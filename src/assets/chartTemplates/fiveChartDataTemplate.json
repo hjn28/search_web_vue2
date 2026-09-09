@@ -1,0 +1,183 @@
+{
+  "version": "1.0.0",
+  "description": "五类图表通用数据样式模板。仅定义可直接渲染的数据结构，不包含业务实值。",
+  "_comment": "JSON 不支持 // 注释，这里使用 _comment / fieldDescriptions 作为参数说明注释。",
+  "rootFieldDescriptions": {
+    "version": "模板版本号。",
+    "description": "模板用途说明。",
+    "commonChartItemShape": "统一图表配置项结构。",
+    "templateKeys": "五类图表的参数结构定义。",
+    "chartsUsageTemplate": "图表配置示例（占位数据）。"
+  },
+  "commonChartItemShape": {
+    "fieldDescriptions": {
+      "id": "图表唯一标识，用于 v-for key。",
+      "title": "图表标题。",
+      "templateKey": "图表类型标识，必须对应 templateKeys 中的键。",
+      "props": "组件入参对象，内容由对应 templateKey 的 propsShape 决定。",
+      "extra": "扩展展示信息，不参与图表核心渲染。"
+    },
+    "id": "chart-unique-id",
+    "title": "图表标题",
+    "templateKey": "line-with-table",
+    "props": {},
+    "extra": {
+      "fieldDescriptions": {
+        "summary": "图表补充文案，可用于图下说明。",
+        "unit": "数值单位，例如 件、%、万元。",
+        "showMode": "展示模式标记，供页面逻辑扩展使用。"
+      },
+      "summary": "图表补充说明（可选）",
+      "unit": "单位（可选）",
+      "showMode": "展示模式标识（可选）"
+    }
+  },
+  "templateKeys": {
+    "line-with-table": {
+      "component": "LineChartWithTable",
+      "fieldDescriptions": {
+        "chartHeight": "图表高度（px）。",
+        "showDataLabel": "是否显示折线点位的数据标签。",
+        "years": "横轴类目数组，通常是年份。",
+        "seriesData": "序列数组，每个序列包含 name/color/data。",
+        "seriesMeanings": "序列说明映射：key 为序列名，value 为说明文本。"
+      },
+      "propsShape": {
+        "chartHeight": 420,
+        "showDataLabel": true,
+        "years": ["年份1", "年份2"],
+        "seriesData": [
+          {
+            "name": "系列名称",
+            "color": "#4A86C5",
+            "data": [0, 0]
+          }
+        ],
+        "seriesMeanings": {
+          "系列名称": "系列说明"
+        }
+      },
+      "requiredProps": ["years", "seriesData"]
+    },
+    "line-percent": {
+      "component": "LinePercentChart",
+      "fieldDescriptions": {
+        "chartHeight": "图表高度（px）。",
+        "showMeaning": "是否显示序列说明区。",
+        "yAxisMin": "Y 轴最小值。",
+        "yAxisMax": "Y 轴最大值。",
+        "years": "横轴类目数组，通常是年份。",
+        "seriesData": "序列数组，数值可为百分比原值（组件内部会格式化）。",
+        "seriesMeanings": "序列说明映射。"
+      },
+      "propsShape": {
+        "chartHeight": 380,
+        "showMeaning": false,
+        "yAxisMin": 0,
+        "yAxisMax": 6,
+        "years": ["年份1", "年份2"],
+        "seriesData": [
+          {
+            "name": "系列名称",
+            "color": "#C0504D",
+            "data": [0, 0]
+          }
+        ],
+        "seriesMeanings": {
+          "系列名称": "系列说明"
+        }
+      },
+      "requiredProps": ["years", "seriesData"]
+    },
+    "grouped-bar-percent": {
+      "component": "GroupedBarPercentChart",
+      "fieldDescriptions": {
+        "chartHeight": "图表高度（px）。",
+        "showDataLabel": "是否显示柱顶标签。",
+        "years": "横轴类目数组，通常是年份。",
+        "seriesData": "多分类序列数组，每个系列对应一类业务。"
+      },
+      "propsShape": {
+        "chartHeight": 620,
+        "showDataLabel": true,
+        "years": ["年份1", "年份2"],
+        "seriesData": [
+          {
+            "name": "分类名称",
+            "color": "#5B9BD5",
+            "data": [0, 0]
+          }
+        ]
+      },
+      "requiredProps": ["years", "seriesData"]
+    },
+    "province-line": {
+      "component": "ProvinceLineChart",
+      "fieldDescriptions": {
+        "chartHeight": "图表高度（px）。",
+        "provinces": "省份类目数组；不传则走组件默认全国省份。",
+        "seriesData": "多序列折线数据（例如按年度区分）。"
+      },
+      "propsShape": {
+        "chartHeight": 500,
+        "provinces": ["省份1", "省份2"],
+        "seriesData": [
+          {
+            "name": "年份或系列名称",
+            "color": "#4F81BD",
+            "data": [0, 0]
+          }
+        ]
+      },
+      "requiredProps": ["seriesData"]
+    },
+    "annual-handle-bar": {
+      "component": "AnnualHandleTypeBarChart",
+      "fieldDescriptions": {
+        "chartHeight": "图表高度（px）。",
+        "years": "横轴类目数组，通常是年份。",
+        "seriesData": "办理类型序列数组。"
+      },
+      "propsShape": {
+        "chartHeight": 500,
+        "years": ["年份1", "年份2"],
+        "seriesData": [
+          {
+            "name": "办理类型",
+            "color": "#9BBB59",
+            "data": [0, 0]
+          }
+        ]
+      },
+      "requiredProps": ["years", "seriesData"]
+    }
+  },
+  "chartsUsageTemplate": [
+    {
+      "_comment": "示例仅展示结构，不代表真实业务数据。",
+      "id": "example-line-with-table",
+      "title": "示例：普通折线+表格",
+      "templateKey": "line-with-table",
+      "props": {
+        "chartHeight": 420,
+        "showDataLabel": true,
+        "years": ["年份1", "年份2"],
+        "seriesData": [
+          {
+            "name": "系列A",
+            "color": "#4A86C5",
+            "data": [0, 0]
+          }
+        ],
+        "seriesMeanings": {
+          "系列A": "说明A"
+        }
+      },
+      "extra": {
+        "summary": "按需填写",
+        "unit": "按需填写",
+        "showMode": "table+meaning"
+      }
+    }
+  ]
+}

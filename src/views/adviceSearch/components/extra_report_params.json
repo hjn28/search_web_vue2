@@ -1,0 +1,343 @@
+"report_template": [
+    {
+        "id": "1",
+        "name": "一、十四次全国民政会议以来建议提案基本情况",
+        "parentId": null,
+        "sort": 1,
+        "level": 1,
+        "children": [
+            {
+                "id": "1-1",
+                "name": "（一）总体数量变化情况分析",
+                "parentId": "1",
+                "sort": 1,
+                "level": 2,
+                "children": []
+            },
+            {
+                "id": "1-2",
+                "name": "（二）内容分布情况分析",
+                "parentId": "1",
+                "sort": 2,
+                "level": 2,
+                "children": []
+            },
+            {
+                "id": "1-3",
+                "name": "（三）地区分布情况分析",
+                "parentId": "1",
+                "sort": 3,
+                "level": 2,
+                "children": []
+            },
+            {
+                "id": "1-4",
+                "name": "（四）办理类别情况分析",
+                "parentId": "1",
+                "sort": 4,
+                "level": 2,
+                "children": []
+            }
+        ]
+    },
+    {
+        "id": "2",
+        "name": "二、十四次全国民政工作会议以来建议提案关注趋势分析",
+        "parentId": null,
+        "sort": 2,
+        "level": 1,
+        "children": [
+            {
+                "id": "2-1",
+                "name": "（一）社会组织",
+                "parentId": "2",
+                "sort": 1,
+                "level": 2,
+                "children": []
+            },
+            {
+                "id": "2-2",
+                "name": "（二）社会救助",
+                "parentId": "2",
+                "sort": 2,
+                "level": 2,
+                "children": []
+            },
+            {
+                "id": "2-3",
+                "name": "（三）区划地名",
+                "parentId": "2",
+                "sort": 3,
+                "level": 2,
+                "children": []
+            },
+            {
+                "id": "2-4",
+                "name": "（四）社会事务",
+                "parentId": "2",
+                "sort": 4,
+                "level": 2,
+                "children": []
+            },
+            {
+                "id": "2-5",
+                "name": "（五）养老服务（老龄工作）",
+                "parentId": "2",
+                "sort": 5,
+                "level": 2,
+                "children": []
+            },
+            {
+                "id": "2-6",
+                "name": "（六）儿童福利",
+                "parentId": "2",
+                "sort": 6,
+                "level": 2,
+                "children": []
+            },
+            {
+                "id": "2-7",
+                "name": "（七）慈善事业",
+                "parentId": "2",
+                "sort": 7,
+                "level": 2,
+                "children": []
+            }
+        ]
+    },
+    {
+        "id": "3",
+        "name": "三、2024年民政工作建议提案关注的重点问题及相关建议",
+        "parentId": null,
+        "sort": 3,
+        "level": 1,
+        "children": [
+            {
+                "id": "3-1",
+                "name": "（一）社会组织",
+                "parentId": "3",
+                "sort": 1,
+                "level": 2,
+                "children": []
+            },
+            {
+                "id": "3-2",
+                "name": "（二）社会救助",
+                "parentId": "3",
+                "sort": 2,
+                "level": 2,
+                "children": []
+            },
+            {
+                "id": "3-3",
+                "name": "（三）区划地名",
+                "parentId": "3",
+                "sort": 3,
+                "level": 2,
+                "children": []
+            },
+            {
+                "id": "3-4",
+                "name": "（四）老龄工作",
+                "parentId": "3",
+                "sort": 4,
+                "level": 2,
+                "children": []
+            },
+            {
+                "id": "3-5",
+                "name": "（五）社会事务",
+                "parentId": "3",
+                "sort": 5,
+                "level": 2,
+                "children": []
+            },
+            {
+                "id": "3-6",
+                "name": "（六）养老服务",
+                "parentId": "3",
+                "sort": 6,
+                "level": 2,
+                "children": []
+            },
+            {
+                "id": "3-7",
+                "name": "（七）儿童福利",
+                "parentId": "3",
+                "sort": 7,
+                "level": 2,
+                "children": []
+            },
+            {
+                "id": "3-8",
+                "name": "（八）慈善事业",
+                "parentId": "3",
+                "sort": 8,
+                "level": 2,
+                "children": []
+            }
+        ]
+    },
+    {
+        "id": "4",
+        "name": "四、“十五五”时期民政工作建议提案关注重点研判",
+        "parentId": null,
+        "sort": 4,
+        "level": 1,
+        "children": [
+            {
+                "id": "4-1",
+                "name": "经过综合梳理十四次全国民政会议以来的建议提案发展趋势，结合我国民政工作实际，对“十五五”时期民政工作建议提案关注点研判如下：",
+                "parentId": "4",
+                "sort": 1,
+                "level": 2,
+                "children": []
+            },
+            {
+                "id": "4-2",
+                "name": "（一）社会组织",
+                "parentId": "4",
+                "sort": 2,
+                "level": 2,
+                "children": []
+            },
+            {
+                "id": "4-3",
+                "name": "（二）社会救助",
+                "parentId": "4",
+                "sort": 3,
+                "level": 2,
+                "children": []
+            },
+            {
+                "id": "4-4",
+                "name": "（三）区划地名",
+                "parentId": "4",
+                "sort": 4,
+                "level": 2,
+                "children": []
+            },
+            {
+                "id": "4-5",
+                "name": "（四）老龄工作",
+                "parentId": "4",
+                "sort": 5,
+                "level": 2,
+                "children": []
+            },
+            {
+                "id": "4-6",
+                "name": "（五）社会事务",
+                "parentId": "4",
+                "sort": 6,
+                "level": 2,
+                "children": []
+            },
+            {
+                "id": "4-7",
+                "name": "（六）养老服务",
+                "parentId": "4",
+                "sort": 7,
+                "level": 2,
+                "children": []
+            },
+            {
+                "id": "4-8",
+                "name": "（七）儿童福利",
+                "parentId": "4",
+                "sort": 8,
+                "level": 2,
+                "children": []
+            },
+            {
+                "id": "4-9",
+                "name": "（八）慈善事业",
+                "parentId": "4",
+                "sort": 9,
+                "level": 2,
+                "children": []
+            }
+        ]
+    },
+    {
+        "id": "5",
+        "name": "五、“十五五”时期应对建议提案关注重点的工作建议",
+        "parentId": null,
+        "sort": 5,
+        "level": 1,
+        "children": [
+            {
+                "id": "5-1",
+                "name": "根据对未来一段时间社会各界对民政工作关注的研判，提出以下建议：",
+                "parentId": "5",
+                "sort": 1,
+                "level": 2,
+                "children": []
+            },
+            {
+                "id": "5-2",
+                "name": "（一）社会组织",
+                "parentId": "5",
+                "sort": 2,
+                "level": 2,
+                "children": []
+            },
+            {
+                "id": "5-3",
+                "name": "（二）社会救助",
+                "parentId": "5",
+                "sort": 3,
+                "level": 2,
+                "children": []
+            },
+            {
+                "id": "5-4",
+                "name": "（三）区划地名",
+                "parentId": "5",
+                "sort": 4,
+                "level": 2,
+                "children": []
+            },
+            {
+                "id": "5-5",
+                "name": "（四）老龄工作",
+                "parentId": "5",
+                "sort": 5,
+                "level": 2,
+                "children": []
+            },
+            {
+                "id": "5-6",
+                "name": "（五）社会事务",
+                "parentId": "5",
+                "sort": 6,
+                "level": 2,
+                "children": []
+            },
+            {
+                "id": "5-7",
+                "name": "（六）养老服务",
+                "parentId": "5",
+                "sort": 7,
+                "level": 2,
+                "children": []
+            },
+            {
+                "id": "5-8",
+                "name": "（七）儿童福利",
+                "parentId": "5",
+                "sort": 8,
+                "level": 2,
+                "children": []
+            },
+            {
+                "id": "5-9",
+                "name": "（八）慈善事业",
+                "parentId": "5",
+                "sort": 9,
+                "level": 2,
+                "children": []
+            }
+        ]
+    }
+]

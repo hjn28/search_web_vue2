@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>浏览器录音与WAV转换</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="../node_modules/@ffmpeg/ffmpeg/dist"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #app {
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      padding: 30px;
+      width: 90%;
+      max-width: 600px;
+      text-align: center;
+    }
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 30px;
+      font-weight: 600;
+    }
+    .status {
+      background-color: #f8f9fa;
+      border-radius: 10px;
+      padding: 15px;
+      margin: 20px 0;
+      font-weight: 500;
+      min-height: 24px;
+    }
+    .recording {
+      background-color: #ffebee;
+      color: #c62828;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.7; }
+      100% { opacity: 1; }
+    }
+    .button-group {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin: 25px 0;
+      flex-wrap: wrap;
+    }
+    button {
+      padding: 12px 25px;
+      border: none;
+      border-radius: 50px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .btn-record {
+      background-color: #e74c3c;
+      color: white;
+    }
+    .btn-record:hover:not(:disabled) {
+      background-color: #c0392b;
+      transform: translateY(-2px);
+    }
+    .btn-stop {
+      background-color: #2ecc71;
+      color: white;
+    }
+    .btn-stop:hover:not(:disabled) {
+      background-color: #27ae60;
+      transform: translateY(-2px);
+    }
+    .btn-download {
+      background-color: #3498db;
+      color: white;
+    }
+    .btn-download:hover:not(:disabled) {
+      background-color: #2980b9;
+      transform: translateY(-2px);
+    }
+    .visualizer {
+      height: 100px;
+      margin: 20px 0;
+      border-radius: 10px;
+      background-color: #2c3e50;
+    }
+    .audio-info {
+      background-color: #f1f8ff;
+      border-radius: 10px;
+      padding: 15px;
+      margin-top: 20px;
+      text-align: left;
+    }
+    .audio-info h3 {
+      margin-top: 0;
+      color: #2c3e50;
+    }
+    .loader {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,.3);
+      border-radius: 50%;
+      border-top-color: #3498db;
+      animation: spin 1s ease-in-out infinite;
+      margin-right: 10px;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .specs {
+      display: flex;
+      justify-content: space-around;
+      margin: 20px 0;
+      flex-wrap: wrap;
+    }
+    .spec-item {
+      background-color: #e8f4fc;
+      border-radius: 10px;
+      padding: 10px 15px;
+      margin: 5px;
+      flex: 1;
+      min-width: 120px;
+    }
+    .spec-value {
+      font-weight: bold;
+      color: #3498db;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1>浏览器录音与WAV格式转换</h1>
+    
+    <div class="specs">
+      <div class="spec-item">
+        <div>格式</div>
+        <div class="spec-value">WAV (PCM)</div>
+      </div>
+      <div class="spec-item">
+        <div>采样率</div>
+        <div class="spec-value">16 kHz</div>
+      </div>
+      <div class="spec-item">
+        <div>位深</div>
+        <div class="spec-value">16 bit</div>
+      </div>
+      <div class="spec-item">
+        <div>声道</div>
+        <div class="spec-value">单声道</div>
+      </div>
+    </div>
+    
+    <div class="visualizer" ref="visualizer"></div>
+    
+    <div class="button-group">
+      <button class="btn-record" @click="startRecording" :disabled="isRecording || isLoading">
+        {{ isLoading ? '初始化中...' : '开始录音' }}
+      </button>
+      <button class="btn-stop" @click="stopRecording" :disabled="!isRecording">
+        停止录音
+      </button>
+      <button class="btn-download" @click="downloadWAV" :disabled="!wavBlob">
+        下载WAV文件
+      </button>
+    </div>
+    
+    <div class="status" :class="{ 'recording': isRecording }">
+      <span v-if="isLoading"><span class="loader"></span>正在加载FFmpeg...</span>
+      <span v-else-if="isRecording"><span class="loader"></span>录音中... {{ formatTime(recordingTime) }}</span>
+      <span v-else-if="converting"><span class="loader"></span>正在转换音频格式...</span>
+      <span v-else>{{ statusMessage }}</span>
+    </div>
+    
+    <div class="audio-info" v-if="wavBlob">
+      <h3>音频信息</h3>
+      <p>格式: WAV (PCM编码)</p>
+      <p>采样率: 16 kHz</p>
+      <p>位深度: 16 bit</p>
+      <p>声道: 单声道</p>
+      <p>文件大小: {{ (wavBlob.size / 1024).toFixed(2) }} KB</p>
+    </div>
+  </div>
+
+  <script>
+    const { createApp, ref, onMounted, onUnmounted } = Vue;
+    
+    createApp({
+      setup() {
+        const isRecording = ref(false);
+        const isLoading = ref(false);
+        const converting = ref(false);
+        const statusMessage = ref('点击"开始录音"按钮开始录制');
+        const wavBlob = ref(null);
+        const visualizer = ref(null);
+        
+        // 录音相关变量
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let audioStream = null;
+        let ffmpeg = null;
+        let recordingStartTime = 0;
+        let recordingTime = ref(0);
+        let timerInterval = null;
+        let audioContext = null;
+        let analyser = null;
+        let dataArray = null;
+        let animationId = null;
+        
+        // 初始化FFmpeg
+        const initFFmpeg = async () => {
+          isLoading.value = true;
+          statusMessage.value = '正在加载FFmpeg...';
+          
+          try {
+            // 创建FFmpeg实例
+            ffmpeg = new FFmpeg();
+            
+            // 加载FFmpeg
+            await ffmpeg.load();
+            
+            console.log('FFmpeg加载成功');
+            statusMessage.value = 'FFmpeg加载成功，可以开始录音';
+            isLoading.value = false;
+          } catch (error) {
+            console.error('FFmpeg加载失败:', error);
+            statusMessage.value = 'FFmpeg加载失败: ' + error.message;
+            isLoading.value = false;
+          }
+        };
+        
+        // 开始录音
+        const startRecording = async () => {
+          try {
+            // 请求麦克风权限
+            audioStream = await navigator.mediaDevices.getUserMedia({ 
+              audio: {
+                channelCount: 1,
+                sampleRate: 16000,
+                echoCancellation: true,
+                noiseSuppression: true
+              } 
+            });
+            
+            // 设置音频分析器用于可视化
+            setupAudioVisualizer();
+            
+            // 创建MediaRecorder实例
+            mediaRecorder = new MediaRecorder(audioStream, {
+              mimeType: 'audio/webm;codecs=opus'
+            });
+            
+            // 重置音频数据
+            audioChunks = [];
+            
+            // 数据可用时的处理
+            mediaRecorder.ondataavailable = (event) => {
+              if (event.data.size > 0) {
+                audioChunks.push(event.data);
+              }
+            };
+            
+            // 录音停止时的处理
+            mediaRecorder.onstop = () => {
+              processAudio();
+            };
+            
+            // 开始录音
+            mediaRecorder.start(100); // 每100ms收集一次数据
+            isRecording.value = true;
+            recordingStartTime = Date.now();
+            recordingTime.value = 0;
+            
+            // 开始计时器
+            timerInterval = setInterval(() => {
+              recordingTime.value = Math.floor((Date.now() - recordingStartTime) / 1000);
+            }, 1000);
+            
+            statusMessage.value = '录音中...';
+          } catch (error) {
+            console.error('无法开始录音:', error);
+            statusMessage.value = '录音失败: ' + error.message;
+          }
+        };
+        
+        // 设置音频可视化
+        const setupAudioVisualizer = () => {
+          if (!audioStream || !visualizer.value) return;
+          
+          // 创建音频上下文
+          audioContext = new AudioContext();
+          analyser = audioContext.createAnalyser();
+          const source = audioContext.createMediaStreamSource(audioStream);
+          
+          // 连接分析器
+          source.connect(analyser);
+          analyser.fftSize = 256;
+          
+          // 创建数据数组
+          const bufferLength = analyser.frequencyBinCount;
+          dataArray = new Uint8Array(bufferLength);
+          
+          // 清除之前的动画
+          if (animationId) {
+            cancelAnimationFrame(animationId);
+          }
+          
+          // 开始可视化
+          drawVisualizer();
+        };
+        
+        // 绘制音频可视化
+        const drawVisualizer = () => {
+          if (!analyser || !visualizer.value || !isRecording.value) return;
+          
+          animationId = requestAnimationFrame(drawVisualizer);
+          
+          analyser.getByteFrequencyData(dataArray);
+          
+          const canvas = visualizer.value;
+          const ctx = canvas.getContext('2d');
+          const width = canvas.width;
+          const height = canvas.height;
+          
+          ctx.clearRect(0, 0, width, height);
+          
+          const barWidth = (width / dataArray.length) * 2.5;
+          let barHeight;
+          let x = 0;
+          
+          for (let i = 0; i < dataArray.length; i++) {
+            barHeight = dataArray[i] / 2;
+            
+            // 创建渐变颜色
+            const gradient = ctx.createLinearGradient(0, 0, 0, height);
+            gradient.addColorStop(0, '#3498db');
+            gradient.addColorStop(1, '#2ecc71');
+            
+            ctx.fillStyle = gradient;
+            ctx.fillRect(x, height - barHeight, barWidth, barHeight);
+            
+            x += barWidth + 1;
+          }
+        };
+        
+        // 停止录音
+        const stopRecording = () => {
+          if (mediaRecorder && isRecording.value) {
+            mediaRecorder.stop();
+            isRecording.value = false;
+            
+            // 停止所有音频轨道
+            if (audioStream) {
+              audioStream.getTracks().forEach(track => track.stop());
+            }
+            
+            // 清除计时器
+            if (timerInterval) {
+              clearInterval(timerInterval);
+              timerInterval = null;
+            }
+            
+            // 停止可视化
+            if (animationId) {
+              cancelAnimationFrame(animationId);
+              animationId = null;
+            }
+            
+            statusMessage.value = '录音已停止，正在处理音频...';
+          }
+        };
+        
+        // 处理音频数据
+        const processAudio = async () => {
+          converting.value = true;
+          
+          try {
+            // 将录制的音频数据转换为Blob
+            const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+            
+            // 使用FFmpeg转换格式
+            const wavData = await convertToWAV(audioBlob);
+            
+            // 创建WAV Blob
+            wavBlob.value = new Blob([wavData], { type: 'audio/wav' });
+            
+            statusMessage.value = '音频转换完成！点击"下载WAV文件"按钮下载';
+            converting.value = false;
+          } catch (error) {
+            console.error('音频处理失败:', error);
+            statusMessage.value = '音频处理失败: ' + error.message;
+            converting.value = false;
+          }
+        };
+        
+        // 使用FFmpeg转换为WAV格式
+        const convertToWAV = async (audioBlob) => {
+          if (!ffmpeg) {
+            throw new Error('FFmpeg未初始化');
+          }
+          
+          // 生成输入和输出文件名
+          const inputFileName = 'input.webm';
+          const outputFileName = 'output.wav';
+          
+          // 将音频数据写入FFmpeg文件系统
+          const audioData = await blobToArrayBuffer(audioBlob);
+          await ffmpeg.writeFile(inputFileName, new Uint8Array(audioData));
+          
+          // 执行FFmpeg命令进行转换
+          // 参数说明:
+          // -i 输入文件
+          // -ar 16000 设置采样率为16kHz
+          // -ac 1 设置声道数为1（单声道）
+          // -acodec pcm_s16le 设置音频编码为PCM signed 16-bit little-endian (16bit)
+          await ffmpeg.exec([
+            '-i', inputFileName,
+            '-ar', '16000',
+            '-ac', '1',
+            '-acodec', 'pcm_s16le',
+            outputFileName
+          ]);
+          
+          // 读取转换后的WAV数据
+          const data = await ffmpeg.readFile(outputFileName);
+          return data;
+        };
+        
+        // 将Blob转换为ArrayBuffer
+        const blobToArrayBuffer = (blob) => {
+          return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsArrayBuffer(blob);
+          });
+        };
+        
+        // 下载WAV文件
+        const downloadWAV = () => {
+          if (wavBlob.value) {
+            const url = URL.createObjectURL(wavBlob.value);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `recording-${new Date().getTime()}.wav`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+          }
+        };
+        
+        // 格式化时间（秒转换为MM:SS）
+        const formatTime = (seconds) => {
+          const mins = Math.floor(seconds / 60);
+          const secs = seconds % 60;
+          return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        };
+        
+        // 组件挂载时初始化FFmpeg
+        onMounted(() => {
+          // 设置可视化画布尺寸
+          if (visualizer.value) {
+            visualizer.value.width = visualizer.value.offsetWidth;
+            visualizer.value.height = visualizer.value.offsetHeight;
+          }
+          
+          // 初始化FFmpeg
+          initFFmpeg();
+        });
+        
+        // 组件卸载时清理资源
+        onUnmounted(() => {
+          if (audioStream) {
+            audioStream.getTracks().forEach(track => track.stop());
+          }
+          
+          if (timerInterval) {
+            clearInterval(timerInterval);
+          }
+          
+          if (animationId) {
+            cancelAnimationFrame(animationId);
+          }
+        });
+        
+        return {
+          isRecording,
+          isLoading,
+          converting,
+          statusMessage,
+          wavBlob,
+          visualizer,
+          recordingTime,
+          startRecording,
+          stopRecording,
+          downloadWAV,
+          formatTime
+        };
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>

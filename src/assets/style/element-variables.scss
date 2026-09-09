@@ -1,0 +1,23 @@
+/* 改变主题色变量 */
+$--color-primary: #E40001;
+
+/* 改变 icon 字体路径变量，必需 */
+$--font-path: '~element-ui/lib/theme-chalk/fonts';
+
+@import "~element-ui/packages/theme-chalk/src/index";
+ .el-icon-close:before{
+    position: absolute;
+    top:-60px;
+    font-size: 28px;
+    color: #fff !important;
+    right:-20px;
+    z-index:1000;
+}
+.redTheme{
+    color: #E40001;
+}
+.el-dialog__footer{
+    padding:0 auto 0 auto !important;
+    margin : 0 20px 0 20px;
+    border-top:1px solid #EDEFF2 ;
+}

@@ -1,0 +1,256 @@
+// @import './reset.scss';//暂时注销，原因：政策文件需要读取带标签的内容，导致格式不生效 --hjn
+@import './transition.scss';
+html,
+body,
+#app {
+  height: 100%;
+}
+// van-nav-bar样式统一修改
+.van-nav-bar{
+    background-color: #d90000;
+    //height: 45px;
+}
+.van-nav-bar .van-icon{
+    font-size: 22px;
+    color: #fff;
+}
+.van-nav-bar__title{
+    color: #fff;
+    font-size: 18px;
+}
+.van-dialog{
+  width:12rem;
+  font-size:0.8rem;
+  .van-dialog__header{
+    padding-top:0.8rem;    
+  }
+  .van-dialog__content .van-dialog__message{
+    font-size:0.8rem;
+  }
+  .van-dialog__footer .van-button{
+    height:2rem;
+    font-size:0.8rem
+  }
+}
+// .van-hairline--bottom::after{
+//     border-bottom-width: 0;
+// }
+.btn-size-1 {
+  height: 36px;
+  margin: 17px 20px 0 20px;
+  font-size: 18px;
+  border-radius: 20px;
+}
+.btn-color-1 {
+  color: #666666;
+  background: #eeeeee;
+}
+.btn-color-2 {
+  color: #ffffff;
+  background: #E40001;
+}
+.placeholder{
+  width: 100%;
+  height: 45px;
+  flex: 0 0 45px;
+}
+.placeholder2{
+  width: 100%;
+  height: 50px;
+}
+.van-popup{
+  max-height:50%;
+  .van-cascader__header{
+    height:1rem;
+    line-height: 1rem;
+    .van-cascader__title{
+      font-size:0.6rem;
+    }
+    .van-icon{
+      font-size:0.6rem;
+    }
+  }
+  .van-tabs{
+    .van-tabs__wrap--scrollable{
+      height:1rem;
+      .van-cascader__tab{
+        font-size:0.6rem;
+      }      
+    }
+    .van-tabs__content .van-cascader__option{
+      padding-top:0.2rem;
+      padding-bottom:0.2rem;
+      font-size:0.6rem;
+    }
+  }
+}
+
+// 列表页 公共样式
+.contentList{
+  box-sizing: border-box;
+  height: calc(100% - 10vh);
+  padding: 0 20px 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  .van-row{
+    height: 100%;
+  }
+  .left{
+    height: 100%;
+    .con{
+      height: 100%;
+      background-color: #A40000;
+      border-radius: 50px 5px 50px 5px;
+      .item{
+        width: 100%;
+        height: 50%;
+        position: relative;
+        text-align: center;
+        div{
+          width: 100%;
+          height: 100%;
+          // width: 7rem;
+          // height: 7rem;
+          // margin-top: -3.5rem;
+          // margin-left: -3.5rem;
+          // position: absolute;
+          // top: 50%;
+          // left: 50%;
+          // border-radius: 10px;
+          color: #fff;
+          line-height: 1.5rem;
+          font-weight: bold;
+          &.active{
+            box-shadow: 0px 0px 10px #333 inset;
+          }
+        }
+        &:last-child{
+          div{
+            &.active{
+              border-radius: 5px 5px 50px 5px;
+            }
+          }
+        }
+        &:first-child{
+          div{
+            &.active{
+              border-radius: 50px 5px 5px 5px;
+            }
+          }
+        }        
+        img{
+          margin-top: 11vh;
+          max-width: 50%;
+        }
+      }
+    }
+  }
+  .main{
+    height: 100%;
+    background: #fff;
+    border-radius: 5px;
+    .list{
+      height: 100%;
+      margin: 0.5rem 0rem;
+      background-color: #fff;
+      border-radius: 0.6rem;
+      .title{
+        color: #b40000;
+        font-size: 1rem;
+        font-weight: 700;
+        padding: 0.4rem 1rem;
+        button{
+          float: right;
+          position: relative;
+          margin-top: -5px;
+          margin-right: 1rem;
+        }
+      }
+    }
+  }
+  .table{
+    padding: 0.4rem 1rem;
+    font-size: 0.875rem;
+    .tr{
+      display: flex;
+      .th, .td{
+        width:20%;
+        border:1px solid #ddd;
+        padding: 0.4rem 0.5rem;
+        text-align: center;
+        &:first-child{
+          width:40%
+        }
+      }
+      .th{
+        padding: 0.6rem 0.5rem;
+        background-color: #EAEAEA;
+      }
+      .td{
+        a{
+          color: #b40000;
+        }
+      }
+    }
+
+  }
+  .pagination{
+    display: flex;
+    justify-content: center;
+    .van-pagination{
+      width:50%;
+      .van-pagination__item{
+        color:#b40000
+      }
+      .van-pagination__item--active{
+        background-color: #b40000;
+        color:#fff
+      }
+    }
+  }
+  // 滚动条的样式调整
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: darkgray;
+    border-radius: 10px;
+    border: 2px solid orange;
+  }
+  
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #ddd;
+  border-radius: 4px;
+  // border: 2px solid #f1f1f1;
+}
+
+// Element 全局 loading 样式，提升与界面区分度
+.req-loading-mask {
+  background: rgba(0, 0, 0, 0.6) !important;
+  .el-loading-spinner {
+    color: #ffffff;
+    transform: scale(1.35);
+    .el-loading-text {
+      color: #ffffff;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      font-size: 16px;
+    }
+    .circular {
+      width: 48px;
+      height: 48px;
+      .path {
+        stroke: #ffffff;
+        stroke-width: 3;
+      }
+    }
+  }
+}

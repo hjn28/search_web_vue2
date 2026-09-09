@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="56px" height="25px" viewBox="0 0 56 25" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>禁用</title>
+    <g id="PC-综合分析" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="01综合分析" transform="translate(-1823, -298)">
+            <g id="禁用" transform="translate(1823, 298)">
+                <path d="M42.0019243,0 L14.0054149,0 C6.27568462,0 0,5.59661717 0,12.4982419 C0,19.3933938 6.2682112,24.9969234 13.9979862,24.9969234 L42.0019243,24.9969234 C49.7243602,24.9969234 56,19.4003462 56,12.4982419 C56,5.6036894 49.7322363,0 42.0019243,0 L42.0019243,0 Z" id="路径" fill="#C9C9C9" fill-rule="nonzero"></path>
+                <text font-family="SourceHanSansCN-Regular, Source Han Sans CN" font-size="12" font-weight="normal" fill="#555555">
+                    <tspan x="26" y="17">禁用</tspan>
+                </text>
+                <path d="M12.7853268,22.5502489 C7.23374026,22.5502489 2.73331991,18.0499484 2.73331991,12.4982419 C2.73331991,8.90718348 4.64925699,5.58878575 7.75944325,3.79331645 C10.8694297,1.9977273 14.7013039,1.9977273 17.8113303,3.79331645 C20.9214766,5.5888257 22.8374137,8.90722343 22.8374137,12.4982419 C22.8374137,18.0499484 18.3369534,22.5502489 12.7853268,22.5502489 Z" id="路径" fill="#FFFFFF" fill-rule="nonzero"></path>
+            </g>
+        </g>
+    </g>
+</svg>

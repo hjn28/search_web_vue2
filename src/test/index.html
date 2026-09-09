@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>全可编辑界面方案</title>
+  <style>
+    /* 基础样式 */
+    * { box-sizing: border-box; }
+    body { font-family: system-ui, sans-serif; padding: 20px; background: #f4f6f8; }
+    
+    /* 工具栏 */
+    .toolbar {
+      background: white; padding: 15px 20px; border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 20px;
+      display: flex; gap: 12px; flex-wrap: wrap; align-items: center;
+    }
+    .toolbar button {
+      padding: 8px 18px; border: none; border-radius: 8px;
+      font-weight: 600; cursor: pointer; transition: 0.2s;
+    }
+    .btn-edit { background: #4f46e5; color: white; }
+    .btn-edit.active { background: #dc2626; }
+    .btn-save { background: #16a34a; color: white; }
+    .btn-reset { background: #e5e7eb; color: #1f2937; }
+    .btn-reset:hover { background: #fca5a5; color: #7f1d1d; }
+    
+    /* 样式修改面板 */
+    .style-panel {
+      background: white; padding: 10px 15px; border-radius: 10px;
+      display: none; gap: 12px; align-items: center; flex-wrap: wrap;
+      border: 1px solid #e5e7eb;
+    }
+    .style-panel.show { display: flex; }
+    .style-panel label { font-size: 13px; font-weight: 500; }
+    .style-panel input[type="color"] { width: 30px; height: 30px; border: none; padding: 0; cursor: pointer; }
+    .style-panel input[type="number"] { width: 60px; padding: 4px 6px; border: 1px solid #d1d5db; border-radius: 6px; }
+
+    /* 可编辑区域 */
+    #app {
+      background: white; padding: 30px; border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+      transition: all 0.2s;
+    }
+    /* 开启编辑模式时的视觉提示 */
+    #app.editing * {
+      outline: 2px dashed transparent;
+      transition: outline 0.15s;
+    }
+    #app.editing *:hover {
+      outline-color: #4f46e5;
+    }
+    /* 示例卡片 */
+    .card { 
+      padding: 20px; border-radius: 12px; margin-bottom: 16px; 
+      background: #f8fafc; border-left: 4px solid #4f46e5;
+    }
+    .card h2 { margin-top: 0; color: #1e293b; }
+    .grid { display: flex; gap: 20px; flex-wrap: wrap; }
+    .grid-item { flex: 1; min-width: 150px; padding: 20px; background: #f1f5f9; border-radius: 12px; text-align: center; }
+  </style>
+</head>
+<body>
+
+<div class="toolbar">
+  <button class="btn-edit" id="toggleEdit">✏️ 开启编辑</button>
+  <button class="btn-save" id="saveState">💾 保存修改</button>
+  <button class="btn-reset" id="resetState">↩️ 恢复原样</button>
+  
+  <!-- 样式浮动面板 -->
+  <div class="style-panel" id="stylePanel">
+    <span style="font-weight:600; margin-right:5px;">🎨 当前元素样式</span>
+    <label>背景 <input type="color" id="bgColor" value="#ffffff"></label>
+    <label>文字 <input type="color" id="textColor" value="#000000"></label>
+    <label>字号 <input type="number" id="fontSize" value="16" min="10" max="48"> px</label>
+    <label>边框圆角 <input type="number" id="borderRadius" value="8" min="0" max="50"> px</label>
+  </div>
+</div>
+
+<!-- 可编辑渲染容器 -->
+<div id="app">
+  <h1>📄 可编辑仪表板</h1>
+  <p style="color: #64748b;">点击下方元素，或开启编辑模式后直接修改文字。</p>
+  
+  <div class="card" style="background: #eff6ff; border-left-color: #3b82f6;">
+    <h2>✍️ 点击选中我</h2>
+    <p>选中的元素会高亮，右侧面板可调样式。</p>
+  </div>
+  
+  <div class="grid">
+    <div class="grid-item" style="background: #fce7f3; color: #9d174d;">🌸 数据A</div>
+    <div class="grid-item" style="background: #dbeafe; color: #1e3a8a;">📊 数据B</div>
+    <div class="grid-item" style="background: #d1fae5; color: #064e3b;">📈 数据C</div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    // ---------- 1. 核心状态 ----------
+    const app = document.getElementById('app');
+    const STORAGE_KEY = 'my_editable_ui_state';
+    
+    // 保存页面加载时的原始HTML（用于恢复原样）
+    const ORIGINAL_HTML = app.innerHTML;
+
+    // 当前选中的DOM元素（用于样式面板操作）
+    let selectedElement = null;
+
+    // DOM 引用
+    const toggleBtn = document.getElementById('toggleEdit');
+    const saveBtn = document.getElementById('saveState');
+    const resetBtn = document.getElementById('resetState');
+    const stylePanel = document.getElementById('stylePanel');
+    const bgColorInput = document.getElementById('bgColor');
+    const textColorInput = document.getElementById('textColor');
+    const fontSizeInput = document.getElementById('fontSize');
+    const borderRadiusInput = document.getElementById('borderRadius');
+
+    // ---------- 2. 核心函数 ----------
+
+    // 2.1 保存当前状态到 localStorage
+    function saveToStorage() {
+      // 序列化当前DOM（包含所有内联样式修改）
+      const htmlContent = app.innerHTML;
+      localStorage.setItem(STORAGE_KEY, htmlContent);
+      alert('✅ 当前界面已保存到浏览器本地！');
+    }
+
+    // 2.2 从 localStorage 恢复状态
+    function loadFromStorage() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        app.innerHTML = saved;
+        return true;
+      }
+      return false;
+    }
+
+    // 2.3 恢复为原始出厂样式
+    function resetToOriginal() {
+      if (confirm('⚠️ 确定要恢复为原始样式吗？当前修改将丢失。')) {
+        app.innerHTML = ORIGINAL_HTML;
+        localStorage.removeItem(STORAGE_KEY); // 清除存储
+        selectedElement = null; // 清空选中
+        updateStylePanelVisibility();
+        alert('✅ 已恢复初始状态');
+      }
+    }
+
+    // 2.4 切换编辑模式 (开启/关闭 contenteditable)
+    function toggleEditMode() {
+      const isEditing = app.classList.toggle('editing');
+      toggleBtn.textContent = isEditing ? '🔒 关闭编辑' : '✏️ 开启编辑';
+      toggleBtn.classList.toggle('active', isEditing);
+      
+      // 让所有直接子元素及后代可编辑（* 选择器仅作用于可见元素）
+      if (isEditing) {
+        app.contentEditable = true;
+        // 开启编辑时自动显示样式面板
+        stylePanel.classList.add('show');
+        // 开启点击选中功能
+        app.addEventListener('click', handleElementClick);
+      } else {
+        app.contentEditable = false;
+        stylePanel.classList.remove('show');
+        app.removeEventListener('click', handleElementClick);
+        selectedElement = null;
+      }
+    }
+
+    // 2.5 点击元素选中（仅编辑模式下生效）
+    function handleElementClick(e) {
+      // 忽略对容器本身的点击，只针对具体内容元素
+      if (e.target === app) return;
+      
+      // 取消上一个选中元素的视觉高亮
+      if (selectedElement) {
+        selectedElement.style.outline = '';
+        selectedElement.style.outlineOffset = '';
+      }
+      
+      // 设置新选中
+      selectedElement = e.target;
+      // 添加高亮（利用内联样式，确保能被序列化保存，但为了视觉我们临时加，且不污染持久化？这里为了体验直接加，保存时也会存下来，但恢复时会被覆盖，无妨）
+      selectedElement.style.outline = '2px solid #4f46e5';
+      selectedElement.style.outlineOffset = '2px';
+      
+      // 更新样式面板的控件值，匹配当前元素样式
+      updateStylePanelValues(selectedElement);
+    }
+
+    // 2.6 根据选中元素填充样式面板的值
+    function updateStylePanelValues(el) {
+      const computed = window.getComputedStyle(el);
+      bgColorInput.value = rgbToHex(computed.backgroundColor) || '#ffffff';
+      textColorInput.value = rgbToHex(computed.color) || '#000000';
+      fontSizeInput.value = parseInt(computed.fontSize) || 16;
+      borderRadiusInput.value = parseInt(computed.borderRadius) || 0;
+    }
+
+    // 辅助：RGB 转 Hex (简化)
+    function rgbToHex(rgb) {
+      if (!rgb || rgb === 'rgba(0, 0, 0, 0)' || rgb === 'transparent') return '#ffffff';
+      const match = rgb.match(/(\d+)/g);
+      if (!match) return '#ffffff';
+      const r = parseInt(match[0]), g = parseInt(match[1]), b = parseInt(match[2]);
+      return '#' + [r, g, b].map(x => {
+        const hex = x.toString(16);
+        return hex.length === 1 ? '0' + hex : hex;
+      }).join('');
+    }
+
+    // 2.7 样式面板的修改应用到选中元素
+    function applyStyleToSelected() {
+      if (!selectedElement) {
+        // 如果没有选中，默认操作当前聚焦元素或忽略
+        return;
+      }
+      // 直接从面板取值并写入内联样式
+      selectedElement.style.backgroundColor = bgColorInput.value;
+      selectedElement.style.color = textColorInput.value;
+      selectedElement.style.fontSize = fontSizeInput.value + 'px';
+      selectedElement.style.borderRadius = borderRadiusInput.value + 'px';
+      
+      // 保持高亮（防止被覆盖）
+      selectedElement.style.outline = '2px solid #4f46e5';
+      selectedElement.style.outlineOffset = '2px';
+    }
+
+    // 2.8 控制样式面板显示（未选中时隐藏部分提示）
+    function updateStylePanelVisibility() {
+      if (!selectedElement && app.classList.contains('editing')) {
+        // 编辑模式下无选中，面板依然显示但控件是默认值，也可
+      }
+    }
+
+    // ---------- 3. 事件绑定 ----------
+    
+    // 切换编辑
+    toggleBtn.addEventListener('click', toggleEditMode);
+
+    // 保存
+    saveBtn.addEventListener('click', saveToStorage);
+
+    // 恢复
+    resetBtn.addEventListener('click', resetToOriginal);
+
+    // 样式面板输入事件（实时修改）
+    [bgColorInput, textColorInput, fontSizeInput, borderRadiusInput].forEach(input => {
+      input.addEventListener('input', applyStyleToSelected);
+    });
+
+    // 点击空白区域取消选中（点击app背景但非元素时）
+    app.addEventListener('click', function(e) {
+      if (e.target === app && app.classList.contains('editing')) {
+        if (selectedElement) {
+          selectedElement.style.outline = '';
+          selectedElement.style.outlineOffset = '';
+          selectedElement = null;
+        }
+      }
+    });
+
+    // ---------- 4. 初始化 ----------
+    // 优先加载存储中的状态
+    const hasSaved = loadFromStorage();
+    if (!hasSaved) {
+      // 没有存储则保持初始HTML（已经存在）
+      console.log('加载初始界面');
+    }
+
+    // 默认不开启编辑模式
+    app.contentEditable = false;
+    // 默认隐藏样式面板
+    stylePanel.classList.remove('show');
+
+    // 额外小功能：按 ESC 取消选中
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && selectedElement) {
+        selectedElement.style.outline = '';
+        selectedElement.style.outlineOffset = '';
+        selectedElement = null;
+        updateStylePanelVisibility();
+      }
+    });
+
+    console.log('✅ 方案已启动。点击"开启编辑" -> 点选任意元素 -> 右侧调样式 -> 保存/恢复。');
+  })();
+</script>
+</body>
+</html>

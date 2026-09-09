@@ -1,0 +1,2825 @@
+{
+    "code": 200,
+    "data": {
+        "totalPages": 3227,
+        "currentPage": 1,
+        "totalElements": 32270,
+        "statistics": [
+            {
+                "name": "政策文件库",
+                "value": 32270,
+                "children": [
+                    [
+                        {
+                            "name": "按主题分类",
+                            "value": 18680,
+                            "children": [
+                                {
+                                    "name": "国务院组织机构",
+                                    "value": 371,
+                                    "children": [
+                                        {
+                                            "name": "国务院",
+                                            "value": 8,
+                                            "pname": "国务院组织机构",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "国务院组织机构/国务院"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国务院办公厅",
+                                            "value": 3,
+                                            "pname": "国务院组织机构",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "国务院组织机构/国务院办公厅"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国务院组成部门",
+                                            "value": 67,
+                                            "pname": "国务院组织机构",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "国务院组织机构/国务院组成部门"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国务院直属特设机构",
+                                            "value": 1,
+                                            "pname": "国务院组织机构",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "国务院组织机构/国务院直属特设机构"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国务院直属机构",
+                                            "value": 43,
+                                            "pname": "国务院组织机构",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "国务院组织机构/国务院直属机构"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国务院办事机构",
+                                            "value": 7,
+                                            "pname": "国务院组织机构",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "国务院组织机构/国务院办事机构"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国务院直属事业单位",
+                                            "value": 16,
+                                            "pname": "国务院组织机构",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "国务院组织机构/国务院直属事业单位"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国务院部委管理的国家局",
+                                            "value": 37,
+                                            "pname": "国务院组织机构",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "国务院组织机构/国务院部委管理的国家局"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国务院议事协调机构",
+                                            "value": 7,
+                                            "pname": "国务院组织机构",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "国务院组织机构/国务院议事协调机构"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "其他",
+                                            "value": 182,
+                                            "pname": "国务院组织机构",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "国务院组织机构/其他"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "chaxun": [
+                                        {
+                                            "name": "ztfl",
+                                            "value": "国务院组织机构"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "综合政务",
+                                    "value": 624,
+                                    "children": [
+                                        {
+                                            "name": "政务公开",
+                                            "value": 99,
+                                            "pname": "综合政务",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "综合政务/政务公开"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "政务督查",
+                                            "value": 40,
+                                            "pname": "综合政务",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "综合政务/政务督查"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "应急管理",
+                                            "value": 68,
+                                            "pname": "综合政务",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "综合政务/应急管理"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "电子政务",
+                                            "value": 38,
+                                            "pname": "综合政务",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "综合政务/电子政务"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "文秘工作",
+                                            "value": 46,
+                                            "pname": "综合政务",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "综合政务/文秘工作"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "保密工作",
+                                            "value": 14,
+                                            "pname": "综合政务",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "综合政务/保密工作"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "信访",
+                                            "value": 4,
+                                            "pname": "综合政务",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "综合政务/信访"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "参事、文史",
+                                            "value": 3,
+                                            "pname": "综合政务",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "综合政务/参事、文史"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "其他",
+                                            "value": 312,
+                                            "pname": "综合政务",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "综合政务/其他"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "chaxun": [
+                                        {
+                                            "name": "ztfl",
+                                            "value": "综合政务"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "国民经济管理、国有资产监管",
+                                    "value": 700,
+                                    "children": [
+                                        {
+                                            "name": "宏观经济",
+                                            "value": 136,
+                                            "pname": "国民经济管理、国有资产监管",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "国民经济管理、国有资产监管/宏观经济"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "经济体制改革",
+                                            "value": 86,
+                                            "pname": "国民经济管理、国有资产监管",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "国民经济管理、国有资产监管/经济体制改革"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "统计",
+                                            "value": 63,
+                                            "pname": "国民经济管理、国有资产监管",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "国民经济管理、国有资产监管/统计"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "物价",
+                                            "value": 53,
+                                            "pname": "国民经济管理、国有资产监管",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "国民经济管理、国有资产监管/物价"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国有资产监管",
+                                            "value": 86,
+                                            "pname": "国民经济管理、国有资产监管",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "国民经济管理、国有资产监管/国有资产监管"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "重大建设项目",
+                                            "value": 21,
+                                            "pname": "国民经济管理、国有资产监管",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "国民经济管理、国有资产监管/重大建设项目"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "其他",
+                                            "value": 255,
+                                            "pname": "国民经济管理、国有资产监管",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "国民经济管理、国有资产监管/其他"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "chaxun": [
+                                        {
+                                            "name": "ztfl",
+                                            "value": "国民经济管理、国有资产监管"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "财政、金融、审计",
+                                    "value": 2468,
+                                    "children": [
+                                        {
+                                            "name": "财政",
+                                            "value": 563,
+                                            "pname": "财政、金融、审计",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "财政、金融、审计/财政"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "税务",
+                                            "value": 655,
+                                            "pname": "财政、金融、审计",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "财政、金融、审计/税务"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "银行",
+                                            "value": 245,
+                                            "pname": "财政、金融、审计",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "财政、金融、审计/银行"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "货币（含外汇）",
+                                            "value": 66,
+                                            "pname": "财政、金融、审计",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "财政、金融、审计/货币（含外汇）"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "证券",
+                                            "value": 221,
+                                            "pname": "财政、金融、审计",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "财政、金融、审计/证券"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "保险",
+                                            "value": 156,
+                                            "pname": "财政、金融、审计",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "财政、金融、审计/保险"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "社会信用体系建设",
+                                            "value": 49,
+                                            "pname": "财政、金融、审计",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "财政、金融、审计/社会信用体系建设"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "审计",
+                                            "value": 47,
+                                            "pname": "财政、金融、审计",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "财政、金融、审计/审计"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "其他",
+                                            "value": 466,
+                                            "pname": "财政、金融、审计",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "财政、金融、审计/其他"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "chaxun": [
+                                        {
+                                            "name": "ztfl",
+                                            "value": "财政、金融、审计"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "国土资源、能源",
+                                    "value": 1213,
+                                    "children": [
+                                        {
+                                            "name": "土地",
+                                            "value": 272,
+                                            "pname": "国土资源、能源",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "国土资源、能源/土地"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "矿产",
+                                            "value": 81,
+                                            "pname": "国土资源、能源",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "国土资源、能源/矿产"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "水资源",
+                                            "value": 26,
+                                            "pname": "国土资源、能源",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "国土资源、能源/水资源"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "海洋",
+                                            "value": 68,
+                                            "pname": "国土资源、能源",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "国土资源、能源/海洋"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "煤炭",
+                                            "value": 118,
+                                            "pname": "国土资源、能源",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "国土资源、能源/煤炭"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "石油与天然气",
+                                            "value": 44,
+                                            "pname": "国土资源、能源",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "国土资源、能源/石油与天然气"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "电力",
+                                            "value": 231,
+                                            "pname": "国土资源、能源",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "国土资源、能源/电力"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "其他",
+                                            "value": 373,
+                                            "pname": "国土资源、能源",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "国土资源、能源/其他"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "chaxun": [
+                                        {
+                                            "name": "ztfl",
+                                            "value": "国土资源、能源"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "农业、林业、水利",
+                                    "value": 1894,
+                                    "children": [
+                                        {
+                                            "name": "农业、畜牧业、渔业",
+                                            "value": 1131,
+                                            "pname": "农业、林业、水利",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "农业、林业、水利/农业、畜牧业、渔业"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "林业",
+                                            "value": 198,
+                                            "pname": "农业、林业、水利",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "农业、林业、水利/林业"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "水利",
+                                            "value": 257,
+                                            "pname": "农业、林业、水利",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "农业、林业、水利/水利"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "其他",
+                                            "value": 308,
+                                            "pname": "农业、林业、水利",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "农业、林业、水利/其他"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "chaxun": [
+                                        {
+                                            "name": "ztfl",
+                                            "value": "农业、林业、水利"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "工业、交通",
+                                    "value": 2176,
+                                    "children": [
+                                        {
+                                            "name": "机械制造与重工业",
+                                            "value": 131,
+                                            "pname": "工业、交通",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "工业、交通/机械制造与重工业"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "轻工纺织",
+                                            "value": 31,
+                                            "pname": "工业、交通",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "工业、交通/轻工纺织"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "化工",
+                                            "value": 34,
+                                            "pname": "工业、交通",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "工业、交通/化工"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国防工业",
+                                            "value": 4,
+                                            "pname": "工业、交通",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "工业、交通/国防工业"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "航天、航空",
+                                            "value": 34,
+                                            "pname": "工业、交通",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "工业、交通/航天、航空"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "信息产业（含电信）",
+                                            "value": 221,
+                                            "pname": "工业、交通",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "工业、交通/信息产业（含电信）"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "公路",
+                                            "value": 226,
+                                            "pname": "工业、交通",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "工业、交通/公路"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "水运",
+                                            "value": 212,
+                                            "pname": "工业、交通",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "工业、交通/水运"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "铁路",
+                                            "value": 109,
+                                            "pname": "工业、交通",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "工业、交通/铁路"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "民航",
+                                            "value": 246,
+                                            "pname": "工业、交通",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "工业、交通/民航"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "邮政",
+                                            "value": 44,
+                                            "pname": "工业、交通",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "工业、交通/邮政"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "其他",
+                                            "value": 884,
+                                            "pname": "工业、交通",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "工业、交通/其他"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "chaxun": [
+                                        {
+                                            "name": "ztfl",
+                                            "value": "工业、交通"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "商贸、海关、旅游",
+                                    "value": 1473,
+                                    "children": [
+                                        {
+                                            "name": "对外经贸合作",
+                                            "value": 378,
+                                            "pname": "商贸、海关、旅游",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "商贸、海关、旅游/对外经贸合作"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国内贸易（含供销）",
+                                            "value": 130,
+                                            "pname": "商贸、海关、旅游",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "商贸、海关、旅游/国内贸易（含供销）"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "海关",
+                                            "value": 498,
+                                            "pname": "商贸、海关、旅游",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "商贸、海关、旅游/海关"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "检验、检疫",
+                                            "value": 15,
+                                            "pname": "商贸、海关、旅游",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "商贸、海关、旅游/检验、检疫"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "旅游",
+                                            "value": 235,
+                                            "pname": "商贸、海关、旅游",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "商贸、海关、旅游/旅游"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "其他",
+                                            "value": 215,
+                                            "pname": "商贸、海关、旅游",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "商贸、海关、旅游/其他"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "chaxun": [
+                                        {
+                                            "name": "ztfl",
+                                            "value": "商贸、海关、旅游"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "市场监管、安全生产监管",
+                                    "value": 972,
+                                    "children": [
+                                        {
+                                            "name": "工商",
+                                            "value": 129,
+                                            "pname": "市场监管、安全生产监管",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "市场监管、安全生产监管/工商"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "质量监督",
+                                            "value": 81,
+                                            "pname": "市场监管、安全生产监管",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "市场监管、安全生产监管/质量监督"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "标准",
+                                            "value": 79,
+                                            "pname": "市场监管、安全生产监管",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "市场监管、安全生产监管/标准"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "食品药品监管",
+                                            "value": 247,
+                                            "pname": "市场监管、安全生产监管",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "市场监管、安全生产监管/食品药品监管"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "安全生产监管",
+                                            "value": 131,
+                                            "pname": "市场监管、安全生产监管",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "市场监管、安全生产监管/安全生产监管"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "其他",
+                                            "value": 304,
+                                            "pname": "市场监管、安全生产监管",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "市场监管、安全生产监管/其他"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "chaxun": [
+                                        {
+                                            "name": "ztfl",
+                                            "value": "市场监管、安全生产监管"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "城乡建设、环境保护",
+                                    "value": 1391,
+                                    "children": [
+                                        {
+                                            "name": "城市规划",
+                                            "value": 256,
+                                            "pname": "城乡建设、环境保护",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "城乡建设、环境保护/城市规划"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "城乡建设（含住房）",
+                                            "value": 401,
+                                            "pname": "城乡建设、环境保护",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "城乡建设、环境保护/城乡建设（含住房）"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "环境监测、保护与治理",
+                                            "value": 379,
+                                            "pname": "城乡建设、环境保护",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "城乡建设、环境保护/环境监测、保护与治理"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "节能与资源综合利用",
+                                            "value": 82,
+                                            "pname": "城乡建设、环境保护",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "城乡建设、环境保护/节能与资源综合利用"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "气象、水文、测绘、地震",
+                                            "value": 86,
+                                            "pname": "城乡建设、环境保护",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "城乡建设、环境保护/气象、水文、测绘、地震"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "其他",
+                                            "value": 186,
+                                            "pname": "城乡建设、环境保护",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "城乡建设、环境保护/其他"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "chaxun": [
+                                        {
+                                            "name": "ztfl",
+                                            "value": "城乡建设、环境保护"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "科技、教育",
+                                    "value": 1650,
+                                    "children": [
+                                        {
+                                            "name": "科技",
+                                            "value": 376,
+                                            "pname": "科技、教育",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "科技、教育/科技"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "教育",
+                                            "value": 883,
+                                            "pname": "科技、教育",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "科技、教育/教育"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "知识产权",
+                                            "value": 333,
+                                            "pname": "科技、教育",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "科技、教育/知识产权"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "其他",
+                                            "value": 58,
+                                            "pname": "科技、教育",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "科技、教育/其他"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "chaxun": [
+                                        {
+                                            "name": "ztfl",
+                                            "value": "科技、教育"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "文化、广电、新闻出版",
+                                    "value": 477,
+                                    "children": [
+                                        {
+                                            "name": "文化",
+                                            "value": 160,
+                                            "pname": "文化、广电、新闻出版",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "文化、广电、新闻出版/文化"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "文物",
+                                            "value": 182,
+                                            "pname": "文化、广电、新闻出版",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "文化、广电、新闻出版/文物"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "新闻出版",
+                                            "value": 19,
+                                            "pname": "文化、广电、新闻出版",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "文化、广电、新闻出版/新闻出版"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "广播、电影、电视",
+                                            "value": 72,
+                                            "pname": "文化、广电、新闻出版",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "文化、广电、新闻出版/广播、电影、电视"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "其他",
+                                            "value": 43,
+                                            "pname": "文化、广电、新闻出版",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "文化、广电、新闻出版/其他"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "chaxun": [
+                                        {
+                                            "name": "ztfl",
+                                            "value": "文化、广电、新闻出版"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "卫生、体育",
+                                    "value": 1264,
+                                    "children": [
+                                        {
+                                            "name": "卫生",
+                                            "value": 522,
+                                            "pname": "卫生、体育",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "卫生、体育/卫生"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "医药管理",
+                                            "value": 376,
+                                            "pname": "卫生、体育",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "卫生、体育/医药管理"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "体育",
+                                            "value": 119,
+                                            "pname": "卫生、体育",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "卫生、体育/体育"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "其他",
+                                            "value": 245,
+                                            "pname": "卫生、体育",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "卫生、体育/其他"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "chaxun": [
+                                        {
+                                            "name": "ztfl",
+                                            "value": "卫生、体育"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "人口与计划生育、妇女儿童工作",
+                                    "value": 42,
+                                    "children": [
+                                        {
+                                            "name": "人口与计划生育",
+                                            "value": 13,
+                                            "pname": "人口与计划生育、妇女儿童工作",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "人口与计划生育、妇女儿童工作/人口与计划生育"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "妇女儿童",
+                                            "value": 26,
+                                            "pname": "人口与计划生育、妇女儿童工作",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "人口与计划生育、妇女儿童工作/妇女儿童"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "其他",
+                                            "value": 3,
+                                            "pname": "人口与计划生育、妇女儿童工作",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "人口与计划生育、妇女儿童工作/其他"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "chaxun": [
+                                        {
+                                            "name": "ztfl",
+                                            "value": "人口与计划生育、妇女儿童工作"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "劳动、人事、监察",
+                                    "value": 704,
+                                    "children": [
+                                        {
+                                            "name": "劳动就业",
+                                            "value": 261,
+                                            "pname": "劳动、人事、监察",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "劳动、人事、监察/劳动就业"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "社会保障",
+                                            "value": 142,
+                                            "pname": "劳动、人事、监察",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "劳动、人事、监察/社会保障"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "人事工作",
+                                            "value": 130,
+                                            "pname": "劳动、人事、监察",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "劳动、人事、监察/人事工作"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "军转安置",
+                                            "value": 11,
+                                            "pname": "劳动、人事、监察",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "劳动、人事、监察/军转安置"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "监察",
+                                            "value": 14,
+                                            "pname": "劳动、人事、监察",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "劳动、人事、监察/监察"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "纠正行业不正之风",
+                                            "value": 20,
+                                            "pname": "劳动、人事、监察",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "劳动、人事、监察/纠正行业不正之风"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "其他",
+                                            "value": 126,
+                                            "pname": "劳动、人事、监察",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "劳动、人事、监察/其他"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "chaxun": [
+                                        {
+                                            "name": "ztfl",
+                                            "value": "劳动、人事、监察"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "公安、安全、司法",
+                                    "value": 354,
+                                    "children": [
+                                        {
+                                            "name": "公安",
+                                            "value": 170,
+                                            "pname": "公安、安全、司法",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "公安、安全、司法/公安"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家安全",
+                                            "value": 5,
+                                            "pname": "公安、安全、司法",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "公安、安全、司法/国家安全"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "司法",
+                                            "value": 140,
+                                            "pname": "公安、安全、司法",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "公安、安全、司法/司法"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "其他",
+                                            "value": 39,
+                                            "pname": "公安、安全、司法",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "公安、安全、司法/其他"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "chaxun": [
+                                        {
+                                            "name": "ztfl",
+                                            "value": "公安、安全、司法"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "民政、扶贫、救灾",
+                                    "value": 588,
+                                    "children": [
+                                        {
+                                            "name": "减灾救灾",
+                                            "value": 46,
+                                            "pname": "民政、扶贫、救灾",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "民政、扶贫、救灾/减灾救灾"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "优抚安置",
+                                            "value": 69,
+                                            "pname": "民政、扶贫、救灾",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "民政、扶贫、救灾/优抚安置"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "社会福利",
+                                            "value": 68,
+                                            "pname": "民政、扶贫、救灾",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "民政、扶贫、救灾/社会福利"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "行政区划与地名",
+                                            "value": 102,
+                                            "pname": "民政、扶贫、救灾",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "民政、扶贫、救灾/行政区划与地名"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "社团管理",
+                                            "value": 40,
+                                            "pname": "民政、扶贫、救灾",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "民政、扶贫、救灾/社团管理"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "扶贫",
+                                            "value": 66,
+                                            "pname": "民政、扶贫、救灾",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "民政、扶贫、救灾/扶贫"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "其他",
+                                            "value": 197,
+                                            "pname": "民政、扶贫、救灾",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "民政、扶贫、救灾/其他"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "chaxun": [
+                                        {
+                                            "name": "ztfl",
+                                            "value": "民政、扶贫、救灾"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "民族、宗教",
+                                    "value": 53,
+                                    "children": [
+                                        {
+                                            "name": "民族事务",
+                                            "value": 36,
+                                            "pname": "民族、宗教",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "民族、宗教/民族事务"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "宗教事务",
+                                            "value": 17,
+                                            "pname": "民族、宗教",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "民族、宗教/宗教事务"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "chaxun": [
+                                        {
+                                            "name": "ztfl",
+                                            "value": "民族、宗教"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "对外事务",
+                                    "value": 64,
+                                    "children": [
+                                        {
+                                            "name": "外交、外事",
+                                            "value": 41,
+                                            "pname": "对外事务",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "对外事务/外交、外事"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国际条约、国际组织",
+                                            "value": 14,
+                                            "pname": "对外事务",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "对外事务/国际条约、国际组织"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "其他",
+                                            "value": 9,
+                                            "pname": "对外事务",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "对外事务/其他"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "chaxun": [
+                                        {
+                                            "name": "ztfl",
+                                            "value": "对外事务"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "港澳台侨工作",
+                                    "value": 52,
+                                    "children": [
+                                        {
+                                            "name": "港澳工作",
+                                            "value": 47,
+                                            "pname": "港澳台侨工作",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "港澳台侨工作/港澳工作"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "对台工作",
+                                            "value": 3,
+                                            "pname": "港澳台侨工作",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "港澳台侨工作/对台工作"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "侨务工作",
+                                            "value": 2,
+                                            "pname": "港澳台侨工作",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "港澳台侨工作/侨务工作"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "chaxun": [
+                                        {
+                                            "name": "ztfl",
+                                            "value": "港澳台侨工作"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "国防",
+                                    "value": 61,
+                                    "children": [
+                                        {
+                                            "name": "国防建设",
+                                            "value": 57,
+                                            "pname": "国防",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "国防/国防建设"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国防动员",
+                                            "value": 4,
+                                            "pname": "国防",
+                                            "chaxun": [
+                                                {
+                                                    "name": "ztfl",
+                                                    "value": "国防/国防动员"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "chaxun": [
+                                        {
+                                            "name": "ztfl",
+                                            "value": "国防"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "其他",
+                                    "value": 56,
+                                    "children": null,
+                                    "chaxun": null
+                                }
+                            ],
+                            "chaxun": []
+                        },
+                        {
+                            "name": "按发布机构分类",
+                            "value": 18680,
+                            "children": [
+                                {
+                                    "name": "国务院文件",
+                                    "value": 6178,
+                                    "children": [
+                                        {
+                                            "name": "国令",
+                                            "value": 468,
+                                            "pname": "国务院文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "wz",
+                                                    "value": "国令"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国发",
+                                            "value": 1260,
+                                            "pname": "国务院文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "wz",
+                                                    "value": "国发"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国函",
+                                            "value": 1496,
+                                            "pname": "国务院文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "wz",
+                                                    "value": "国函"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国发明电",
+                                            "value": 22,
+                                            "pname": "国务院文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "wz",
+                                                    "value": "国发明电"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国办发",
+                                            "value": 2036,
+                                            "pname": "国务院文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "wz",
+                                                    "value": "国办发"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国办函",
+                                            "value": 861,
+                                            "pname": "国务院文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "wz",
+                                                    "value": "国办函"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国办发明电",
+                                            "value": 81,
+                                            "pname": "国务院文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "wz",
+                                                    "value": "国办发明电"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "其他",
+                                            "value": 53,
+                                            "pname": "国务院文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "wz",
+                                                    "value": "其他"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "chaxun": [
+                                        {
+                                            "name": "labelTypeNames",
+                                            "value": "gwywj"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "国务院部门文件",
+                                    "value": 12502,
+                                    "children": [
+                                        {
+                                            "name": "外交部",
+                                            "value": 24,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "外交部"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家发展和改革委员会",
+                                            "value": 1540,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家发展和改革委员会"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "教育部",
+                                            "value": 1149,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "教育部"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "科学技术部",
+                                            "value": 453,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "科学技术部"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "工业和信息化部",
+                                            "value": 1350,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "工业和信息化部"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家民族事务委员会",
+                                            "value": 45,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家民族事务委员会"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "公安部",
+                                            "value": 390,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "公安部"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家安全部",
+                                            "value": 8,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家安全部"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "民政部",
+                                            "value": 488,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "民政部"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "司法部",
+                                            "value": 141,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "司法部"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "财政部",
+                                            "value": 2167,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "财政部"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "人力资源和社会保障部",
+                                            "value": 770,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "人力资源和社会保障部"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "自然资源部",
+                                            "value": 622,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "自然资源部"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "生态环境部",
+                                            "value": 512,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "生态环境部"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "住房和城乡建设部",
+                                            "value": 795,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "住房和城乡建设部"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "交通运输部",
+                                            "value": 1079,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "交通运输部"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "水利部",
+                                            "value": 305,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "水利部"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "农业农村部",
+                                            "value": 1399,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "农业农村部"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "商务部",
+                                            "value": 632,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "商务部"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "文化和旅游部",
+                                            "value": 479,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "文化和旅游部"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家卫生健康委员会",
+                                            "value": 934,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家卫生健康委员会"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "退役军人事务部",
+                                            "value": 56,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "退役军人事务部"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "应急管理部",
+                                            "value": 231,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "应急管理部"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "中国人民银行",
+                                            "value": 413,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "中国人民银行"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "审计署",
+                                            "value": 30,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "审计署"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家语言文字工作委员会",
+                                            "value": 6,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家语言文字工作委员会"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家航天局",
+                                            "value": 3,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家航天局"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家原子能机构",
+                                            "value": 1,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家原子能机构"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家核安全局",
+                                            "value": 7,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家核安全局"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家乡村振兴局",
+                                            "value": 112,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家乡村振兴局"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国务院国有资产监督管理委员会",
+                                            "value": 229,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国务院国有资产监督管理委员会"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "海关总署",
+                                            "value": 529,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "海关总署"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家税务总局",
+                                            "value": 786,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家税务总局"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家市场监督管理总局",
+                                            "value": 989,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家市场监督管理总局"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家金融监督管理总局",
+                                            "value": 655,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家金融监督管理总局"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "中国证券监督管理委员会",
+                                            "value": 317,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "中国证券监督管理委员会"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家广播电视总局",
+                                            "value": 163,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家广播电视总局"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家体育总局",
+                                            "value": 170,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家体育总局"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家信访局",
+                                            "value": 6,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家信访局"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家统计局",
+                                            "value": 70,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家统计局"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家知识产权局",
+                                            "value": 376,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家知识产权局"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家国际发展合作署",
+                                            "value": 11,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家国际发展合作署"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家医疗保障局",
+                                            "value": 296,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家医疗保障局"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家机关事务管理局",
+                                            "value": 56,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家机关事务管理局"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家认证认可监督管理委员会",
+                                            "value": 17,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家认证认可监督管理委员会"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家标准化管理委员会",
+                                            "value": 56,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家标准化管理委员会"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家新闻出版署",
+                                            "value": 14,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家新闻出版署"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家版权局",
+                                            "value": 10,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家版权局"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家宗教事务局",
+                                            "value": 11,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家宗教事务局"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国务院台湾事务办公室",
+                                            "value": 2,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国务院台湾事务办公室"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家互联网信息办公室",
+                                            "value": 138,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家互联网信息办公室"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "中国科学院",
+                                            "value": 39,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "中国科学院"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "中国社会科学院",
+                                            "value": 6,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "中国社会科学院"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "中国工程院",
+                                            "value": 18,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "中国工程院"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "中国气象局",
+                                            "value": 61,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "中国气象局"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家粮食和物资储备局",
+                                            "value": 108,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家粮食和物资储备局"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家能源局",
+                                            "value": 429,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家能源局"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家数据局",
+                                            "value": 45,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家数据局"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家国防科技工业局",
+                                            "value": 24,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家国防科技工业局"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家烟草专卖局",
+                                            "value": 59,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家烟草专卖局"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家移民管理局",
+                                            "value": 46,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家移民管理局"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家林业和草原局",
+                                            "value": 282,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家林业和草原局"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家铁路局",
+                                            "value": 125,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家铁路局"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "中国民用航空局",
+                                            "value": 172,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "中国民用航空局"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家邮政局",
+                                            "value": 88,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家邮政局"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家文物局",
+                                            "value": 187,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家文物局"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家中医药管理局",
+                                            "value": 293,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家中医药管理局"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家疾病预防控制局",
+                                            "value": 79,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家疾病预防控制局"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家矿山安全监察局",
+                                            "value": 118,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家矿山安全监察局"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家消防救援局",
+                                            "value": 19,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家消防救援局"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家外汇管理局",
+                                            "value": 105,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家外汇管理局"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家药品监督管理局",
+                                            "value": 306,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家药品监督管理局"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家公务员局",
+                                            "value": 4,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家公务员局"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家档案局",
+                                            "value": 15,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家档案局"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家保密局",
+                                            "value": 5,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家保密局"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家密码管理局",
+                                            "value": 16,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家密码管理局"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "国家电影局",
+                                            "value": 8,
+                                            "pname": "国务院部门文件",
+                                            "chaxun": [
+                                                {
+                                                    "name": "fwjg",
+                                                    "value": "国家电影局"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "chaxun": [
+                                        {
+                                            "name": "labelTypeNames",
+                                            "value": "bmwj"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "chaxun": []
+                        },
+                        {
+                            "name": "解读",
+                            "value": 13590,
+                            "children": [],
+                            "chaxun": [
+                                {
+                                    "name": "labelTypeNames",
+                                    "value": "zcjd"
+                                }
+                            ]
+                        }
+                    ]
+                ],
+                "chaxun": [
+                    {
+                        "name": "database",
+                        "value": "002"
+                    }
+                ]
+            }
+        ],
+        "documents": [
+            {
+                "c_fwjg": "解读",
+                "title": "跨省共济，让医保个账资金成为“家庭健康金”（政策解读·问答）",
+                "list": [
+                    {
+                        "name": "标题",
+                        "value": "跨省共济，让医保个账资金成为“家庭健康金”（政策解读·问答）",
+                        "show": "false"
+                    },
+                    {
+                        "name": "发布时间",
+                        "value": "2026-06-10",
+                        "show": "true"
+                    }
+                ],
+                "content": "国家医保局、财政部近日印发《职工基本医疗保险个人账户跨省共济经办规程（试行）》，其中包含了诸多跨省共济操作层面的实用信息，意味着跨省共济全面覆盖的步伐正在加快。跨省共济对象有哪些？共济关系如何建立和解除？共济额度如何使用？围绕这些问题，记者采访了国家医保局相关负责人。问：什么是跨省共济？适用对象包括哪些人？答：职工基本医疗保险个人账户跨省共济，是指依托全国统一的医保信息平台设立个人医保钱包，设定共济额度，实现职工个人账户资金按规定支付近亲属在定点医药机构就医、购药发生的个人负担费用，以及参保缴费。跨省共济的适用对象范围为职工基本医疗保险参保人的近亲属，被共济人应为基本医疗保险（包括职工基本医疗保险和城乡居民基本医疗保险）的参保对象。近亲属包括配偶、父母、子女、兄弟姐妹、祖父母、外祖父母、孙子女及外孙子女。问：如何建立或解除共济关系？答：参保人可通过国家医保服务平台应用程序、省级医保服务平台、参保地医保经办机构窗口等多种渠道建立或解除共济关系。建立共济关系时共济人应签署承诺书，对承诺事项真实性、准确性负责。一个共济人可与多个近亲属建立共济关系，一个被共济人也可以接受多个近亲属共济。共济关系建立期间，共济人与被共济人均可自主办理解除。共济人或被共济人的医保关系终止或发生跨统筹地区转移的，共济关系自动解除。问：共济额度管理有哪些规定？解除共济关系，未用额度能退回吗？答：个人医保钱包实行虚拟额度管理。共济人通过医保钱包为被共济人设定共济额度，共济人不能再使用该额度的个人账户资金。被共济人不得将获得的共济额度再共济给第三人。被共济人发生符合规定的费用，可共济结算。根据现实情况，共济额度没有实施全国统一管理。各省份可结合实际情况设定共济额度转出频次和限额，规范基金管理。各省份可明确个人账户与医保钱包支付顺序。被共济人使用医保钱包额度时，按照共济额度设定先后顺序使用。通过国家医保服务平台应用程序、省级医保服务平台以及医保经办机构窗口等渠道解除共济关系时，被共济人尚未使用的共济额度自动恢复至共济人个人账户。共济关系解除后，被共济人发生退费的，未使用的共济金额按原渠道返回，因共济人参保关系发生变化（如转移接续、中断参保、一次性支取等）等原因无法退回共济人个人账户的，由共济人建立共济关系时的参保地按规定处理。问：共济额度可以用在哪些方面？答：被共济人在定点医疗机构就医发生的个人负担医疗费用，在定点零售药店购买符合规定的药品、医疗器械、医用耗材发生的个人负担费用，可使用共济额度支付。被共济人缴纳参加城乡居民基本医疗保险、长期护理保险个人缴费部分，可使用共济额度支付，且须全额支付。（记者 孙秀艳）",
+                "content_html": "<div class=\"trs_editor_view TRS_UEDITOR trs_paper_default trs_web\"><p style=\"text-indent: 2em;\">国家医保局、财政部近日印发《职工基本医疗保险个人账户跨省共济经办规程（试行）》，其中包含了诸多跨省共济操作层面的实用信息，意味着跨省共济全面覆盖的步伐正在加快。跨省共济对象有哪些？共济关系如何建立和解除？共济额度如何使用？围绕这些问题，记者采访了国家医保局相关负责人。</p><p style=\"text-indent: 2em;\"><strong>问：什么是跨省共济？适用对象包括哪些人？</strong></p><p style=\"text-indent: 2em;\">答：职工基本医疗保险个人账户跨省共济，是指依托全国统一的医保信息平台设立个人医保钱包，设定共济额度，实现职工个人账户资金按规定支付近亲属在定点医药机构就医、购药发生的个人负担费用，以及参保缴费。</p><p style=\"text-indent: 2em;\">跨省共济的适用对象范围为职工基本医疗保险参保人的近亲属，被共济人应为基本医疗保险（包括职工基本医疗保险和城乡居民基本医疗保险）的参保对象。近亲属包括配偶、父母、子女、兄弟姐妹、祖父母、外祖父母、孙子女及外孙子女。</p><p style=\"text-indent: 2em;\"><strong>问：如何建立或解除共济关系？</strong></p><p style=\"text-indent: 2em;\">答：参保人可通过国家医保服务平台应用程序、省级医保服务平台、参保地医保经办机构窗口等多种渠道建立或解除共济关系。建立共济关系时共济人应签署承诺书，对承诺事项真实性、准确性负责。一个共济人可与多个近亲属建立共济关系，一个被共济人也可以接受多个近亲属共济。共济关系建立期间，共济人与被共济人均可自主办理解除。共济人或被共济人的医保关系终止或发生跨统筹地区转移的，共济关系自动解除。</p><p style=\"text-indent: 2em;\"><strong>问：共济额度管理有哪些规定？解除共济关系，未用额度能退回吗？</strong></p><p style=\"text-indent: 2em;\">答：个人医保钱包实行虚拟额度管理。共济人通过医保钱包为被共济人设定共济额度，共济人不能再使用该额度的个人账户资金。被共济人不得将获得的共济额度再共济给第三人。被共济人发生符合规定的费用，可共济结算。</p><p style=\"text-indent: 2em;\">根据现实情况，共济额度没有实施全国统一管理。各省份可结合实际情况设定共济额度转出频次和限额，规范基金管理。各省份可明确个人账户与医保钱包支付顺序。被共济人使用医保钱包额度时，按照共济额度设定先后顺序使用。</p><p style=\"text-indent: 2em;\">通过国家医保服务平台应用程序、省级医保服务平台以及医保经办机构窗口等渠道解除共济关系时，被共济人尚未使用的共济额度自动恢复至共济人个人账户。共济关系解除后，被共济人发生退费的，未使用的共济金额按原渠道返回，因共济人参保关系发生变化（如转移接续、中断参保、一次性支取等）等原因无法退回共济人个人账户的，由共济人建立共济关系时的参保地按规定处理。</p><p style=\"text-indent: 2em;\"><strong>问：共济额度可以用在哪些方面？</strong></p><p style=\"text-indent: 2em;\">答：被共济人在定点医疗机构就医发生的个人负担医疗费用，在定点零售药店购买符合规定的药品、医疗器械、医用耗材发生的个人负担费用，可使用共济额度支付。被共济人缴纳参加城乡居民基本医疗保险、长期护理保险个人缴费部分，可使用共济额度支付，且须全额支付。（记者 孙秀艳）</p></div>"
+            },
+            {
+                "c_fwjg": "国务院部门",
+                "title": "交通运输部等十部门关于印发《促进小微型客车租赁高质量发展三年行动方案（2026—2028年）》的通知",
+                "list": [
+                    {
+                        "name": "标题",
+                        "value": "交通运输部等十部门关于印发《促进小微型客车租赁高质量发展三年行动方案（2026—2028年）》的通知",
+                        "show": "false"
+                    },
+                    {
+                        "name": "发文机关",
+                        "value": "交通运输部等",
+                        "show": "true"
+                    },
+                    {
+                        "name": "主题分类",
+                        "value": "工业、交通/其他",
+                        "show": "true"
+                    },
+                    {
+                        "name": "成文日期",
+                        "value": "2026-06-01 16:00:00",
+                        "show": "true"
+                    },
+                    {
+                        "name": "发布时间",
+                        "value": "2026-06-07",
+                        "show": "true"
+                    }
+                ],
+                "content": "交通运输部等十部门关于印发《促进小微型客车租赁高质量发展三年行动方案（2026—2028年）》的通知交运发〔2026〕53号各省、自治区、直辖市、新疆生产建设兵团交通运输厅（局、委）、发展改革委、公安厅（局）、商务厅（委、局）、文化和旅游厅（局）、市场监管局（厅、委），各金融监管局，各地区铁路监管局，民航各地区管理局，各铁路局集团公司：现将《促进小微型客车租赁高质量发展三年行动方案（2026—2028年）》印发给你们。请结合实际，抓好贯彻落实。交通运输部 国家发展改革委 公安部商务部 文化和旅游部 市场监管总局金融监管总局 国家铁路局 中国民用航空局中国国家铁路集团有限公司2026年6月1日（此件公开发布）促进小微型客车租赁高质量发展三年行动方案（2026—2028年）小微型客车租赁是公众出行的重要方式，是激发消费潜能、培育壮大服务消费的重点领域。为贯彻落实党中央、国务院关于提振消费的决策部署，促进小微型客车租赁高质量发展，制定如下行动方案。一、总体要求以习近平新时代中国特色社会主义思想为指导，深入贯彻党的二十大和二十届历次全会精神，坚持“市场主导、政府引导，用户为本、安全至上，创新服务、融合发展”原则，着力完善小微型客车租赁服务网络，提高服务能力和品质，加快构建规范有序、安全便捷、绿色智慧、富有活力的小微型客车租赁市场体系，推动小微型客车租赁行业高质量发展，更好满足人民群众多样化、高品质出行需求，为扩内需、促消费提供新场景、新动能，服务加快建设交通强国。力争到2028年，推动建成布局合理、便捷高效、安全优质的小微型客车租赁服务网络，实现民航机场、高铁车站网点覆盖，引导重点省域及热门线路沿线免费或低费异地还车，“高铁/民航+落地租车”模式基本普及，数智化服务全面推广，小微型客车租赁成为群众自驾出行的重要选择。二、完善租赁服务网络（一）推进客运枢纽租赁服务覆盖。有序推动民航机场、高铁车站租赁网点覆盖，具备条件的年吞吐量100万人次以上民航机场、二等及以上高铁车站设置租赁服务网点，加快发展“高铁/民航+落地租车”服务。通过设置自助取还车点、提供枢纽取还车服务、提供枢纽至门店摆渡接驳服务等方式，力争实现民航机场、高铁车站租赁服务覆盖。督促民航机场、高铁车站按照相关标准，规范设置租赁服务导向标识。（二）完善重点区域租赁网点布局。推进在京津冀、长三角、粤港澳大湾区、成渝地区双城经济圈等城市群和5A级旅游景区所在地，依托城市交通枢纽、租赁服务网点、景区旅游服务中心等，为旅客提供租车咨询、车辆取还、异地还车、车辆查验等一站式服务。支持小微型客车租赁企业（以下简称租赁企业）结合旅游资源、精品自驾旅游公路等，科学设置租赁服务网点。（三）完善停车充电等配套服务设施。鼓励租赁企业投放新能源汽车。加快推动高速公路服务区充电设施建设，2028年底前高速公路服务区（含停车区）新建改建60千瓦以上功率电动汽车充电设施（充电枪）3万个，围绕旅游公路、国省干线、“四好农村路”等规划布局充换电设施。引导民航机场、高铁车站、汽车客运站等与租赁企业加强合作，为租赁车辆停放和充电提供便利。三、提高租赁服务便利化水平（四）扩大免费异地还车服务供给。支持租赁企业优化资源配置，加强信息共享，到2028年底前实现重点旅游地区、京津冀、长三角、粤港澳大湾区、成渝地区双城经济圈等城市群免费异地还车。依托行业协会等探索建立跨区域租赁企业合作联盟，推动联盟内企业间共享资源，提供免费异地还车服务。推动租赁车辆备案信息跨区域互认，满足异地还车服务需求，2027年底前实现租赁车辆“一地备案、省内通用”，2028年底前实现京津冀、长三角、粤港澳大湾区、成渝地区双城经济圈等城市群租赁车辆备案互认。（五）优化租车便民举措。优化承租人机动车驾驶证线上查验流程，有序推动承租人身份信息与机动车驾驶证信息“一号查验”。优化道路交通安全违法行为处理流程，推动租赁车辆交通违法处理等便利举措落地。引导租赁企业和电商平台全面推行“信用免押租车”、上门取送车、“无车免费升级”等便民服务。支持租赁企业利用人工智能、物联网等技术，优化车辆动态调配机制，提供车型智能推荐、VR看车、全流程无接触自助取还车等服务。优化外籍承租人证件信息查验，鼓励市场服务主体提供多样化支付方式，提升外籍来华人员支付便利性。引导重点租赁企业在线上租车APP增加“一键救援”功能，2027年底前实现重点企业全覆盖。四、规范租赁市场秩序（六）规范企业经营行为。制定推广租赁合同示范文本，明确承租双方权利义务、押金退还、事故和违章处理、违约责任等事项，严厉打击“天价定损”等侵害消费者合法权益行为。引导租赁企业健全完善出车必检、定期维保、故障救援等安全管理制度，确保租赁车辆安全、卫生状况良好。加强租赁电商平台监管，督促电商平台严格落实资质资格审核义务。充分发挥12328、12345等热线电话作用，畅通消费者投诉渠道；引导租赁企业公开客服热线及线上投诉渠道，鼓励实行24小时在线服务。（七）建立完善信用体系。制定小微型客车租赁企业服务质量信用评价管理办法，明确评价指标和评价流程。强化交通运输信用体系应用，定期公布租赁企业投诉率、服务满意度等情况，完善租赁企业和承租人奖惩机制。推动依法共享承租人逾期未处理交通违法、恶意拆解和变卖租赁车辆等不良行为信息，联合抵制不良承租行为。严厉打击恶意骗租、抵押、变卖租赁车辆等违法行为。五、拓展租赁市场空间（八）加大金融保险支持。科学厘定租赁车辆保险基准费率，引导保险企业优化保险服务供给。加大“车险好投保”平台宣传力度，鼓励汽车企业强化安全和维修经济性管理，推动解决新能源车辆投保难问题。引导融资租赁企业与租赁企业合作，综合采取融资支持等措施，培育壮大经营主体。（九）促进租赁与旅游融合发展。充分衔接精品自驾旅游公路布局，完善沿线租车服务网络，推动沿线城市免费异地还车服务，加强应急救援服务体系建设，建立车辆故障应急置换机制。支持租赁企业与旅行社、景区、酒店、民宿等开展市场化合作，推出“租赁+门票”“租赁+酒店”等一站式服务产品，为承租人提供线路推荐、行程策划等多元化服务。鼓励租赁企业拓展服务链条，一站式提供自驾游沿线景区景点、地理人文、取还车网点、停车充电、应急救援等信息服务。（十）促进租赁与汽车产业融合发展。充分发挥行业协会作用，引导中小型租赁企业抱团集采，共享汽车生产企业合作资源与优惠政策。引导租赁企业与汽车生产企业建立车辆批量采购和回购机制，通过参股、合作经营等方式深化合作，积极开展新车联合营销、深度试驾体验等业务。支持具备条件的租赁企业开展二手车出口经营活动，加快租赁车辆更新，积极打造“租赁汽车转出口”模式。支持租赁企业拓展汽车维修等汽车后市场服务。六、营造良好发展环境（十一）完善租赁法规政策体系。在《道路运输条例》修订中研究论证将小微型客车租赁管理纳入条例予以规范。研究修订《小微型客车租赁经营服务管理办法》，优化完善相关制度要求。修订《道路交通管理 机动车类型》等标准，优化租赁车辆使用性质。（十二）强化市场运行监测。充分利用信息技术手段，建立完善租赁市场运行监测体系。建立重点企业联系制度，加强车型结构、车辆数量、租赁价格、订单数量等监测分析，动态掌握行业运行情况。强化节假日期间重点城市租赁市场监测预警。（十三）加强宣传引导。聚焦高校学生、银发人群等重点群体，组织开展针对性宣传推介活动，积极培育租车消费理念。鼓励租赁企业结合地方特色开发租车出行主题文创产品，创新宣传方式，加强品牌转化。重大节假日期间，综合采取新闻报道、专题专栏、公益广告、短视频、网络直播等形式，全方位、多角度、立体化开展租车出行宣传，营造良好舆论氛围。各地各有关部门要切实加强组织领导，强化跨部门协同配合，共同推动解决小微型客车租赁发展面临的新情况新问题，加强典型经验总结推广，加快推动小微型客车租赁行业高质量发展。",
+                "content_html": "<div class=\"trs_editor_view TRS_UEDITOR trs_paper_default trs_web\"><p label=\"居中对齐\" style=\"text-align: center; text-indent: 0em;\"><span data-index=\"5\" style=\"font-size: 24px;\"><strong>交通运输部等十部门关于印发《促进小微型客车租赁高质量发展三年行动方案（2026—2028年）》的通知</strong></span><br/><span style=\"font-family: 楷体, SimKai;\">交运发〔2026〕53号</span></p><p style=\"text-indent: 0em;\">各省、自治区、直辖市、新疆生产建设兵团交通运输厅（局、委）、发展改革委、公安厅（局）、商务厅（委、局）、文化和旅游厅（局）、市场监管局（厅、委），各金融监管局，各地区铁路监管局，民航各地区管理局，各铁路局集团公司：</p><p style=\"text-indent: 2em;\">现将《促进小微型客车租赁高质量发展三年行动方案（2026—2028年）》印发给你们。请结合实际，抓好贯彻落实。</p><p label=\"右对齐\" style=\"text-indent: 0em; text-align: right;\">交通运输部 国家发展改革委 公安部<br/><span style=\"text-indent: 0em;\">商务部</span><span style=\"text-indent: 0em;\"> </span><span style=\"text-indent: 0em;\">文化和旅游部</span><span style=\"text-indent: 0em;\"> </span><span style=\"text-indent: 0em;\">市场监管总局<br/></span><span style=\"text-indent: 0em;\">金融监管总局</span><span style=\"text-indent: 0em;\"> </span><span style=\"text-indent: 0em;\">国家铁路局</span><span style=\"text-indent: 0em;\"> </span><span style=\"text-indent: 0em;\">中国民用航空局<br/></span><span style=\"text-indent: 0em;\">中国国家铁路集团有限公司<br/></span><span style=\"text-indent: 0em;\">2026年6月1日</span></p><p style=\"text-indent: 2em;\">（此件公开发布）</p><p label=\"居中对齐\" style=\"text-align: center; text-indent: 0em;\"><span data-index=\"5\" style=\"font-size: 24px;\"><strong>促进小微型客车租赁高质量发展三年行动方案（2026—2028年）</strong></span></p><p style=\"text-indent: 2em;\">小微型客车租赁是公众出行的重要方式，是激发消费潜能、培育壮大服务消费的重点领域。为贯彻落实党中央、国务院关于提振消费的决策部署，促进小微型客车租赁高质量发展，制定如下行动方案。</p><p style=\"text-indent: 2em;\"><strong>一、总体要求</strong></p><p style=\"text-indent: 2em;\">以习近平新时代中国特色社会主义思想为指导，深入贯彻党的二十大和二十届历次全会精神，坚持“市场主导、政府引导，用户为本、安全至上，创新服务、融合发展”原则，着力完善小微型客车租赁服务网络，提高服务能力和品质，加快构建规范有序、安全便捷、绿色智慧、富有活力的小微型客车租赁市场体系，推动小微型客车租赁行业高质量发展，更好满足人民群众多样化、高品质出行需求，为扩内需、促消费提供新场景、新动能，服务加快建设交通强国。</p><p style=\"text-indent: 2em;\">力争到2028年，推动建成布局合理、便捷高效、安全优质的小微型客车租赁服务网络，实现民航机场、高铁车站网点覆盖，引导重点省域及热门线路沿线免费或低费异地还车，“高铁/民航+落地租车”模式基本普及，数智化服务全面推广，小微型客车租赁成为群众自驾出行的重要选择。</p><p style=\"text-indent: 2em;\"><strong>二、完善租赁服务网络</strong></p><p style=\"text-indent: 2em;\">（一）推进客运枢纽租赁服务覆盖。有序推动民航机场、高铁车站租赁网点覆盖，具备条件的年吞吐量100万人次以上民航机场、二等及以上高铁车站设置租赁服务网点，加快发展“高铁/民航+落地租车”服务。通过设置自助取还车点、提供枢纽取还车服务、提供枢纽至门店摆渡接驳服务等方式，力争实现民航机场、高铁车站租赁服务覆盖。督促民航机场、高铁车站按照相关标准，规范设置租赁服务导向标识。</p><p style=\"text-indent: 2em;\">（二）完善重点区域租赁网点布局。推进在京津冀、长三角、粤港澳大湾区、成渝地区双城经济圈等城市群和5A级旅游景区所在地，依托城市交通枢纽、租赁服务网点、景区旅游服务中心等，为旅客提供租车咨询、车辆取还、异地还车、车辆查验等一站式服务。支持小微型客车租赁企业（以下简称租赁企业）结合旅游资源、精品自驾旅游公路等，科学设置租赁服务网点。</p><p style=\"text-indent: 2em;\">（三）完善停车充电等配套服务设施。鼓励租赁企业投放新能源汽车。加快推动高速公路服务区充电设施建设，2028年底前高速公路服务区（含停车区）新建改建60千瓦以上功率电动汽车充电设施（充电枪）3万个，围绕旅游公路、国省干线、“四好农村路”等规划布局充换电设施。引导民航机场、高铁车站、汽车客运站等与租赁企业加强合作，为租赁车辆停放和充电提供便利。</p><p style=\"text-indent: 2em;\"><strong>三、提高租赁服务便利化水平</strong></p><p style=\"text-indent: 2em;\">（四）扩大免费异地还车服务供给。支持租赁企业优化资源配置，加强信息共享，到2028年底前实现重点旅游地区、京津冀、长三角、粤港澳大湾区、成渝地区双城经济圈等城市群免费异地还车。依托行业协会等探索建立跨区域租赁企业合作联盟，推动联盟内企业间共享资源，提供免费异地还车服务。推动租赁车辆备案信息跨区域互认，满足异地还车服务需求，2027年底前实现租赁车辆“一地备案、省内通用”，2028年底前实现京津冀、长三角、粤港澳大湾区、成渝地区双城经济圈等城市群租赁车辆备案互认。</p><p style=\"text-indent: 2em;\">（五）优化租车便民举措。优化承租人机动车驾驶证线上查验流程，有序推动承租人身份信息与机动车驾驶证信息“一号查验”。优化道路交通安全违法行为处理流程，推动租赁车辆交通违法处理等便利举措落地。引导租赁企业和电商平台全面推行“信用免押租车”、上门取送车、“无车免费升级”等便民服务。支持租赁企业利用人工智能、物联网等技术，优化车辆动态调配机制，提供车型智能推荐、VR看车、全流程无接触自助取还车等服务。优化外籍承租人证件信息查验，鼓励市场服务主体提供多样化支付方式，提升外籍来华人员支付便利性。引导重点租赁企业在线上租车APP增加“一键救援”功能，2027年底前实现重点企业全覆盖。</p><p style=\"text-indent: 2em;\"><strong>四、规范租赁市场秩序</strong></p><p style=\"text-indent: 2em;\">（六）规范企业经营行为。制定推广租赁合同示范文本，明确承租双方权利义务、押金退还、事故和违章处理、违约责任等事项，严厉打击“天价定损”等侵害消费者合法权益行为。引导租赁企业健全完善出车必检、定期维保、故障救援等安全管理制度，确保租赁车辆安全、卫生状况良好。加强租赁电商平台监管，督促电商平台严格落实资质资格审核义务。充分发挥12328、12345等热线电话作用，畅通消费者投诉渠道；引导租赁企业公开客服热线及线上投诉渠道，鼓励实行24小时在线服务。</p><p style=\"text-indent: 2em;\">（七）建立完善信用体系。制定小微型客车租赁企业服务质量信用评价管理办法，明确评价指标和评价流程。强化交通运输信用体系应用，定期公布租赁企业投诉率、服务满意度等情况，完善租赁企业和承租人奖惩机制。推动依法共享承租人逾期未处理交通违法、恶意拆解和变卖租赁车辆等不良行为信息，联合抵制不良承租行为。严厉打击恶意骗租、抵押、变卖租赁车辆等违法行为。</p><p style=\"text-indent: 2em;\"><strong>五、拓展租赁市场空间</strong></p><p style=\"text-indent: 2em;\">（八）加大金融保险支持。科学厘定租赁车辆保险基准费率，引导保险企业优化保险服务供给。加大“车险好投保”平台宣传力度，鼓励汽车企业强化安全和维修经济性管理，推动解决新能源车辆投保难问题。引导融资租赁企业与租赁企业合作，综合采取融资支持等措施，培育壮大经营主体。</p><p style=\"text-indent: 2em;\">（九）促进租赁与旅游融合发展。充分衔接精品自驾旅游公路布局，完善沿线租车服务网络，推动沿线城市免费异地还车服务，加强应急救援服务体系建设，建立车辆故障应急置换机制。支持租赁企业与旅行社、景区、酒店、民宿等开展市场化合作，推出“租赁+门票”“租赁+酒店”等一站式服务产品，为承租人提供线路推荐、行程策划等多元化服务。鼓励租赁企业拓展服务链条，一站式提供自驾游沿线景区景点、地理人文、取还车网点、停车充电、应急救援等信息服务。</p><p style=\"text-indent: 2em;\">（十）促进租赁与汽车产业融合发展。充分发挥行业协会作用，引导中小型租赁企业抱团集采，共享汽车生产企业合作资源与优惠政策。引导租赁企业与汽车生产企业建立车辆批量采购和回购机制，通过参股、合作经营等方式深化合作，积极开展新车联合营销、深度试驾体验等业务。支持具备条件的租赁企业开展二手车出口经营活动，加快租赁车辆更新，积极打造“租赁汽车转出口”模式。支持租赁企业拓展汽车维修等汽车后市场服务。</p><p style=\"text-indent: 2em;\"><strong>六、营造良好发展环境</strong></p><p style=\"text-indent: 2em;\">（十一）完善租赁法规政策体系。在《道路运输条例》修订中研究论证将小微型客车租赁管理纳入条例予以规范。研究修订《小微型客车租赁经营服务管理办法》，优化完善相关制度要求。修订《道路交通管理 机动车类型》等标准，优化租赁车辆使用性质。</p><p style=\"text-indent: 2em;\">（十二）强化市场运行监测。充分利用信息技术手段，建立完善租赁市场运行监测体系。建立重点企业联系制度，加强车型结构、车辆数量、租赁价格、订单数量等监测分析，动态掌握行业运行情况。强化节假日期间重点城市租赁市场监测预警。</p><p style=\"text-indent: 2em;\">（十三）加强宣传引导。聚焦高校学生、银发人群等重点群体，组织开展针对性宣传推介活动，积极培育租车消费理念。鼓励租赁企业结合地方特色开发租车出行主题文创产品，创新宣传方式，加强品牌转化。重大节假日期间，综合采取新闻报道、专题专栏、公益广告、短视频、网络直播等形式，全方位、多角度、立体化开展租车出行宣传，营造良好舆论氛围。</p><p style=\"text-indent: 2em;\">各地各有关部门要切实加强组织领导，强化跨部门协同配合，共同推动解决小微型客车租赁发展面临的新情况新问题，加强典型经验总结推广，加快推动小微型客车租赁行业高质量发展。</p></div>"
+            },
+            {
+                "c_fwjg": "国务院部门",
+                "title": "国家发展改革委等部门关于印发《非化石能源电力消费核算指南（试行）》的通知",
+                "list": [
+                    {
+                        "name": "标题",
+                        "value": "国家发展改革委等部门关于印发《非化石能源电力消费核算指南（试行）》的通知",
+                        "show": "false"
+                    },
+                    {
+                        "name": "发文机关",
+                        "value": "国家发展改革委 国家能源局 生态环境部 国家统计局 国家数据局",
+                        "show": "true"
+                    },
+                    {
+                        "name": "主题分类",
+                        "value": "国土资源、能源/其他",
+                        "show": "true"
+                    },
+                    {
+                        "name": "成文日期",
+                        "value": "2026-05-06 10:35:00",
+                        "show": "true"
+                    },
+                    {
+                        "name": "发布时间",
+                        "value": "2026-06-02",
+                        "show": "true"
+                    }
+                ],
+                "content": "国家发展改革委等部门关于印发《非化石能源电力消费核算指南（试行）》的通知发改能源〔2026〕622号各省、自治区、直辖市及新疆生产建设兵团发展改革委、能源局、生态环境厅（局）、统计局、数据管理部门，国家电网有限公司、中国南方电网有限责任公司、内蒙古电力（集团）有限责任公司，有关发电企业，北京、广州电力交易中心，水电水利规划设计总院，中国电力企业联合会：为贯彻落实党中央和国务院关于碳达峰碳中和的重大决策部署，推动完善碳排放统计核算体系，我们制定了《非化石能源电力消费核算指南（试行）》，现印发给你们，请按此做好相关工作。本指南自印发之日起试行，用于2026年及以后年份非化石能源电力消费核算。试行过程中如有问题和建议，请及时向国家发展改革委、国家能源局反馈。国家发展改革委国家能源局生态环境部国家统计局国家数据局2026年5月6日附件：《非化石能源电力消费核算指南（试行）》",
+                "content_html": "<div class=\"trs_editor_view TRS_UEDITOR trs_paper_default trs_web\"><p label=\"居中对齐\" style=\"text-align: center; text-indent: 0em;\"><strong><span data-index=\"5\" style=\"font-size: 24px;\">国家发展改革委等部门关于印发《非化石能源电力消费核算指南（试行）》的通知<br/></span></strong><span style=\"font-family: 楷体, 楷体_GB2312; text-indent: 0em;\">发改能源〔2026〕622号</span></p><p style=\"text-indent: 0em;\">各省、自治区、直辖市及新疆生产建设兵团发展改革委、能源局、生态环境厅（局）、统计局、数据管理部门，国家电网有限公司、中国南方电网有限责任公司、内蒙古电力（集团）有限责任公司，有关发电企业，北京、广州电力交易中心，水电水利规划设计总院，中国电力企业联合会：</p><p style=\"text-indent: 2em;\">为贯彻落实党中央和国务院关于碳达峰碳中和的重大决策部署，推动完善碳排放统计核算体系，我们制定了《非化石能源电力消费核算指南（试行）》，现印发给你们，请按此做好相关工作。本指南自印发之日起试行，用于2026年及以后年份非化石能源电力消费核算。试行过程中如有问题和建议，请及时向国家发展改革委、国家能源局反馈。</p><p label=\"右对齐\" style=\"text-indent: 0em; text-align: right;\">国家发展改革委<br/><span style=\"text-indent: 0em;\">国家能源局<br/></span><span style=\"text-indent: 0em;\">生态环境部<br/></span><span style=\"text-indent: 0em;\">国家统计局<br/></span><span style=\"text-indent: 0em;\">国家数据局<br/></span><span style=\"text-indent: 0em;\">2026年5月6日</span></p><p style=\"text-indent: 2em;\">附件：<a style=\"color:#0066cc;\" appendix=\"true\" data-appendix=\"true\" needdownload=\"true\" data-needdownload=\"true\" target=\"_blank\" otheroperation=\"false\" data-otheroperation=\"false\" href=\"https://www.gov.cn/zhengce/zhengceku/202606/P020260602358924010195.pdf\" title=\"《非化石能源电力消费核算指南（试行）》\" _title=\"《非化石能源电力消费核算指南（试行）》.pdf\" oldsrc=\"/protect/P0202606/P020260602/P020260602358924010195.pdf\">《非化石能源电力消费核算指南（试行）》</a></p></div>"
+            },
+            {
+                "c_fwjg": "解读",
+                "title": "国家能源局有关负责同志就《非化石能源电力消费核算指南（试行）》答记者问",
+                "list": [
+                    {
+                        "name": "标题",
+                        "value": "国家能源局有关负责同志就《非化石能源电力消费核算指南（试行）》答记者问",
+                        "show": "false"
+                    },
+                    {
+                        "name": "发布时间",
+                        "value": "2026-06-02",
+                        "show": "true"
+                    }
+                ],
+                "content": "近日，国家发展改革委、国家能源局、生态环境部、国家统计局、国家数据局印发《非化石能源电力消费核算指南（试行）》（发改能源〔2026〕622号，以下简称《指南》）。国家能源局有关负责同志就《指南》接受采访，回答了记者提问。一、《指南》出台的背景是什么？党的二十届四中全会提出要实施碳排放总量和强度双控制度，完善碳排放统计核算体系。中共中央办公厅、国务院办公厅印发《碳达峰碳中和综合评价考核办法》，将非化石能源消费占比列为1项评价考核控制指标。国务院办公厅印发《关于完善全国统一电力市场体系的实施意见》，部署研究将绿证纳入碳排放核算的可行路径。目前，我国非化石能源消费中95%为电力，非化石能源电力消费核算工作面临核算规则不统一、核算对象覆盖面不足、不同政策机制相互衔接有待加强等问题。《指南》凝聚各方共识，统一明确了省市两级和电力用户的非化石能源电力消费核算方法，用于指导各层级非化石能源电力消费核算工作，支撑电力消费间接碳排放核算，促进电能量交易、绿证交易、碳排放核算等不同政策机制有效衔接，更好推动碳排放双控制度实施。二、《指南》对非化石能源电力消费核算做出了哪些规定？《指南》作为非化石能源电力消费核算基础性制度，基于统筹衔接、稳妥有序、科学合理等基本原则，对非化石能源电力消费的认定方式和核算方法做出了具体规定。分类认定每千瓦时非化石能源电力消费的归属。《指南》明确了三种认定方式：一是物理认定，包括非化石能源电力自发自用电量、绿电直连等新业态新模式的自用电量、非化石能源发电项目生产耗用电量等方式；二是交易认定，包括非化石能源电力参与电能量交易、绿证交易等方式；三是分摊认定，主要针对未参与物理认定和交易认定的非化石能源电量，为确保核算的完整性，纳入省间分摊和省内分摊。分层明确非化石能源电力消费量的核算方法。《指南》明确了省级、地市和电力用户非化石能源电力消费量的具体核算方法，既考虑了不同层面数据口径的衔接统一，又避免重复核算。在同一层面核算中，每千瓦时非化石能源电力消费量，只采用一种认定方式、只认定给了一个主体，确保核算方法的科学性。三、下一步如何推动《指南》落实？一是明确责任主体。省级层面由国家发展改革委、国家能源局组织开展核算，地市层面由省级能源主管部门组织开展核算，电力用户核算范围及核算责任方由省级能源主管部门根据工作需要研究明确，另有规定的从其规定。二是建立工作机制。国家发展改革委、国家能源局将建立核算工作机制，明确工作流程、时间节点和负责单位。近期重点推动相关方面加快完善绿证核发和交易系统功能，支撑各层级开展非化石能源电力消费核算需要。三是做好政策宣贯。一方面，为推动各方全面理解《指南》规定，我们组织编制了非化石能源电力消费核算20问，对一些具体问题作了解答。另一方面，下一步还将结合工作需要，组织开展专场政策宣贯，指导地方和机构开展核算工作。四是推动核算应用。重点用于支撑省级行政区域非化石能源消费占比统计核算、评价考核和高质量发展综合绩效评价有关指标核算。同时，做好与可再生能源消纳最低比重目标和可再生能源电力消纳权重政策、碳排放双控制度、碳排放统计核算、产品碳足迹、绿证自愿消费的有序衔接，持续扩大应用范围，发挥政策合力。",
+                "content_html": "<div class=\"trs_editor_view TRS_UEDITOR trs_paper_default trs_web\"><p style=\"text-indent: 2em;\">近日，国家发展改革委、国家能源局、生态环境部、国家统计局、国家数据局印发《非化石能源电力消费核算指南（试行）》（发改能源〔2026〕622号，以下简称《指南》）。国家能源局有关负责同志就《指南》接受采访，回答了记者提问。</p><p style=\"text-indent: 2em;\"><strong>一、《指南》出台的背景是什么？</strong></p><p style=\"text-indent: 2em;\">党的二十届四中全会提出要实施碳排放总量和强度双控制度，完善碳排放统计核算体系。中共中央办公厅、国务院办公厅印发《碳达峰碳中和综合评价考核办法》，将非化石能源消费占比列为1项评价考核控制指标。国务院办公厅印发《关于完善全国统一电力市场体系的实施意见》，部署研究将绿证纳入碳排放核算的可行路径。目前，我国非化石能源消费中95%为电力，非化石能源电力消费核算工作面临核算规则不统一、核算对象覆盖面不足、不同政策机制相互衔接有待加强等问题。《指南》凝聚各方共识，统一明确了省市两级和电力用户的非化石能源电力消费核算方法，用于指导各层级非化石能源电力消费核算工作，支撑电力消费间接碳排放核算，促进电能量交易、绿证交易、碳排放核算等不同政策机制有效衔接，更好推动碳排放双控制度实施。</p><p style=\"text-indent: 2em;\"><strong>二、《指南》对非化石能源电力消费核算做出了哪些规定？</strong></p><p style=\"text-indent: 2em;\">《指南》作为非化石能源电力消费核算基础性制度，基于统筹衔接、稳妥有序、科学合理等基本原则，对非化石能源电力消费的认定方式和核算方法做出了具体规定。</p><p style=\"text-indent: 2em;\">分类认定每千瓦时非化石能源电力消费的归属。《指南》明确了三种认定方式：一是物理认定，包括非化石能源电力自发自用电量、绿电直连等新业态新模式的自用电量、非化石能源发电项目生产耗用电量等方式；二是交易认定，包括非化石能源电力参与电能量交易、绿证交易等方式；三是分摊认定，主要针对未参与物理认定和交易认定的非化石能源电量，为确保核算的完整性，纳入省间分摊和省内分摊。</p><p style=\"text-indent: 2em;\">分层明确非化石能源电力消费量的核算方法。《指南》明确了省级、地市和电力用户非化石能源电力消费量的具体核算方法，既考虑了不同层面数据口径的衔接统一，又避免重复核算。在同一层面核算中，每千瓦时非化石能源电力消费量，只采用一种认定方式、只认定给了一个主体，确保核算方法的科学性。</p><p style=\"text-indent: 2em;\"><strong>三、下一步如何推动《指南》落实？</strong></p><p style=\"text-indent: 2em;\">一是明确责任主体。省级层面由国家发展改革委、国家能源局组织开展核算，地市层面由省级能源主管部门组织开展核算，电力用户核算范围及核算责任方由省级能源主管部门根据工作需要研究明确，另有规定的从其规定。</p><p style=\"text-indent: 2em;\">二是建立工作机制。国家发展改革委、国家能源局将建立核算工作机制，明确工作流程、时间节点和负责单位。近期重点推动相关方面加快完善绿证核发和交易系统功能，支撑各层级开展非化石能源电力消费核算需要。</p><p style=\"text-indent: 2em;\">三是做好政策宣贯。一方面，为推动各方全面理解《指南》规定，我们组织编制了非化石能源电力消费核算20问，对一些具体问题作了解答。另一方面，下一步还将结合工作需要，组织开展专场政策宣贯，指导地方和机构开展核算工作。</p><p style=\"text-indent: 2em;\">四是推动核算应用。重点用于支撑省级行政区域非化石能源消费占比统计核算、评价考核和高质量发展综合绩效评价有关指标核算。同时，做好与可再生能源消纳最低比重目标和可再生能源电力消纳权重政策、碳排放双控制度、碳排放统计核算、产品碳足迹、绿证自愿消费的有序衔接，持续扩大应用范围，发挥政策合力。</p></div>"
+            },
+            {
+                "c_fwjg": "解读",
+                "title": "司法部、国家发展改革委、商务部负责人就《国务院关于对外投资的规定》答记者问",
+                "list": [
+                    {
+                        "name": "标题",
+                        "value": "司法部、国家发展改革委、商务部负责人就《国务院关于对外投资的规定》答记者问",
+                        "show": "false"
+                    },
+                    {
+                        "name": "发布时间",
+                        "value": "2026-06-01",
+                        "show": "true"
+                    }
+                ],
+                "content": "新华社北京6月1日电 题：司法部、国家发展改革委、商务部负责人就《国务院关于对外投资的规定》答记者问新华社记者2026年5月5日，国务院总理李强签署第837号国务院令，公布《国务院关于对外投资的规定》（以下简称《规定》），自2026年7月1日起施行。日前，司法部、国家发展改革委、商务部负责人就《规定》的有关问题回答了记者提问。问：请简要介绍一下《规定》的制定背景。答：对外投资是对外开放的重要方面。党的十八大以来，党中央、国务院就深化对外投资领域改革，健全境外投资法律体系等作出一系列决策部署，我国对外投资规模稳居世界前列，参与国际产业分工合作不断深化。随着百年变局加速演进，地缘政治风险上升，国际竞争日益激烈，长期以来主要依据部门规章、规范性文件等实施对外投资管理服务的模式已不符合现实需求，迫切需要高位阶专门立法将长期施行的有效措施上升为法律制度，更好对接国际高标准经济贸易规则，明确对外投资服务、管理、保护等方面的制度措施，以有效保护投资者及其对外投资合法权益，维护国家主权、安全和发展利益，在法治轨道上推进对外投资高质量发展。制定《规定》是贯彻落实党的二十届三中、四中全会关于健全对外投资管理服务体系、有效实施对外投资管理决策部署的重要举措，是统筹发展和安全、推进对外投资高质量发展的迫切需要，是我国坚定不移扩大开放，推进经济全球化朝着更加开放、包容、普惠、平衡、共赢的方向发展的重大法治实践，在我国对外投资发展历程上具有里程碑意义。问：《规定》制定中征求意见的情况如何？答：在《规定》制定过程中，起草部门严格按照科学立法、民主立法、依法立法有关要求，按程序广泛听取各方面意见。《国务院2025年度立法工作计划》提出推进对外投资立法。制定国务院关于对外投资的规定列入《国务院2026年度立法工作计划》。司法部、国家发展改革委、商务部认真梳理对外投资实践中的成效和问题，通过书面征求意见、赴地方调研、走访企业、召开专家座谈会等方式，深入了解有关部门、企业、行业协会商会、专家学者和律师的意见并充分研究采纳。起草形成工作稿后，司法部先后三轮征求中央有关单位、地方人民政府、有关人民团体等100多家单位意见，多次组织专家论证，听取有关企业、行业协会商会、专家学者、人大代表、政协委员的意见，赴地方开展实地调研，在此基础上，对各方面提出的意见建议逐条认真研究、充分吸收采纳，反复修改完善形成草案，按照立法程序提请国务院常务会议审议后公布施行。可以说，《规定》广泛征求并充分吸纳了各类意见建议，是各方面智慧的结晶。问：制定《规定》的总体思路是什么？答：《规定》以习近平新时代中国特色社会主义思想为指导，遵循以下总体思路：一是贯彻落实党中央、国务院决策部署，将党的十八大以来的对外投资监管经验和改革成果上升为法律制度。二是坚持问题导向，把握新情况新问题，明确对外投资基本原则，针对性完善对外投资服务、管理、保护方面的主要制度。三是统筹发展和安全，既多措并举促进对外投资高质量发展，明确我国坚定维护多边主义、坚持对外开放的原则立场，支持投资者按照市场化原则开展对外投资活动，又稳妥预置投资领域风险防范应对措施，坚决维护国家主权、安全和发展利益。问：《规定》适用于哪些情形？答：《规定》总结长期实践经验，明确规定：中华人民共和国境内投资者对外投资，适用本规定。对外投资即境外投资，是指投资者以投入资产、权益或者提供融资、担保等方式，直接或者间接获得其他国家（地区）的企业、资产等所有权、控制权、经营管理权以及其他相关权益的活动。投资者包括中国境内的企业、其他组织和居民个人。对投资者在香港特别行政区、澳门特别行政区、台湾地区投资的管理，参照本规定执行；法律、行政法规或者国务院另有规定的，依照其规定。问：对外投资工作遵循哪些基本原则和要求？答：对外投资工作遵循的基本原则和要求，是做好对外投资工作的行动指南，十分重要。对此，《规定》明确规定：对外投资工作坚持对外开放的基本国策，贯彻总体国家安全观，统筹发展和安全，统筹国内国际，健全对外投资管理服务体系，提升对外投资质量与水平，促进开放合作、互利共赢。同时，重申中国坚持高水平对外开放，鼓励开展对外投资的原则立场：国家主动对接国际高标准经济贸易规则，推进高质量共建“一带一路”，推进多双边投资合作机制建设，积极参与国际投资规则制定，推动产业链供应链国际合作，反对单边主义和保护主义，推动建设开放型世界经济。投资者是开展对外投资活动的主体。《规定》明确规定，国家支持投资者按照市场化原则开展对外投资活动，积极参与国际合作竞争。投资者依法享有对外投资自主权，自主决策、自担风险、自负盈亏。同时，落实投资者主体责任、强化法治原则，规定投资者开展对外投资及其相关活动，应当遵守法律法规和国际惯例，尊重当地习俗和文化传统，遵守商业道德，诚实守信、公平竞争，履行社会责任，维护国家形象，不得妨害市场竞争秩序、破坏生态环境、损害劳动者合法权益，不得危害中国国家安全、损害国家利益和社会公共利益。问：《规定》在对外投资服务方面作了哪些规定？答：党的二十届四中全会提出健全海外综合服务体系。《规定》明确国家健全海外综合服务体系，促进贸易投资一体化，并从多个维度完善制度措施，为出海企业参与国际合作竞争提供有力法治保障：一是完善公共平台与服务，统筹外事、法律、财税、金融、经贸、物流、出境入境、海关、贸促等领域服务资源，为投资者提供服务保障；省级以上人民政府及其有关部门提升公共服务能力和水平。二是支持咨询评估、法律服务、会计审计、信用评级、调解仲裁、知识产权等专业服务机构提高国际化服务能力和水平，提供高质量专业服务。三是银行业金融机构立足职能定位提供融资等金融服务，鼓励政策性保险机构提供海外投资保险等服务。四是行业协会商会、贸易投资促进组织按照章程提供与对外投资有关的信息咨询、权益保护等方面的服务。问：《规定》在对外投资管理方面作了哪些规定？答：党的二十届四中全会对有效实施对外投资管理作出部署。《规定》总结提炼长期以来对外投资管理实践经验，并与现行法律规定作好协调衔接：一是国家健全对外投资管理体系，完善调控措施，分类分级实施全过程监管，加强风险防控，提高对外投资的科学性、安全性，推动投资便利化和有效防范风险相结合。二是国务院投资主管部门、商务主管部门会同国务院其他有关部门根据国民经济和社会发展需要、有关国家（地区）投资环境变化和风险程度等，制定、调整和实施对外投资政策，明确鼓励、限制、禁止的对外投资，加强对外投资监管，指导、监督投资者规范投资经营行为。三是与现行制度衔接，明确投资者开展对外投资活动依法需要履行核准备案、信息报告、跨境资金登记等手续的，应当依照国家有关规定办理，如实提交有关材料。四是明确国家健全境外投资安全审查制度，国务院投资主管部门、商务主管部门会同国务院其他有关部门对影响或者可能影响国家安全的境外投资及相关资产、权益等的转让、处分进行安全审查。五是强化投资者主体责任，要求投资者规范投资经营行为，不得扰乱对外投资市场秩序。问：《规定》在对外投资保护方面作了哪些规定？答：随着中国对外投资深度参与国际产业分工合作，投资者及其对外投资合法权益的保护需求日益凸显。《规定》对接国际高标准经济贸易规则，借鉴世界主要经济体的有关法律和国际通行做法，从四个方面作出规定：一是国务院有关部门加强对外投资监测预警和风险评估，及时发布有关国家（地区）安全状况，提示投资风险，指导和帮助投资者做好安全风险防范，维护国家海外利益和投资者合法权益。二是中国根据缔结或者参加的国际条约、协定，或者按照平等互惠原则，与其他国家（地区）、国际组织等开展执法领域合作与交流，保护投资者及其投资的企业、项目所属员工和资产等的安全以及有关组织、个人的正当权益。国家积极商签多双边贸易投资协定等国际经贸协定，提高对外投资保护水平，促进投资自由化便利化。三是国家依法为在其他国家（地区）投资的中国公民、组织及其在该国家（地区）投资的企业、项目所属中国籍员工提供领事保护与协助，维护其正当权益。中国政府作出避险安排的，有关组织、个人应当配合。四是鼓励投资者通过协商、调解、仲裁、诉讼等多种方式化解对外投资有关矛盾纠纷，维护自身合法权益。问：近年来，个别外国政府、组织等对中国投资者及其对外投资采取歧视性措施，不合理打压、限制中国对外投资，《规定》针对这些情形规定了哪些应对措施？答：经济全球化是人类社会发展必经之路，中国是经济全球化的积极参与者和坚定支持者。中国坚定实施对外开放基本国策，着力促进贸易和投资自由化便利化，始终秉持共商共建共享原则，坚持真正的多边主义，反对单边主义和保护主义，坚定维护以规则为基础、透明、非歧视、开放、包容的多边贸易体制，维护公平竞争，积极参与全球经济治理。近年来，经济全球化遭遇逆流，单边主义、保护主义、孤立主义上升，个别外国政府、组织等对中国投资者及其对外投资的歧视性措施，严重损害我国公民、组织的正当权益，侵害我国海外利益。为切实提高对外投资保护能力和水平，加强保护力度，《规定》规定了以下措施：一是针对外国国家（地区）与贸易有关的投资壁垒或者其他投资经营障碍，国务院商务主管部门可以自行或者会同有关部门开展调查，国务院有关部门可以根据调查结果采取调整有关国别投资政策，禁止或者限制有关货物、技术进出口等措施。二是针对外国国家（地区）、国际组织在投资经营等方面采取歧视性禁止、限制或者其他类似措施，中国政府有权根据实际情况采取相应措施，并可以依据《中华人民共和国反外国制裁法》及其配套规定等对直接或者间接参与制定、决定和实施有关措施的组织、个人实施反制。三是针对外国组织、个人危害中国国家主权、安全、发展利益，违反正常的市场交易原则中断交易，或者采取歧视性措施，不合理剥夺或者限制投资者及其对外投资正当权益的，国务院有关部门可以对其采取禁止或者限制其在中国境内投资、入境以及有关交易、合作等措施。上述措施是为保护中国投资者及其对外投资的正当权益、保护国家海外利益不受威胁侵害而采取的必要措施，是保护性、防御性措施，不影响正常的市场交易活动，也不影响企业自主依法解决商业纠纷。问：为确保《规定》顺利实施，需要重点做好哪些工作？答：国家发展改革委、商务部将会同有关部门和地方抓好《规定》组织实施：一是做好宣传阐释，开展形式多样的宣传、解读、培训工作，重点推进政府及其有关部门工作人员全面、准确掌握《规定》内容，领会精神实质，同时推动社会公众了解和掌握《规定》内容，为实施《规定》营造良好环境。二是做好配套制度制定修订，明确细化有关内容，同时完善协同机制，加强政策衔接。三是做好对投资者的服务指导，不断提高对外投资服务、管理和保护水平，促进对外投资高质量发展和高水平安全良性互动。",
+                "content_html": "<div class=\"trs_editor_view TRS_UEDITOR trs_paper_default trs_web\"><p style=\"text-indent: 2em;\">新华社北京6月1日电 <span style=\"color: rgb(51, 51, 153);\"><strong>题：司法部、国家发展改革委、商务部负责人就《国务院关于对外投资的规定》答记者问</strong></span></p><p style=\"text-indent: 2em;\">新华社记者</p><p style=\"text-indent: 2em;\">2026年5月5日，国务院总理李强签署第837号国务院令，公布<a href=\"https://www.gov.cn/zhengce/content/202606/content_7070755.htm\" target=\"_blank\" needdownload=\"false\" data-needdownload=\"false\" data-needparse=\"false\" style=\"color: rgb(11, 119, 205);\">《国务院关于对外投资的规定》</a>（以下简称《规定》），自2026年7月1日起施行。日前，司法部、国家发展改革委、商务部负责人就《规定》的有关问题回答了记者提问。</p><p style=\"text-indent: 2em;\"><strong>问：请简要介绍一下《规定》的制定背景。</strong></p><p style=\"text-indent: 2em;\"><strong>答：</strong>对外投资是对外开放的重要方面。党的十八大以来，党中央、国务院就深化对外投资领域改革，健全境外投资法律体系等作出一系列决策部署，我国对外投资规模稳居世界前列，参与国际产业分工合作不断深化。随着百年变局加速演进，地缘政治风险上升，国际竞争日益激烈，长期以来主要依据部门规章、规范性文件等实施对外投资管理服务的模式已不符合现实需求，迫切需要高位阶专门立法将长期施行的有效措施上升为法律制度，更好对接国际高标准经济贸易规则，明确对外投资服务、管理、保护等方面的制度措施，以有效保护投资者及其对外投资合法权益，维护国家主权、安全和发展利益，在法治轨道上推进对外投资高质量发展。</p><p style=\"text-indent: 2em;\">制定《规定》是贯彻落实党的二十届三中、四中全会关于健全对外投资管理服务体系、有效实施对外投资管理决策部署的重要举措，是统筹发展和安全、推进对外投资高质量发展的迫切需要，是我国坚定不移扩大开放，推进经济全球化朝着更加开放、包容、普惠、平衡、共赢的方向发展的重大法治实践，在我国对外投资发展历程上具有里程碑意义。</p><p style=\"text-indent: 2em;\"><strong>问：《规定》制定中征求意见的情况如何？</strong></p><p style=\"text-indent: 2em;\"><strong>答：</strong>在《规定》制定过程中，起草部门严格按照科学立法、民主立法、依法立法有关要求，按程序广泛听取各方面意见。《国务院2025年度立法工作计划》提出推进对外投资立法。制定国务院关于对外投资的规定列入《国务院2026年度立法工作计划》。司法部、国家发展改革委、商务部认真梳理对外投资实践中的成效和问题，通过书面征求意见、赴地方调研、走访企业、召开专家座谈会等方式，深入了解有关部门、企业、行业协会商会、专家学者和律师的意见并充分研究采纳。起草形成工作稿后，司法部先后三轮征求中央有关单位、地方人民政府、有关人民团体等100多家单位意见，多次组织专家论证，听取有关企业、行业协会商会、专家学者、人大代表、政协委员的意见，赴地方开展实地调研，在此基础上，对各方面提出的意见建议逐条认真研究、充分吸收采纳，反复修改完善形成草案，按照立法程序提请国务院常务会议审议后公布施行。可以说，《规定》广泛征求并充分吸纳了各类意见建议，是各方面智慧的结晶。</p><p style=\"text-indent: 2em;\"><strong>问：制定《规定》的总体思路是什么？</strong></p><p style=\"text-indent: 2em;\"><strong>答：</strong>《规定》以习近平新时代中国特色社会主义思想为指导，遵循以下总体思路：一是贯彻落实党中央、国务院决策部署，将党的十八大以来的对外投资监管经验和改革成果上升为法律制度。二是坚持问题导向，把握新情况新问题，明确对外投资基本原则，针对性完善对外投资服务、管理、保护方面的主要制度。三是统筹发展和安全，既多措并举促进对外投资高质量发展，明确我国坚定维护多边主义、坚持对外开放的原则立场，支持投资者按照市场化原则开展对外投资活动，又稳妥预置投资领域风险防范应对措施，坚决维护国家主权、安全和发展利益。</p><p style=\"text-indent: 2em;\"><strong>问：《规定》适用于哪些情形？</strong></p><p style=\"text-indent: 2em;\"><strong>答：</strong>《规定》总结长期实践经验，明确规定：中华人民共和国境内投资者对外投资，适用本规定。对外投资即境外投资，是指投资者以投入资产、权益或者提供融资、担保等方式，直接或者间接获得其他国家（地区）的企业、资产等所有权、控制权、经营管理权以及其他相关权益的活动。投资者包括中国境内的企业、其他组织和居民个人。对投资者在香港特别行政区、澳门特别行政区、台湾地区投资的管理，参照本规定执行；法律、行政法规或者国务院另有规定的，依照其规定。</p><p style=\"text-indent: 2em;\"><strong>问：对外投资工作遵循哪些基本原则和要求？</strong></p><p style=\"text-indent: 2em;\"><strong>答：</strong>对外投资工作遵循的基本原则和要求，是做好对外投资工作的行动指南，十分重要。对此，《规定》明确规定：对外投资工作坚持对外开放的基本国策，贯彻总体国家安全观，统筹发展和安全，统筹国内国际，健全对外投资管理服务体系，提升对外投资质量与水平，促进开放合作、互利共赢。同时，重申中国坚持高水平对外开放，鼓励开展对外投资的原则立场：国家主动对接国际高标准经济贸易规则，推进高质量共建“一带一路”，推进多双边投资合作机制建设，积极参与国际投资规则制定，推动产业链供应链国际合作，反对单边主义和保护主义，推动建设开放型世界经济。</p><p style=\"text-indent: 2em;\">投资者是开展对外投资活动的主体。《规定》明确规定，国家支持投资者按照市场化原则开展对外投资活动，积极参与国际合作竞争。投资者依法享有对外投资自主权，自主决策、自担风险、自负盈亏。同时，落实投资者主体责任、强化法治原则，规定投资者开展对外投资及其相关活动，应当遵守法律法规和国际惯例，尊重当地习俗和文化传统，遵守商业道德，诚实守信、公平竞争，履行社会责任，维护国家形象，不得妨害市场竞争秩序、破坏生态环境、损害劳动者合法权益，不得危害中国国家安全、损害国家利益和社会公共利益。</p><p style=\"text-indent: 2em;\"><strong>问：《规定》在对外投资服务方面作了哪些规定？</strong></p><p style=\"text-indent: 2em;\"><strong>答：</strong>党的二十届四中全会提出健全海外综合服务体系。《规定》明确国家健全海外综合服务体系，促进贸易投资一体化，并从多个维度完善制度措施，为出海企业参与国际合作竞争提供有力法治保障：一是完善公共平台与服务，统筹外事、法律、财税、金融、经贸、物流、出境入境、海关、贸促等领域服务资源，为投资者提供服务保障；省级以上人民政府及其有关部门提升公共服务能力和水平。二是支持咨询评估、法律服务、会计审计、信用评级、调解仲裁、知识产权等专业服务机构提高国际化服务能力和水平，提供高质量专业服务。三是银行业金融机构立足职能定位提供融资等金融服务，鼓励政策性保险机构提供海外投资保险等服务。四是行业协会商会、贸易投资促进组织按照章程提供与对外投资有关的信息咨询、权益保护等方面的服务。</p><p style=\"text-indent: 2em;\"><strong>问：《规定》在对外投资管理方面作了哪些规定？</strong></p><p style=\"text-indent: 2em;\"><strong>答：</strong>党的二十届四中全会对有效实施对外投资管理作出部署。《规定》总结提炼长期以来对外投资管理实践经验，并与现行法律规定作好协调衔接：</p><p style=\"text-indent: 2em;\">一是国家健全对外投资管理体系，完善调控措施，分类分级实施全过程监管，加强风险防控，提高对外投资的科学性、安全性，推动投资便利化和有效防范风险相结合。</p><p style=\"text-indent: 2em;\">二是国务院投资主管部门、商务主管部门会同国务院其他有关部门根据国民经济和社会发展需要、有关国家（地区）投资环境变化和风险程度等，制定、调整和实施对外投资政策，明确鼓励、限制、禁止的对外投资，加强对外投资监管，指导、监督投资者规范投资经营行为。</p><p style=\"text-indent: 2em;\">三是与现行制度衔接，明确投资者开展对外投资活动依法需要履行核准备案、信息报告、跨境资金登记等手续的，应当依照国家有关规定办理，如实提交有关材料。</p><p style=\"text-indent: 2em;\">四是明确国家健全境外投资安全审查制度，国务院投资主管部门、商务主管部门会同国务院其他有关部门对影响或者可能影响国家安全的境外投资及相关资产、权益等的转让、处分进行安全审查。</p><p style=\"text-indent: 2em;\">五是强化投资者主体责任，要求投资者规范投资经营行为，不得扰乱对外投资市场秩序。</p><p style=\"text-indent: 2em;\"><strong>问：《规定》在对外投资保护方面作了哪些规定？</strong></p><p style=\"text-indent: 2em;\"><strong>答：</strong>随着中国对外投资深度参与国际产业分工合作，投资者及其对外投资合法权益的保护需求日益凸显。《规定》对接国际高标准经济贸易规则，借鉴世界主要经济体的有关法律和国际通行做法，从四个方面作出规定：</p><p style=\"text-indent: 2em;\">一是国务院有关部门加强对外投资监测预警和风险评估，及时发布有关国家（地区）安全状况，提示投资风险，指导和帮助投资者做好安全风险防范，维护国家海外利益和投资者合法权益。</p><p style=\"text-indent: 2em;\">二是中国根据缔结或者参加的国际条约、协定，或者按照平等互惠原则，与其他国家（地区）、国际组织等开展执法领域合作与交流，保护投资者及其投资的企业、项目所属员工和资产等的安全以及有关组织、个人的正当权益。国家积极商签多双边贸易投资协定等国际经贸协定，提高对外投资保护水平，促进投资自由化便利化。</p><p style=\"text-indent: 2em;\">三是国家依法为在其他国家（地区）投资的中国公民、组织及其在该国家（地区）投资的企业、项目所属中国籍员工提供领事保护与协助，维护其正当权益。中国政府作出避险安排的，有关组织、个人应当配合。</p><p style=\"text-indent: 2em;\">四是鼓励投资者通过协商、调解、仲裁、诉讼等多种方式化解对外投资有关矛盾纠纷，维护自身合法权益。</p><p style=\"text-indent: 2em;\"><strong>问：近年来，个别外国政府、组织等对中国投资者及其对外投资采取歧视性措施，不合理打压、限制中国对外投资，《规定》针对这些情形规定了哪些应对措施？</strong></p><p style=\"text-indent: 2em;\"><strong>答：</strong>经济全球化是人类社会发展必经之路，中国是经济全球化的积极参与者和坚定支持者。中国坚定实施对外开放基本国策，着力促进贸易和投资自由化便利化，始终秉持共商共建共享原则，坚持真正的多边主义，反对单边主义和保护主义，坚定维护以规则为基础、透明、非歧视、开放、包容的多边贸易体制，维护公平竞争，积极参与全球经济治理。近年来，经济全球化遭遇逆流，单边主义、保护主义、孤立主义上升，个别外国政府、组织等对中国投资者及其对外投资的歧视性措施，严重损害我国公民、组织的正当权益，侵害我国海外利益。为切实提高对外投资保护能力和水平，加强保护力度，《规定》规定了以下措施：</p><p style=\"text-indent: 2em;\">一是针对外国国家（地区）与贸易有关的投资壁垒或者其他投资经营障碍，国务院商务主管部门可以自行或者会同有关部门开展调查，国务院有关部门可以根据调查结果采取调整有关国别投资政策，禁止或者限制有关货物、技术进出口等措施。</p><p style=\"text-indent: 2em;\">二是针对外国国家（地区）、国际组织在投资经营等方面采取歧视性禁止、限制或者其他类似措施，中国政府有权根据实际情况采取相应措施，并可以依据《中华人民共和国反外国制裁法》及其配套规定等对直接或者间接参与制定、决定和实施有关措施的组织、个人实施反制。</p><p style=\"text-indent: 2em;\">三是针对外国组织、个人危害中国国家主权、安全、发展利益，违反正常的市场交易原则中断交易，或者采取歧视性措施，不合理剥夺或者限制投资者及其对外投资正当权益的，国务院有关部门可以对其采取禁止或者限制其在中国境内投资、入境以及有关交易、合作等措施。</p><p style=\"text-indent: 2em;\">上述措施是为保护中国投资者及其对外投资的正当权益、保护国家海外利益不受威胁侵害而采取的必要措施，是保护性、防御性措施，不影响正常的市场交易活动，也不影响企业自主依法解决商业纠纷。</p><p style=\"text-indent: 2em;\"><strong>问：为确保《规定》顺利实施，需要重点做好哪些工作？</strong></p><p style=\"text-indent: 2em;\"><strong>答：</strong>国家发展改革委、商务部将会同有关部门和地方抓好《规定》组织实施：一是做好宣传阐释，开展形式多样的宣传、解读、培训工作，重点推进政府及其有关部门工作人员全面、准确掌握《规定》内容，领会精神实质，同时推动社会公众了解和掌握《规定》内容，为实施《规定》营造良好环境。二是做好配套制度制定修订，明确细化有关内容，同时完善协同机制，加强政策衔接。三是做好对投资者的服务指导，不断提高对外投资服务、管理和保护水平，促进对外投资高质量发展和高水平安全良性互动。</p></div>"
+            },
+            {
+                "c_fwjg": "国务院文件",
+                "title": "国务院关于对外投资的规定",
+                "list": [
+                    {
+                        "name": "标题",
+                        "value": "国务院关于对外投资的规定",
+                        "show": "false"
+                    },
+                    {
+                        "name": "发文机关",
+                        "value": "国务院",
+                        "show": "true"
+                    },
+                    {
+                        "name": "主题分类",
+                        "value": "商贸、海关、旅游/对外经贸合作",
+                        "show": "true"
+                    },
+                    {
+                        "name": "成文日期",
+                        "value": "2026-05-05 10:00:00",
+                        "show": "true"
+                    },
+                    {
+                        "name": "发布时间",
+                        "value": "2026-06-01",
+                        "show": "true"
+                    }
+                ],
+                "content": "中华人民共和国国务院令第837号《国务院关于对外投资的规定》已经2026年4月17日国务院第83次常务会议通过，现予公布，自2026年7月1日起施行。总理　　李强　　　　　　　 2026年5月5日　　　　  国务院关于对外投资的规定第一条　为了推进高水平对外开放，促进对外投资高质量发展，有效实施对外投资管理，保护投资者及其对外投资合法权益，维护国家主权、安全、发展利益，根据《中华人民共和国对外关系法》、《中华人民共和国对外贸易法》等法律，制定本规定。第二条　中华人民共和国境内（以下简称中国境内）投资者对外投资，适用本规定。本规定所称对外投资即境外投资，是指投资者以投入资产、权益或者提供融资、担保等方式，直接或者间接获得其他国家（地区）的企业、资产等所有权、控制权、经营管理权以及其他相关权益的活动。本规定所称投资者，包括中国境内的企业、其他组织和居民个人。第三条　对外投资工作坚持对外开放的基本国策，贯彻总体国家安全观，统筹发展和安全，统筹国内国际，健全对外投资管理服务体系，提升对外投资质量与水平，促进开放合作、互利共赢。第四条　国家主动对接国际高标准经济贸易规则，推进高质量共建“一带一路”，推进多双边投资合作机制建设，积极参与国际投资规则制定，推动产业链供应链国际合作，反对单边主义和保护主义，推动建设开放型世界经济。第五条　国家支持投资者按照市场化原则开展对外投资活动，积极参与国际合作竞争。投资者依法享有对外投资自主权，自主决策、自担风险、自负盈亏。投资者开展对外投资及其相关活动，应当遵守法律法规和国际惯例，尊重当地习俗和文化传统，遵守商业道德，诚实守信、公平竞争，履行社会责任，维护国家形象，不得妨害市场竞争秩序、破坏生态环境、损害劳动者合法权益，不得危害中国国家安全、损害国家利益和社会公共利益。第六条　国家健全海外综合服务体系，促进贸易投资一体化，完善公共平台与服务，统筹外事、法律、财税、金融、经贸、物流、出境入境、海关、贸促等领域服务资源，为投资者提供服务保障。省级以上人民政府及其有关部门提升公共服务能力和水平，为投资者提供法律法规、政策措施、投资指南、知识产权、风险防范应对、权益保护等方面的公共产品和服务。第七条　支持咨询评估、法律服务、会计审计、信用评级、调解仲裁、知识产权等专业服务机构拓展海外服务网络，提高国际化服务能力和水平，为投资者及其对外投资提供高质量专业服务。有关专业服务机构应当遵循诚实守信、勤勉尽责、独立客观的原则，建立有效的风险控制和内部控制制度，配备具有相应专业能力的从业人员，依法开展有关服务活动。第八条　银行业金融机构应当立足职能定位，遵循市场化、法治化、商业可持续和风险可控原则，在业务范围内为投资者对外投资提供融资等金融服务。鼓励政策性保险机构为投资者对外投资提供海外投资保险等服务。第九条　有关行业协会商会应当依照法律、法规和章程，加强行业自律，提升服务投资者及其对外投资的能力和水平，及时反映行业诉求。行业协会商会、贸易投资促进组织按照章程提供与对外投资有关的信息咨询、市场拓展、经贸交流、权益保护、纠纷处理等方面的服务。第十条　国家健全对外投资管理体系，完善调控措施，分类分级实施全过程监管，加强风险防控，提高对外投资的科学性、安全性，推动投资便利化和有效防范风险相结合。第十一条　国务院投资主管部门、商务主管部门会同国务院其他有关部门根据国民经济和社会发展需要、有关国家（地区）投资环境变化和风险程度等，制定、调整和实施对外投资政策，明确鼓励、限制、禁止的对外投资，加强对外投资监管，指导、监督投资者规范投资经营行为。第十二条　投资者开展对外投资活动依法需要履行核准备案、信息报告、跨境资金登记等手续的，应当依照国家有关规定办理，如实提交有关材料，并配合有关主管部门的监督检查。第十三条　投资者开展对外投资活动，不得出口、使用国家禁止出口的货物、技术、服务及相关数据，或者未经许可出口、使用国家限制出口的货物、技术、服务及相关数据；不得以跨境派遣技术人员、组织人员赴其他国家（地区）工作、跨境提供技术指导、安排人员跨境培训等方式向其他国家（地区）转移国家禁止出口的货物、技术、服务及相关数据，或者未经许可向其他国家（地区）转移国家限制出口的货物、技术、服务及相关数据。第十四条　对外投资涉及资金汇兑、货物与技术进出口、跨境服务贸易、跨境数据流动、人员出境入境的管理以及经营者集中审查、出口管制、网络安全监管、税收征收管理、国有资产监管等，依照有关法律、行政法规和国家有关规定执行。第十五条　国家健全境外投资安全审查制度，国务院投资主管部门、商务主管部门会同国务院其他有关部门对影响或者可能影响国家安全的境外投资及相关资产、权益等的转让、处分进行安全审查。有关组织、个人应当予以协助、配合，不得拒绝、阻碍，并应当遵守境外投资安全审查决定。第十六条　投资者及其在其他国家（地区）投资的企业应当完善治理结构，建立健全合规经营、内部控制、安全生产、突发事件处置等制度，加强风险识别和防范处置，投入必要的人员、资金、设备等资源，保障其员工和资产安全。第十七条　投资者应当规范投资经营行为，不得损害其他投资者的商业信誉、商品声誉，侵犯他人商业秘密，没有正当理由低价倾销商品，通过贿赂、欺诈等手段牟取不正当利益，扰乱对外投资市场秩序。第十八条　国务院有关部门加强对外投资监测预警和风险评估，及时发布有关国家（地区）安全状况，提示投资风险，指导和帮助投资者做好安全风险防范，维护国家海外利益和投资者合法权益。第十九条　中华人民共和国根据缔结或者参加的国际条约、协定，或者按照平等互惠原则，与其他国家（地区）、国际组织等开展执法领域合作与交流，保护在其他国家（地区）的投资者及其投资的企业、项目所属员工和资产等的安全以及有关组织、个人的正当权益。国家积极商签多双边贸易投资协定等国际经贸协定，提高对外投资保护水平，促进投资自由化便利化。第二十条　国家依法为在其他国家（地区）投资的中国公民、组织及其在该国家（地区）投资的企业、项目所属中国籍员工提供领事保护与协助，维护其正当权益。投资目的国家（地区）发生战争、武装冲突、暴乱、严重自然灾害、重大事故灾难、重大传染病疫情、恐怖袭击等重大突发事件，在该国家（地区）的投资者及其投资的企业、项目所属中国籍员工因人身财产安全受到威胁需要帮助的，驻外外交机构应当及时核实情况，敦促有关国家（地区）采取有效措施保护中国公民、组织的人身财产安全，并根据相关情形提供协助；中国政府作出相应避险安排的，有关组织、个人应当予以配合。第二十一条　鼓励投资者通过协商、调解、仲裁、诉讼等多种方式化解对外投资有关矛盾纠纷，维护自身合法权益。第二十二条　中国境内组织、个人参与对外投资相关仲裁、诉讼或者受到境外司法、执法机构相关调查，需要向境外提供证据或者相关材料的，应当遵守保守国家秘密、数据安全、个人信息保护、技术出口管理、出口管制、司法协助等法律、行政法规和国家有关规定。依法须经主管机关准许的，应当履行相关法律程序。第二十三条　投资者在投资目的国家（地区）遭遇与贸易有关的投资壁垒或者其他投资经营障碍的，国务院商务主管部门可以自行或者会同国务院其他有关部门组织开展调查，有关组织、个人应当予以协助、配合。根据调查结果，国务院有关部门可以采取调整有关国别投资政策，禁止或者限制有关货物、技术进出口或者国际服务贸易等措施。第二十四条　任何国家（地区）、国际组织违反国际法和国际关系基本准则，在投资经营等方面对中华人民共和国采取歧视性禁止、限制或者其他类似措施，中国政府及其有关部门可以根据实际情况采取相应的措施，保护投资者及其对外投资的安全和正当权益，保护国家的海外利益不受威胁和侵害。国务院有关部门可以依照《中华人民共和国反外国制裁法》、《实施〈中华人民共和国反外国制裁法〉的规定》等，决定将直接或者间接参与制定、决定、实施前款规定的歧视性禁止、限制或者其他类似措施的组织、个人列入反制清单，采取相应的措施。第二十五条　外国组织、个人危害中国国家主权、安全、发展利益，违反正常的市场交易原则中断与中国企业、其他组织或者个人的正常交易，或者对投资者及其对外投资采取歧视性措施，不合理剥夺或者限制投资者及其对外投资正当权益的，国务院有关部门可以采取禁止或者限制其从事与我国有关的进出口活动，禁止或者限制其在中国境内投资，禁止或者限制中国境内的组织、个人与其进行有关交易、合作等活动，禁止或者限制相关人员、产品、交通运输工具等入境，取消或者限制相关人员在中国境内工作、停留或者居留资格等措施。有关措施可以适用于外国组织、个人实际控制或者参与设立、运营的组织。第二十六条　公职人员对在履行对外投资管理服务相关职责中知悉的国家秘密、工作秘密、商业秘密、个人隐私和个人信息等应当依法予以保密，不得泄露或者非法向他人提供。第二十七条　投资者投资国家禁止的对外投资的，由国务院投资主管部门、商务主管部门按照职责分工责令停止该投资活动，限期处分股份、资产，没收违法所得；拒不执行的，处投资额5‰以上10‰以下的罚款；对直接负责的主管人员和其他直接责任人员处5万元以上10万元以下的罚款。投资者未按规定履行境外投资核准备案手续，或者以提交虚假材料、隐瞒真实信息等方式申请有关核准备案的，由核准备案机关责令改正，没收违法所得，处投资额1‰以上5‰以下的罚款；拒不改正的，责令其停止该投资活动，限期处分股份、资产，处投资额5‰以上10‰以下的罚款；对直接负责的主管人员和其他直接责任人员处2万元以上5万元以下的罚款。投资者以贿赂、欺骗等不正当手段获得境外投资核准备案的，由核准备案机关撤销核准备案文件，没收违法所得，处投资额1‰以上5‰以下的罚款；已经投资的，责令其停止该投资活动，限期处分股份、资产，处投资额5‰以上10‰以下的罚款；对直接负责的主管人员和其他直接责任人员处2万元以上5万元以下的罚款。自前三款规定的处罚决定生效之日起，有关主管部门可以在3年内不受理违法行为人提出的核准备案申请，或者禁止其在1年以上3年以下的期限内从事对外投资活动。第二十八条　违反本规定第十五条规定，拒不配合境外投资安全审查，提供虚假材料或者隐瞒有关信息，或者不遵守境外投资安全审查决定的，由国务院有关部门责令改正，没收违法所得，处以罚款；危害国家安全的，责令其采取必要措施消除对国家安全的影响，可以禁止其在1年以上3年以下的期限内从事对外投资活动；已经投资的，可以责令其停止该投资活动，限期处分股份、资产。第二十九条　投资者违反本规定第十七条规定的，国务院投资主管部门、商务主管部门按照职责分工可以责令限期改正；造成危害后果的，可以禁止其在1年以上3年以下的期限内从事对外投资活动。第三十条　投资者开展对外投资活动，违反本规定，造成人身损害、财产损失的，依法承担民事责任；构成违反治安管理行为的，依法给予治安管理处罚；构成犯罪的，依法追究刑事责任。投资者开展对外投资活动，违反其他法律、法规的，由有权机关责令改正，依法予以处理。第三十一条　公职人员在对外投资工作中滥用职权、玩忽职守、徇私舞弊，或者泄露、非法向他人提供所知悉的国家秘密、工作秘密、商业秘密、个人隐私和个人信息的，依法给予处分；构成犯罪的，依法追究刑事责任。第三十二条　对投资者在香港特别行政区、澳门特别行政区、台湾地区投资的管理，参照本规定执行；法律、行政法规或者国务院另有规定的，依照其规定。第三十三条　对投资者以自有资金、募集资金及其他受托资金在中国境外金融市场投资的管理，依照本规定和国家其他有关规定执行。对投资者以对外投资获得的资产、权益等在中国境外再投资的管理，依照本规定和国家其他有关规定执行。中国境内居民个人等对外投资具体管理办法，由国务院投资主管部门、商务主管部门制定。第三十四条　本规定自2026年7月1日起施行。",
+                "content_html": "<div class=\"trs_editor_view TRS_UEDITOR trs_paper_default trs_web\"><p style=\"margin-top: 2px; margin-bottom: 2px; text-indent: 0em; text-align: center; font-size: 24px;\"><span data-index=\"5\" style=\"font-size: 24px;\"><strong>中华人民共和国国务院令</strong></span></p><p style=\"margin-top: 2px; margin-bottom: 2px; text-indent: 0em; text-align: center;\"><span style=\"font-family: 楷体, SimKai;\">第837号</span></p><p style=\"margin-top: 2px; margin-bottom: 2px; text-indent: 0em; text-align: center;\"><br/></p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\">《国务院关于对外投资的规定》已经2026年4月17日国务院第83次常务会议通过，现予公布，自2026年7月1日起施行。</p><p style=\"margin-top: 2px; margin-bottom: 2px; text-indent: 0em; text-align: right;\">总理<span style=\"text-wrap-mode: wrap\">　　李强　　　　　　　 </span></p><p style=\"margin-top: 2px; margin-bottom: 2px; text-indent: 0em; text-align: right;\">2026年5月5日　　　　  </p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\"><br/></p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\"><br/></p><p style=\"margin-top: 2px; margin-bottom: 2px; text-indent: 0em; text-align: center; font-size: 24px;\"><span data-index=\"5\" style=\"font-size: 24px;\"><strong>国务院关于对外投资的规定</strong></span></p><p style=\"margin-top: 2px; margin-bottom: 2px; text-indent: 0em;\"><br/></p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\"><strong>第一条</strong>　为了推进高水平对外开放，促进对外投资高质量发展，有效实施对外投资管理，保护投资者及其对外投资合法权益，维护国家主权、安全、发展利益，根据《中华人民共和国对外关系法》、《中华人民共和国对外贸易法》等法律，制定本规定。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\"><strong>第二条</strong>　中华人民共和国境内（以下简称中国境内）投资者对外投资，适用本规定。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\">本规定所称对外投资即境外投资，是指投资者以投入资产、权益或者提供融资、担保等方式，直接或者间接获得其他国家（地区）的企业、资产等所有权、控制权、经营管理权以及其他相关权益的活动。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\">本规定所称投资者，包括中国境内的企业、其他组织和居民个人。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\"><strong>第三条</strong>　对外投资工作坚持对外开放的基本国策，贯彻总体国家安全观，统筹发展和安全，统筹国内国际，健全对外投资管理服务体系，提升对外投资质量与水平，促进开放合作、互利共赢。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\"><strong>第四条</strong>　国家主动对接国际高标准经济贸易规则，推进高质量共建“一带一路”，推进多双边投资合作机制建设，积极参与国际投资规则制定，推动产业链供应链国际合作，反对单边主义和保护主义，推动建设开放型世界经济。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\"><strong>第五条</strong>　国家支持投资者按照市场化原则开展对外投资活动，积极参与国际合作竞争。投资者依法享有对外投资自主权，自主决策、自担风险、自负盈亏。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\">投资者开展对外投资及其相关活动，应当遵守法律法规和国际惯例，尊重当地习俗和文化传统，遵守商业道德，诚实守信、公平竞争，履行社会责任，维护国家形象，不得妨害市场竞争秩序、破坏生态环境、损害劳动者合法权益，不得危害中国国家安全、损害国家利益和社会公共利益。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\"><strong>第六条</strong>　国家健全海外综合服务体系，促进贸易投资一体化，完善公共平台与服务，统筹外事、法律、财税、金融、经贸、物流、出境入境、海关、贸促等领域服务资源，为投资者提供服务保障。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\">省级以上人民政府及其有关部门提升公共服务能力和水平，为投资者提供法律法规、政策措施、投资指南、知识产权、风险防范应对、权益保护等方面的公共产品和服务。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\"><strong>第七条</strong>　支持咨询评估、法律服务、会计审计、信用评级、调解仲裁、知识产权等专业服务机构拓展海外服务网络，提高国际化服务能力和水平，为投资者及其对外投资提供高质量专业服务。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\">有关专业服务机构应当遵循诚实守信、勤勉尽责、独立客观的原则，建立有效的风险控制和内部控制制度，配备具有相应专业能力的从业人员，依法开展有关服务活动。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\"><strong>第八条</strong>　银行业金融机构应当立足职能定位，遵循市场化、法治化、商业可持续和风险可控原则，在业务范围内为投资者对外投资提供融资等金融服务。鼓励政策性保险机构为投资者对外投资提供海外投资保险等服务。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\"><strong>第九条</strong>　有关行业协会商会应当依照法律、法规和章程，加强行业自律，提升服务投资者及其对外投资的能力和水平，及时反映行业诉求。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\">行业协会商会、贸易投资促进组织按照章程提供与对外投资有关的信息咨询、市场拓展、经贸交流、权益保护、纠纷处理等方面的服务。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\"><strong>第十条</strong>　国家健全对外投资管理体系，完善调控措施，分类分级实施全过程监管，加强风险防控，提高对外投资的科学性、安全性，推动投资便利化和有效防范风险相结合。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\"><strong>第十一条</strong>　国务院投资主管部门、商务主管部门会同国务院其他有关部门根据国民经济和社会发展需要、有关国家（地区）投资环境变化和风险程度等，制定、调整和实施对外投资政策，明确鼓励、限制、禁止的对外投资，加强对外投资监管，指导、监督投资者规范投资经营行为。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\"><strong>第十二条</strong>　投资者开展对外投资活动依法需要履行核准备案、信息报告、跨境资金登记等手续的，应当依照国家有关规定办理，如实提交有关材料，并配合有关主管部门的监督检查。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\"><strong>第十三条</strong>　投资者开展对外投资活动，不得出口、使用国家禁止出口的货物、技术、服务及相关数据，或者未经许可出口、使用国家限制出口的货物、技术、服务及相关数据；不得以跨境派遣技术人员、组织人员赴其他国家（地区）工作、跨境提供技术指导、安排人员跨境培训等方式向其他国家（地区）转移国家禁止出口的货物、技术、服务及相关数据，或者未经许可向其他国家（地区）转移国家限制出口的货物、技术、服务及相关数据。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\"><strong>第十四条</strong>　对外投资涉及资金汇兑、货物与技术进出口、跨境服务贸易、跨境数据流动、人员出境入境的管理以及经营者集中审查、出口管制、网络安全监管、税收征收管理、国有资产监管等，依照有关法律、行政法规和国家有关规定执行。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\"><strong>第十五条</strong>　国家健全境外投资安全审查制度，国务院投资主管部门、商务主管部门会同国务院其他有关部门对影响或者可能影响国家安全的境外投资及相关资产、权益等的转让、处分进行安全审查。有关组织、个人应当予以协助、配合，不得拒绝、阻碍，并应当遵守境外投资安全审查决定。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\"><strong>第十六条</strong>　投资者及其在其他国家（地区）投资的企业应当完善治理结构，建立健全合规经营、内部控制、安全生产、突发事件处置等制度，加强风险识别和防范处置，投入必要的人员、资金、设备等资源，保障其员工和资产安全。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\"><strong>第十七条</strong>　投资者应当规范投资经营行为，不得损害其他投资者的商业信誉、商品声誉，侵犯他人商业秘密，没有正当理由低价倾销商品，通过贿赂、欺诈等手段牟取不正当利益，扰乱对外投资市场秩序。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\"><strong>第十八条</strong>　国务院有关部门加强对外投资监测预警和风险评估，及时发布有关国家（地区）安全状况，提示投资风险，指导和帮助投资者做好安全风险防范，维护国家海外利益和投资者合法权益。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\"><strong>第十九条</strong>　中华人民共和国根据缔结或者参加的国际条约、协定，或者按照平等互惠原则，与其他国家（地区）、国际组织等开展执法领域合作与交流，保护在其他国家（地区）的投资者及其投资的企业、项目所属员工和资产等的安全以及有关组织、个人的正当权益。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\">国家积极商签多双边贸易投资协定等国际经贸协定，提高对外投资保护水平，促进投资自由化便利化。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\"><strong>第二十条</strong>　国家依法为在其他国家（地区）投资的中国公民、组织及其在该国家（地区）投资的企业、项目所属中国籍员工提供领事保护与协助，维护其正当权益。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\">投资目的国家（地区）发生战争、武装冲突、暴乱、严重自然灾害、重大事故灾难、重大传染病疫情、恐怖袭击等重大突发事件，在该国家（地区）的投资者及其投资的企业、项目所属中国籍员工因人身财产安全受到威胁需要帮助的，驻外外交机构应当及时核实情况，敦促有关国家（地区）采取有效措施保护中国公民、组织的人身财产安全，并根据相关情形提供协助；中国政府作出相应避险安排的，有关组织、个人应当予以配合。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\"><strong>第二十一条</strong>　鼓励投资者通过协商、调解、仲裁、诉讼等多种方式化解对外投资有关矛盾纠纷，维护自身合法权益。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\"><strong>第二十二条</strong>　中国境内组织、个人参与对外投资相关仲裁、诉讼或者受到境外司法、执法机构相关调查，需要向境外提供证据或者相关材料的，应当遵守保守国家秘密、数据安全、个人信息保护、技术出口管理、出口管制、司法协助等法律、行政法规和国家有关规定。依法须经主管机关准许的，应当履行相关法律程序。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\"><strong>第二十三条</strong>　投资者在投资目的国家（地区）遭遇与贸易有关的投资壁垒或者其他投资经营障碍的，国务院商务主管部门可以自行或者会同国务院其他有关部门组织开展调查，有关组织、个人应当予以协助、配合。根据调查结果，国务院有关部门可以采取调整有关国别投资政策，禁止或者限制有关货物、技术进出口或者国际服务贸易等措施。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\"><strong>第二十四条</strong>　任何国家（地区）、国际组织违反国际法和国际关系基本准则，在投资经营等方面对中华人民共和国采取歧视性禁止、限制或者其他类似措施，中国政府及其有关部门可以根据实际情况采取相应的措施，保护投资者及其对外投资的安全和正当权益，保护国家的海外利益不受威胁和侵害。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\">国务院有关部门可以依照《中华人民共和国反外国制裁法》、《实施〈中华人民共和国反外国制裁法〉的规定》等，决定将直接或者间接参与制定、决定、实施前款规定的歧视性禁止、限制或者其他类似措施的组织、个人列入反制清单，采取相应的措施。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\"><strong>第二十五条</strong>　外国组织、个人危害中国国家主权、安全、发展利益，违反正常的市场交易原则中断与中国企业、其他组织或者个人的正常交易，或者对投资者及其对外投资采取歧视性措施，不合理剥夺或者限制投资者及其对外投资正当权益的，国务院有关部门可以采取禁止或者限制其从事与我国有关的进出口活动，禁止或者限制其在中国境内投资，禁止或者限制中国境内的组织、个人与其进行有关交易、合作等活动，禁止或者限制相关人员、产品、交通运输工具等入境，取消或者限制相关人员在中国境内工作、停留或者居留资格等措施。有关措施可以适用于外国组织、个人实际控制或者参与设立、运营的组织。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\"><strong>第二十六条</strong>　公职人员对在履行对外投资管理服务相关职责中知悉的国家秘密、工作秘密、商业秘密、个人隐私和个人信息等应当依法予以保密，不得泄露或者非法向他人提供。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\"><strong>第二十七条</strong>　投资者投资国家禁止的对外投资的，由国务院投资主管部门、商务主管部门按照职责分工责令停止该投资活动，限期处分股份、资产，没收违法所得；拒不执行的，处投资额5‰以上10‰以下的罚款；对直接负责的主管人员和其他直接责任人员处5万元以上10万元以下的罚款。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\">投资者未按规定履行境外投资核准备案手续，或者以提交虚假材料、隐瞒真实信息等方式申请有关核准备案的，由核准备案机关责令改正，没收违法所得，处投资额1‰以上5‰以下的罚款；拒不改正的，责令其停止该投资活动，限期处分股份、资产，处投资额5‰以上10‰以下的罚款；对直接负责的主管人员和其他直接责任人员处2万元以上5万元以下的罚款。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\">投资者以贿赂、欺骗等不正当手段获得境外投资核准备案的，由核准备案机关撤销核准备案文件，没收违法所得，处投资额1‰以上5‰以下的罚款；已经投资的，责令其停止该投资活动，限期处分股份、资产，处投资额5‰以上10‰以下的罚款；对直接负责的主管人员和其他直接责任人员处2万元以上5万元以下的罚款。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\">自前三款规定的处罚决定生效之日起，有关主管部门可以在3年内不受理违法行为人提出的核准备案申请，或者禁止其在1年以上3年以下的期限内从事对外投资活动。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\"><strong>第二十八条</strong>　违反本规定第十五条规定，拒不配合境外投资安全审查，提供虚假材料或者隐瞒有关信息，或者不遵守境外投资安全审查决定的，由国务院有关部门责令改正，没收违法所得，处以罚款；危害国家安全的，责令其采取必要措施消除对国家安全的影响，可以禁止其在1年以上3年以下的期限内从事对外投资活动；已经投资的，可以责令其停止该投资活动，限期处分股份、资产。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\"><strong>第二十九条</strong>　投资者违反本规定第十七条规定的，国务院投资主管部门、商务主管部门按照职责分工可以责令限期改正；造成危害后果的，可以禁止其在1年以上3年以下的期限内从事对外投资活动。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\"><strong>第三十条</strong>　投资者开展对外投资活动，违反本规定，造成人身损害、财产损失的，依法承担民事责任；构成违反治安管理行为的，依法给予治安管理处罚；构成犯罪的，依法追究刑事责任。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\">投资者开展对外投资活动，违反其他法律、法规的，由有权机关责令改正，依法予以处理。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\"><strong>第三十一条</strong>　公职人员在对外投资工作中滥用职权、玩忽职守、徇私舞弊，或者泄露、非法向他人提供所知悉的国家秘密、工作秘密、商业秘密、个人隐私和个人信息的，依法给予处分；构成犯罪的，依法追究刑事责任。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\"><strong>第三十二条</strong>　对投资者在香港特别行政区、澳门特别行政区、台湾地区投资的管理，参照本规定执行；法律、行政法规或者国务院另有规定的，依照其规定。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\"><strong>第三十三条</strong>　对投资者以自有资金、募集资金及其他受托资金在中国境外金融市场投资的管理，依照本规定和国家其他有关规定执行。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\">对投资者以对外投资获得的资产、权益等在中国境外再投资的管理，依照本规定和国家其他有关规定执行。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\">中国境内居民个人等对外投资具体管理办法，由国务院投资主管部门、商务主管部门制定。</p><p data-index=\"-2\" style=\"text-indent: 2em; margin-top: 2px; margin-bottom: 2px;\"><strong>第三十四条</strong>　本规定自2026年7月1日起施行。</p></div>"
+            },
+            {
+                "c_fwjg": "解读",
+                "title": "未来5年预计将投资5万亿元，建设改造城市地下管网约77万公里",
+                "list": [
+                    {
+                        "name": "标题",
+                        "value": "未来5年预计将投资5万亿元，建设改造城市地下管网约77万公里",
+                        "show": "false"
+                    },
+                    {
+                        "name": "发布时间",
+                        "value": "2026-05-29",
+                        "show": "true"
+                    }
+                ],
+                "content": "",
+                "content_html": "<div class=\"trs_editor_view TRS_UEDITOR trs_paper_default\"><div id=\"player_video\" style=\"margin:0px auto;width:615px\"><iframe id=\"iframe1\" src=\"https://player.v.news.cn/api/v1/getPlayPage?uuid=1_2bc71bd967c24646b05c3b608b6a3a6f&vid=b49a012cefce3cae33666e2e1935cd4a&playType=0\" width=\"615\" height=\"461\" scrolling=\"no\" frameborder=\"0\" allowscriptaccess=\"always\" allowfullscreen=\"true\"></iframe></div></div>"
+            },
+            {
+                "c_fwjg": "解读",
+                "title": "未来5年预计将投资5万亿元，建设改造城市地下管网约77万公里",
+                "list": [
+                    {
+                        "name": "标题",
+                        "value": "未来5年预计将投资5万亿元，建设改造城市地下管网约77万公里",
+                        "show": "false"
+                    },
+                    {
+                        "name": "发布时间",
+                        "value": "2026-05-29",
+                        "show": "true"
+                    }
+                ],
+                "content": "",
+                "content_html": "<div class=\"trs_editor_view TRS_UEDITOR trs_paper_default\"><div id=\"player_video\" style=\"margin:0px auto;width:615px\"><iframe id=\"iframe1\" src=\"https://player.v.news.cn/api/v1/getPlayPage?uuid=1_2bc71bd967c24646b05c3b608b6a3a6f&vid=b49a012cefce3cae33666e2e1935cd4a&playType=0\" width=\"615\" height=\"461\" scrolling=\"no\" frameborder=\"0\" allowscriptaccess=\"always\" allowfullscreen=\"true\"></iframe></div></div>"
+            },
+            {
+                "c_fwjg": "解读",
+                "title": "未来5年新开工改造城镇老旧小区11.5万个，优先改造这些小区！",
+                "list": [
+                    {
+                        "name": "标题",
+                        "value": "未来5年新开工改造城镇老旧小区11.5万个，优先改造这些小区！",
+                        "show": "false"
+                    },
+                    {
+                        "name": "发布时间",
+                        "value": "2026-05-29",
+                        "show": "true"
+                    }
+                ],
+                "content": "",
+                "content_html": "<div class=\"trs_editor_view TRS_UEDITOR trs_paper_default\"><div id=\"player_video\" style=\"margin:0px auto;width:615px\"><iframe id=\"iframe1\" src=\"https://player.v.news.cn/api/v1/getPlayPage?uuid=1_2bc71bd967c24646b05c3b608b6a3a6f&vid=7cf0542a7fae418933666e2e1935cd4a&playType=0\" width=\"615\" height=\"461\" scrolling=\"no\" frameborder=\"0\" allowscriptaccess=\"always\" allowfullscreen=\"true\"></iframe></div><div id=\"player_video\" style=\"margin:0px auto;width:615px\"></div></div>"
+            },
+            {
+                "c_fwjg": "解读",
+                "title": "未来5年新开工改造城镇老旧小区11.5万个，优先改造这些小区！",
+                "list": [
+                    {
+                        "name": "标题",
+                        "value": "未来5年新开工改造城镇老旧小区11.5万个，优先改造这些小区！",
+                        "show": "false"
+                    },
+                    {
+                        "name": "发布时间",
+                        "value": "2026-05-29",
+                        "show": "true"
+                    }
+                ],
+                "content": "",
+                "content_html": "<div class=\"trs_editor_view TRS_UEDITOR trs_paper_default\"><div id=\"player_video\" style=\"margin:0px auto;width:615px\"><iframe id=\"iframe1\" src=\"https://player.v.news.cn/api/v1/getPlayPage?uuid=1_2bc71bd967c24646b05c3b608b6a3a6f&vid=7cf0542a7fae418933666e2e1935cd4a&playType=0\" width=\"615\" height=\"461\" scrolling=\"no\" frameborder=\"0\" allowscriptaccess=\"always\" allowfullscreen=\"true\"></iframe></div><div id=\"player_video\" style=\"margin:0px auto;width:615px\"></div></div>"
+            }
+        ]
+    },
+    "msg": "success"
+}
