@@ -44,7 +44,7 @@
                 <el-tag v-show="item.status === '1'" size="mini" class="task-tag task-tag--status-done">已完成</el-tag>
                 <el-tag v-show="item.status === '2'" size="mini" class="task-tag task-tag--status-failed">失败</el-tag>
               </td>
-              <td>
+              <td class="task-action-cell">
                 <button class="btn btn-outline btn-sm action-btn" @click="handleDelete(item.id)" :disabled="item.status === '0'">删除</button>
                 <button class="btn btn-outline btn-sm action-btn" @click="handleView(item)" :disabled="item.status === '0' || item.status === '2'">查看</button>
               </td>
@@ -138,5 +138,8 @@ export default {
   color: #c9190b;
   background-color: #fdeceb;
   border-color: #f0bbb6;
+}
+.task-action-cell .btn {
+  margin-right: 5px;
 }
 </style>

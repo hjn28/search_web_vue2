@@ -9,7 +9,7 @@
       @clear="clearHistory"
     /> -->
 
-    <div class="modal-overlay" :class="{ show: overlayVisible }" @click="closeAllModals"></div>
+    <!-- <div class="modal-overlay" :class="{ show: overlayVisible }" @click="closeAllModals"></div> -->
 
     <div class="main-container">
       <AdviceClusterLeft
@@ -61,6 +61,7 @@
     <GenerateReportModal
       :visible="templateModalVisible"
       :initial-tree="templateInitialTree"
+      :initial-file-name="templateInitialFileName"
       :mode="templateModalType"
       :show-summary-options="false"
       @save="onTemplateSave"

@@ -116,6 +116,7 @@
     <GenerateReportModal
       :visible="generateReportVisible"
       :initial-tree="generateReportTree"
+      :initial-file-name="generateReportFileName"
       :initial-report-options="generateReportOptions"
       :show-summary-options="generateReportShowSummaryOptions"
       @close="generateReportVisible = false"
@@ -146,10 +147,10 @@
           </div>
           <!-- <button class="btn btn-outline btn-sm" :disabled="!selectedIds.length" @click="generateSummary">分类要点内容汇总</button>
           <button class="btn btn-outline btn-sm" :disabled="!selectedIds.length" @click="generateReportAll">生成分析报告</button> -->
-          <button class="btn btn-outline btn-sm" :disabled="!selectedIds.length" @click="outputRepresentatives">输出代表</button>
+          <button class="btn btn-outline btn-sm" :disabled="!selectedIds.length" @click="outputRepresentatives">输出列表</button>
           <button class="btn btn-outline btn-sm" @click="rwdlQuery">任务队列</button>
           <button class="btn btn-outline btn-sm" @click="resetTableSelection">重置</button>
-          <button class="btn btn-outline btn-sm">打入标签</button>
+          <!-- <button class="btn btn-outline btn-sm">打入标签</button> -->
         </div>
         <div v-else-if="viewMode === 'summary'" class="detail-header-actions">
           <button class="btn btn-outline btn-sm" @click="backToTable">返回列表</button>
@@ -329,6 +330,7 @@ export default {
       /* ---- 生成报告弹窗（GenerateReportModal） ---- */
       generateReportVisible: false,
       generateReportTree: [],
+      generateReportFileName: '',
       generateReportOptions: {},
       generateReportShowSummaryOptions: true,
       generateReportFromTaskQueue: false,
@@ -535,12 +537,22 @@ export default {
       this.generateReportShowSummaryOptions = !options.hideSummaryOptions
       if (fromTaskQueue && this.taskQueueReportTree.length) {
         this.generateReportTree = this.taskQueueReportTree
+        this.generateReportFileName = ''
       } else {
-        // 普通入口回显汇总要点/分析报告共用的共享模板目录树。
+        // 普通入口优先使用左侧上传模板目录；没有时回退到共享模板。
+        const wordTemplate = this.$store?.state?.wordTemplate
         const savedTemplate = this.$store?.state?.template
-        this.generateReportTree = savedTemplate?.hasData && Array.isArray(savedTemplate?.tree) && savedTemplate.tree.length
-          ? savedTemplate.tree
-          : []
+        if (wordTemplate?.hasData && Array.isArray(wordTemplate?.tree) && wordTemplate.tree.length) {
+          this.generateReportTree = wordTemplate.tree
+          this.generateReportFileName = wordTemplate.wordFileName || ''
+        } else if (savedTemplate?.hasData && Array.isArray(savedTemplate?.tree) && savedTemplate.tree.length) {
+          this.generateReportTree = savedTemplate.tree
+          this.generateReportFileName = ''
+        } else {
+          const classificationWords = Array.isArray(this.leftKeywords) ? this.leftKeywords : []
+          this.generateReportTree = TreeHelper.buildTreeFromWords(classificationWords)
+          this.generateReportFileName = ''
+        }
       }
       this.generateReportVisible = true
     },
@@ -548,16 +560,17 @@ export default {
     /* ==================== 保存生成报告模板 ==================== */
     handleReportTemplateSave(payload) {
       const tree = Array.isArray(payload && payload.tree) ? payload.tree : []
-      if (!tree.length) return
       this.generateReportTree = tree
+      this.generateReportFileName = payload && payload.wordFileName ? payload.wordFileName : ''
       this.generateReportOptions = {
         selectedOption: payload.selectedOption || '',
         delegation: payload.delegation || '',
         cbdw: payload.cbdw || ''
       }
-      this.$store.dispatch('template/saveTemplate', {
+      this.$store.dispatch('wordTemplate/saveTemplate', {
         tree,
-        words: TreeHelper.collectNodeNames(tree)
+        words: TreeHelper.collectNodeNames(tree),
+        wordFileName: this.generateReportFileName
       })
       this.showAlert('目录结构和右侧选项已保存')
     },
@@ -586,7 +599,7 @@ export default {
       if (!selected.length) { this.showAlert('请先勾选要生成汇总/报告的记录'); return }
       // 生成的目录树写入共享模板 store，供汇总要点/分析报告后续复用（与原有生成流程一致）
       if (tree.length) {
-        this.$store.dispatch('template/saveTemplate', { tree, words: TreeHelper.collectNodeNames(tree) })
+        this.$store.dispatch('wordTemplate/saveTemplate', { tree, words: TreeHelper.collectNodeNames(tree) })
       }
       // 提交后关闭弹窗（与原有分析报告/汇总要点流程一致，目录树已入共享 store，重开可回显）
       this.generateReportVisible = false
@@ -744,13 +757,13 @@ export default {
       })
     },
 
-    /* ==================== 输出代表 CSV ==================== */
+    /* ==================== 输出列表 CSV ==================== */
     outputRepresentatives() {
       const selected = this.tableData.filter(item => this.selectedIds.includes(item.id))
       if (!selected.length) { this.showAlert('请先勾选要输出的代表记录'); return }
       DataExporter.exportCsv(selected, '代表信息', ['建议编号', '标题', '届次', '代表', '代表团'],
         r => [r.id, r.title, r.session, r.representative, r.delegation])
-      this.addHistory('输出代表', `导出代表记录${selected.length}条`)
+      this.addHistory('输出列表', `导出代表记录${selected.length}条`)
     },
 
     /* ==================== 任务队列 ==================== */

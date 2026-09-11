@@ -2,7 +2,7 @@
   <div>
     <!-- PDF 预览 -->
     <!-- <vue-office-pdf :src="pdfSrc" style="height: 100vh;" @rendered="onPdfRendered" /> -->
-    
+
     <!-- DOCX 预览 -->
     <vue-office-docx :src="docxSrc" style="height: 100vh;" @rendered="onDocxRendered" />
   </div>
@@ -25,7 +25,7 @@ export default {
     return {
       // 可以是网络 URL、上传文件的 ArrayBuffer 或 Blob 等
       docxSrc: '/static/综合分析功能说明手册.docx',
-      pdfSrc: '/static/综合分析流程图.pdf',
+      pdfSrc: '/static/综合分析流程图.pdf'
     }
   },
   methods: {

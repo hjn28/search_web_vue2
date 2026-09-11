@@ -36,7 +36,7 @@
               </template>
             </td> -->
             <td class="action-col">
-              <button class="btn btn-outline btn-sm action-btn" @click="onOpenBq(item)">标签</button>
+              <!-- <button class="btn btn-outline btn-sm action-btn" @click="onOpenBq(item)">标签</button> -->
               <button class="btn btn-outline btn-sm action-btn" @click="onShowDetail(item)">详情</button>
               <!-- 启用/禁用胶囊：已禁用显示"启用"（红色），启用中显示"禁用"（灰色），点击切换 -->
               <img

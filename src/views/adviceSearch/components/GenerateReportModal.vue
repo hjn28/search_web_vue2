@@ -11,7 +11,7 @@
         <div class="layout-left">
           <div class="upload-card">
             <input v-model="fileName" class="upload-file-name" type="text" readonly aria-label="已选文件" />
-            <button type="button" class="upload-trigger" @click="handleUploadClick"><i class="el-icon-upload2"></i>文件上传</button>
+            <button type="button" class="upload-trigger" @click="handleUploadClick">文件上传</button>
             <input ref="fileInput" type="file" class="file-input" @change="handleFileChange" />
           </div>
 
@@ -104,6 +104,10 @@ export default {
       type: Array,
       default: () => []
     },
+    initialFileName: {
+      type: String,
+      default: ''
+    },
     showSummaryOptions: {
       type: Boolean,
       default: true
@@ -169,6 +173,7 @@ export default {
           if (savedOptions.selectedOption) this.selectedOption = savedOptions.selectedOption
           this.selectedDelegationForReport = savedOptions.delegation || ''
           this.selectedCbdwForReport = savedOptions.cbdw || ''
+          this.fileName = this.initialFileName || ''
           if (!this.showSummaryOptions && this.selectedOption.indexOf('summary-') === 0) {
             this.selectedOption = 'report-default'
           }
@@ -235,13 +240,10 @@ export default {
   },
   methods: {
     handleSaveTemplate() {
-      if (!Array.isArray(this.treeData) || !this.treeData.length) {
-        this.$message && this.$message.warning('目录不能为空')
-        return
-      }
       this.$emit('save', {
         tree: this.treeData,
         words: this.collectTreeNames(this.treeData),
+        wordFileName: this.fileName,
         selectedOption: this.selectedOption,
         delegation: this.selectedDelegationForReport,
         cbdw: this.selectedCbdwForReport
@@ -261,6 +263,7 @@ export default {
       return result.filter(Boolean)
     },
     handleClose() {
+      this.fileName = ''
       this.$emit('change', this.treeData)
       this.$emit('close')
     },

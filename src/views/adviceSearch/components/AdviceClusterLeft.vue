@@ -56,9 +56,9 @@
                   >?</span>
                 </el-tooltip>
               </button> -->
+              <button class="btn btn-outline btn-sm" @click="onEditWord">上传分类模板</button>
+              <button class="btn btn-outline btn-sm" @click="toggleAssistBuild">辅助分类构建</button>
               <button class="btn btn-outline btn-sm" @click="onWarehouseUpload">上传分类学习资料</button>
-              <button class="btn btn-outline btn-sm" @click="onEditWord">上传模板</button>
-              <button class="btn btn-outline btn-sm" @click="toggleAssistBuild">辅助构建</button>
               <!-- <button class="title-icon-btn" @click="onEditWord" title="上传模板">
                 <img class="warehouse-upload-icon" src="~@/assets/img/upload_template.svg" alt="上传模板" />
               </button> -->
@@ -121,8 +121,8 @@
                   />
                   <div v-if="!filterSemiFuzzyWord" class="category-template-hint">
                     <div>1. 单层分类可直接输入此框。</div>
-                    <div>2. 多层分类可点击“上传模板”上传。</div>
-                    <div>3. 点击“辅助构建”可查询政策文件，将有关文件要点输入此框构建分类体系。</div>
+                    <div>2. 多层分类可点击“上传分类模板”上传。</div>
+                    <div>3. 点击“辅助分类构建”可查询政策文件，将有关文件要点输入此框构建分类体系。</div>
                     <div>4. 点击“上传分类学习资料”，提供分类释义、政策文件及历史分析报告，支撑大模型深度学习理解分类逻辑。</div>
                   </div>
                 </template>
@@ -154,11 +154,11 @@
         </div>
 
         <!-- ======== 底部：分析材料入库区 ======== -->
-        <div class="panel">
+        <div v-if="isShowZlsc" class="panel">
           <div class="section-title"><span>分析材料入库区</span></div>
           <!-- 学习文件区域：左右间距 30px -->
           <div class="warehouse-upload-wrap">
-            <div class="optional-row warehouse-upload-row" @dragover.prevent @drop.prevent="onWarehouseDrop">
+            <div class="optional-row warehouse-upload-row">
               <div class="optional-item">
                 <label class="optional-label scxxzl">入库分析资料：</label>
                 <input v-model="warehouseFileName" class="optional-select" placeholder="" />
@@ -186,7 +186,7 @@
         <button class="btn btn-sm left-fixed-btn" @click="handleBottomSearch">开始检索</button>
       </div>
 
-      <div v-if="expandedTextarea" class="textarea-expand-mask" @click="closeTextareaExpand"></div>
+      <!-- <div v-if="expandedTextarea" class="textarea-expand-mask" @click="closeTextareaExpand"></div>
       <div v-if="expandedTextarea" class="textarea-expand-overlay left-textarea-expand-overlay">
         <div class="textarea-expand-header">
           <span>{{
@@ -200,7 +200,7 @@
         <textarea v-else-if="expandedTextarea === 'sentence'" v-model="textInputs.sentence" class="textarea-expand-input" placeholder="请输入句子"></textarea>
         <textarea v-else-if="expandedTextarea === 'semi'" v-model="filterSemiFuzzyWord" class="textarea-expand-input" placeholder="请输入模糊检索词"></textarea>
         <textarea v-else v-model="textInputs.paragraph" class="textarea-expand-input" placeholder="请输入段落"></textarea>
-      </div>
+      </div> -->
 
       <!-- 一次拓展结果展示在右侧面板，请见 AdviceClusterRight.vue -->
 
@@ -221,12 +221,12 @@
  * 布局（左侧自上而下三个区域）：
  *   1. 选定分析的范围  → FilterConditions 组件（范围筛选 + 精准词）
  *   2. 构建分析的分类体系 → 关键词输入 + 拓展按钮 + 模糊词一栏
- *   3. 分析材料入库区  → 学习文件上传（点击/拖拽）
+ *   3. 分析材料入库区  → 学习文件上传（点击选择）
  *
  * 不再使用父组件的 vm 引用，所有数据归本组件自管。
  */
 
-import { searchZF } from '../../../api/login'
+import { searchZF, uploadTaskFile, getSourceList } from '../../../api/login'
 import SearchHelper from '../../../utils/classes/SearchHelper'
 import CitationView from './CitationView.vue'
 import FilterConditions from './FilterConditions.vue'
@@ -234,6 +234,7 @@ import TemplateModalBus from '../../../utils/classes/TemplateModalBus'
 import data from '../data.json'
 import DebounceHelper from '../../../utils/classes/DebounceHelper'
 import { mapState } from 'vuex'
+import { pinyin } from 'pinyin-pro'
 
 const { mockSearchZFSearch2 } = data
 
@@ -254,10 +255,12 @@ export default {
 
       /* ---- 筛选（传递给 FilterConditions 组件） ---- */
       categories: [
-        { label: '建议库', value: '建议库' },
-        { label: '议案库', value: '议案库' },
-        { label: '大会简报', value: '大会简报' },
-        { label: '预算库', value: '预算库' }
+        // { label: '建议库', value: '建议库' },
+        // { label: '议案库', value: '议案库' },
+        // { label: '预算库', value: '预算库' }
+        { label: '建议库', value: 'jianyi' },
+        { label: '议案库', value: 'yian' },
+        { label: '预算库', value: 'yusuan' }
       ],
       budgetExactWords: SearchHelper.DEFAULT_BUDGET_WORDS,
       filterSessions: SearchHelper.sortSessionsDesc((data.filters && data.filters.sessions) || []),
@@ -283,6 +286,7 @@ export default {
       assistExpanded: false,
 
       /* ---- 入库区（分析材料入库区） ---- */
+      isShowZlsc: false, // 是否显示“资料上传”功能（由 authUrl 中是否包含 menu/zhfx/zlsc 决定）
       warehouseFiles: [],
       warehouseFileName: '',
 
@@ -301,7 +305,11 @@ export default {
     // 回显展示仅由模糊词生成触发，汇总要点/分析报告保存不会写到这里）
     ...mapState('wordTemplate', {
       templateHasData: 'hasData',
-      templateTree: 'tree'
+      templateTree: 'tree',
+      templateFileName: 'wordFileName'
+    }),
+    ...mapState('dict', {
+      isShowZlsc: 'isShowZlsc'
     }),
     // 从树结构中提取所有叶节点名称（不含父节点），用于检索聚类
     templateLeafWords() {
@@ -375,6 +383,20 @@ export default {
   },
   mounted() {
     this.emitKeywords()
+    getSourceList().then((res) => {
+      if (res && res.data && Array.isArray(res.data)) {
+        // this.categories 拼接上来源库数据，value 使用拼音简写
+        this.categories = [
+          { label: '建议库', value: 'jianyi' },
+          { label: '议案库', value: 'yian' },
+          { label: '预算库', value: 'yusuan' },
+          ...res.data.map(item => ({
+            label: item.label,
+            value: item.value
+          }))
+        ]
+      }
+    })
   },
   methods: {
     /** 收集关键词并同步给父组件（用于右侧生成汇总要点时导入目录树） */
@@ -500,7 +522,7 @@ export default {
       TemplateModalBus.$emit('open-template-modal', {
         type: 'word-edit',
         initialTree: this.templateTree,
-        initialFileName: ''
+        initialFileName: this.templateFileName || ''
       })
     },
 
@@ -611,29 +633,48 @@ export default {
         this.$refs.warehouseFileInput.click()
       }
     },
-    /** 文件选择框变化：将文件去扩展名后加入入库文件列表 */
+    /** 文件选择框变化：上传文件并在成功后加入入库文件列表 */
     onWarehouseFileChange(e) {
       const files = e && e.target && e.target.files
       if (!files || !files.length) return
-      this.addWarehouseFiles(files)
+      this.uploadWarehouseFiles(files)
       if (e && e.target) e.target.value = ''
     },
-    /** 拖拽文件到上传区 */
-    onWarehouseDrop(e) {
-      const files = e && e.dataTransfer && e.dataTransfer.files
-      if (files && files.length) this.addWarehouseFiles(files)
-    },
-    /** 文件列表去重后加入入库区（文件名去掉扩展名，作为模糊词检索项），学习文件名称回显到输入框 */
-    addWarehouseFiles(files) {
-      let lastLabel = ''
+    /** 上传文件到分类学习资料索引，接口成功后再加入入库区 */
+    uploadWarehouseFiles(files) {
       Array.prototype.forEach.call(files, file => {
-        const label = String(file.name || '').replace(/\.\w+$/, '')
-        if (label && this.warehouseFiles.indexOf(label) === -1) {
-          this.warehouseFiles.push(label)
-          lastLabel = label
-        }
+        const fileName = String((file && file.name) || '').split('.')[0].trim()
+        if (!fileName) return
+        const formData = new FormData()
+        formData.append('file', file)
+        formData.append('fileName', fileName)
+        formData.append('indexName', this.toPinyin(fileName))
+        formData.append('force', false)
+
+        uploadTaskFile(formData).then(res => {
+          if (res && (res.code === 0 || res.success === true)) {
+            const label = fileName.replace(/\.\w+$/, '')
+            if (label && this.warehouseFiles.indexOf(label) === -1) {
+              this.warehouseFiles.push(label)
+            }
+            this.warehouseFileName = label
+            this.addHistory('文件上传', `上传文件：${fileName}`)
+            this.$message && this.$message.success('文件上传成功')
+          } else {
+            this.showAlert((res && (res.message || res.msg)) || '文件上传失败，请重试')
+          }
+        }).catch(error => {
+          console.error('分类学习资料上传失败:', error)
+          this.showAlert('文件上传失败，请重试')
+        })
       })
-      if (lastLabel) this.warehouseFileName = lastLabel
+    },
+    /** 将中文来源库名称转换为接口需要的无声调全拼索引名 */
+    toPinyin(value) {
+      return pinyin(String(value || ''), {
+        toneType: 'none',
+        pattern: 'pinyin'
+      }).replace(/\s+/g, '')
     },
     /** 移除单个入库文件 */
     removeWarehouseFile(label) {

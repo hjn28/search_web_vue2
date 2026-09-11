@@ -11,18 +11,21 @@ export default {
   state: {
     hasData: false, // 是否有模板数据
     tree: [], // 目录树结构 [{ id, name, children }]
-    words: [] // 所有节点名称列表（叶子节点文本）
+    words: [], // 所有节点名称列表（叶子节点文本）
+    wordFileName: '' // 模板文件名称
   },
   mutations: {
-    SET_TEMPLATE(state, { tree, words }) {
+    SET_TEMPLATE(state, { tree, words, wordFileName }) {
       state.hasData = true
       state.tree = tree || []
       state.words = words || []
+      state.wordFileName = wordFileName || ''
     },
     CLEAR_TEMPLATE(state) {
       state.hasData = false
       state.tree = []
       state.words = []
+      state.wordFileName = ''
     }
   },
   actions: {
@@ -30,7 +33,8 @@ export default {
     saveTemplate({ commit }, payload) {
       commit('SET_TEMPLATE', {
         tree: payload.tree || [],
-        words: (payload.words || []).filter(Boolean)
+        words: (payload.words || []).filter(Boolean),
+        wordFileName: payload.wordFileName || ''
       })
     },
     /** 清除模糊词模板数据 */

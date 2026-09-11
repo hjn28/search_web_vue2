@@ -31,6 +31,7 @@ const API = {
 
   // ========== 文件转换 ==========
   UPLOAD_FILE_TO_HTML: '/voice/uploadFlieToHtml',
+  UPLOAD_TASK_FILE: '/task/uploadFile',
 
   // ========== 汇总要点 ==========
   GET_BILL_ID: '/proposal/pb/zy',
@@ -65,7 +66,10 @@ const API = {
   TASK_RESULT: '/task/result',
   TASK_DELETE: '/task/deleteTask',
   TASK_UPDATE_RESULT: '/task/updateResult',
-  TASK_GET_NEW_RESULT: '/task/getNewResult'
+  TASK_GET_NEW_RESULT: '/task/getNewResult',
+
+  // ========== 来源库 ==========
+  GET_SOURCE_LIST: '/task/getSource'
 }
 
 export default API

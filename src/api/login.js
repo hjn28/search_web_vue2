@@ -9,7 +9,7 @@
  * @module api/login
  */
 
-import { httpPost } from '../utils/req'
+import { httpPost, httpGet } from '../utils/req'
 import API from './config'
 
 /**
@@ -62,3 +62,15 @@ export const searchZFZhaiyao = (data) =>
  */
 export const uploadFlieToHtml = (data) =>
   httpPost({ url: API.UPLOAD_FILE_TO_HTML, data })
+
+/**
+ * 上传分类学习资料
+ * @param {Object} data FormData 表单数据（含 file、fileName、indexName、force）
+ * @returns {Promise<Object>} 上传结果
+ */
+export const uploadTaskFile = (data) =>
+  httpPost({ url: API.UPLOAD_TASK_FILE, data })
+
+// 来源库数据
+export const getSourceList = (data) =>
+  httpGet({ url: API.GET_SOURCE_LIST, data })

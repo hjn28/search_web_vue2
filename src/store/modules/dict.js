@@ -39,7 +39,8 @@ export default {
     allCbdw: [], // 承办单位接口全量 [{ sysDeptId, deptName }]
     delegationValue: '', // 当前选中的代表团（label 或 value）
     cbdwValue: '', // 当前选中的承办单位（deptName）
-    loaded: false // 是否已拉取过（避免重复请求）
+    loaded: false, // 是否已拉取过（避免重复请求）
+    isShowZlsc: false // 是否显示“资料上传”功能（由 authUrl 中是否包含 menu/zhfx/zlsc 决定）
   },
   mutations: {
     SET_DELEGATIONS(state, list) {
@@ -56,6 +57,9 @@ export default {
     },
     SET_LOADED(state, val) {
       state.loaded = !!val
+    },
+    SET_SHOW_ZLSC(state, val) {
+      state.isShowZlsc = !!val
     }
   },
   actions: {
@@ -66,6 +70,10 @@ export default {
       const userInfo = readUserInfo()
       delegationsReq = platloginBz(userInfo.userId || '')
         .then(res => {
+          // 判断authUrl中是否包含'menu/zhfx/zlsc'
+          const isShowZlsc = res.data?.authUrl?.includes('menu/zhfx/zlsc')
+          commit('SET_SHOW_ZLSC', isShowZlsc)
+          // 获取代表团
           if (!res?.data || res.result !== 0) {
             console.error('[dict] 获取代表团字典失败')
             return

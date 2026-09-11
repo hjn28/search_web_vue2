@@ -23,6 +23,7 @@
     "font-awesome.css": "^4.7.2",
     "js-md5": "^0.7.3",
     "node-sass": "^7.0.3",
+    "pinyin-pro": "^3.29.3",
     "vant": "^2.12.14",
     "vue": "^2.6.11",
     "vue-code-diff": "^1.2.0",

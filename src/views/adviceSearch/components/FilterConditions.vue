@@ -47,7 +47,7 @@
               </el-select>
             </div>
           </div>
-          <div class="optional-row" v-if="selectedCategory === '建议库'">
+          <div class="optional-row" v-if="selectedCategory === 'jianyi'">
             <div class="optional-item">
               <label class="optional-label">承办单位：</label>
               <el-select v-model="selectedCbdw" filterable clearable popper-append-to-body popper-class="optional-el-select-dropdown" @filter-change="onCbdwFilter" class="optional-el-select" placeholder="请输入或选择承办单位">
@@ -61,7 +61,7 @@
               </el-select>
             </div>
           </div>
-          <div class="optional-row" v-if="selectedCategory === '建议库'">
+          <div class="optional-row" v-if="selectedCategory === 'jianyi'">
             <div class="optional-item">
               <label class="optional-label">重点建议：</label>
               <el-select v-model="selectedKeyProposal" multiple collapse-tags popper-append-to-body popper-class="optional-el-select-dropdown" class="optional-el-select" placeholder="全部" @visible-change="onKeyProposalVisibleChange">
@@ -75,7 +75,7 @@
           </div>
         </div>
         <div >
-          <div v-if="selectedCategory === '建议库'" class="outline-summary-filter">
+          <div v-if="selectedCategory === 'jianyi'" class="outline-summary-filter">
             <div class="outline-summary-title">十五五<br />规划纲要</div>
             <div class="outline-summary-fields">
               <div class="optional-row">
@@ -115,14 +115,14 @@
           <div class="dual-input-row">
             <label class="optional-label">关键词：</label>
             <div class="dual-textarea-wrapper">
-              <textarea v-model="exactWordInput" class="optional-select dual-text-input" placeholder="请输入精准检索词（支持多行，以换行分隔）" />
+              <textarea v-model="exactWordInput" class="optional-select dual-text-input" placeholder="请输入精准检索词（以、分隔）" />
               <button class="textarea-expand-btn" @click="openExpand('exact')" title="放大">⤢</button>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <button style="float:right" class="btn btn-outline btn-sm" @click="tagModalVisible = true">标签检索</button>
+    <!-- <button style="float:right" class="btn btn-outline btn-sm" @click="tagModalVisible = true">标签检索</button> -->
 
     <!-- 标签检索弹框 -->
     <TagSearchModal :visible="tagModalVisible" @close="tagModalVisible = false" @quote="onTagQuote" />
@@ -220,7 +220,7 @@ export default {
   emits: ['search', 'reset', 'category-change', 'update:exact-word', 'update:fuzzy-word'],
   data() {
     return {
-      selectedCategory: '建议库',
+      selectedCategory: 'jianyi',
       selectedSession: [],
       selectedDelegation: [],
       selectedRepresentative: '',
