@@ -13,9 +13,9 @@
                 <button class="sort-btn" :class="{ active: suggestionSortOrder === 'desc' }" @click="setSuggestionSort('desc')"><i class="el-icon-arrow-down"></i></button>
               </span> -->
             </th>
+            <th>代表</th>
             <th>标题</th>
             <th>届次</th>
-            <th>代表</th>
             <th>代表团</th>
             <!-- <th>标签</th> -->
             <th class="action-col">操作</th>
@@ -26,9 +26,9 @@
             <td><input type="checkbox" :checked="selectedIds.includes(item.id)" :disabled="item.disabled" @change="toggleRow(item.id, $event)" /></td>
             <td>{{ (pagination.page - 1) * pagination.page_size + index + 1 }}</td>
             <td>{{ item.id }}</td>
+            <td>{{ item.representative }}</td>
             <td :title="item.title">{{ shortTitle(item.title) }}</td>
             <td>{{ item.session }}</td>
-            <td>{{ item.representative }}</td>
             <td>{{ item.delegation }}</td>
             <!-- <td :class="taggingMap[item.id] ? 'tag-cell' : ''">
               <template v-if="taggingMap[item.id]">

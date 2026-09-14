@@ -271,9 +271,9 @@ body {
 .dual-input-row > *:last-child {
   margin-right: 0;
 }
-.dual-text-input { flex: 1; height: 88px; resize: none; }
+.dual-text-input { flex: 1; width: 100%; resize: none; }
 .dual-textarea-wrapper { position: relative; flex: 1; display: flex; }
-.textarea-expand-btn { position: absolute; right: 8px; bottom: 8px; width: 24px; height: 24px; border-radius: 4px; border: 1px solid var(--border-color); background: #fff; color: #666; cursor: pointer; font-size: 12px; display: inline-flex; align-items: center; justify-content: center; padding: 0; &:hover { border-color: var(--primary-red); color: var(--primary-red); } }
+.textarea-expand-btn { position: absolute; right: 8px; top: 3px; width: 24px; height: 24px; border-radius: 4px; border: 1px solid var(--border-color); background: #fff; color: #666; cursor: pointer; font-size: 12px; display: inline-flex; align-items: center; justify-content: center; padding: 0; &:hover { border-color: var(--primary-red); color: var(--primary-red); } }
 
 /* ───── 分页 ───── */
 .pagination { display: flex; align-items: center; }
@@ -460,9 +460,6 @@ body {
 /* ───── 左侧面板特有 ───── */
 .left-container { width: 45%; height: 100%; overflow: hidden; border-right: 1px solid #e5e9ea; display: flex; flex-direction: column; position: relative; min-height: 0; }
 .left-scroll-area { flex: 1; overflow-y: auto; min-height: 0; padding-bottom: 15px; display: flex; flex-direction: column; position: relative; }
-.left-scroll-area > * {
-  margin-bottom: 15px;
-}
 .left-scroll-area > *:last-child {
   margin-bottom: 0;
 }

@@ -8,7 +8,7 @@
 -->
 <template>
   <div class="panel ai-expand-section">
-    <div style="margin-top: 15px; margin-bottom: 15px;">
+    <div style="margin-top: 12px;">
       <div ref="optionalBox" :class="['optional-conditions', { stuck: optionalStuck }]">
         <div class="section-title">
           <span>选定分析的范围</span>
@@ -111,12 +111,15 @@
             </div>
           </div>
         </div>
-        <div class="dual-inputs">
-          <div class="dual-input-row">
-            <label class="optional-label">关键词：</label>
-            <div class="dual-textarea-wrapper">
-              <textarea v-model="exactWordInput" class="optional-select dual-text-input" placeholder="请输入精准检索词（以、分隔）" />
-              <button class="textarea-expand-btn" @click="openExpand('exact')" title="放大">⤢</button>
+        <div class="optional-controls">
+          <div class="optional-row">
+            <div class="optional-item">
+              <label class="optional-label">关键词：</label>
+              <div class="dual-textarea-wrapper">
+                <!-- <textarea v-model="exactWordInput" class="optional-select dual-text-input" placeholder="请输入精准检索词（以、分隔）" /> -->
+                <input v-model="exactWordInput" class="optional-select dual-text-input" placeholder="请输入精准检索词（以、分隔）" />
+                <button class="textarea-expand-btn" @click="openExpand('exact')" title="放大">⤢</button>
+              </div>
             </div>
           </div>
         </div>

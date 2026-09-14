@@ -125,6 +125,7 @@
                     <div>3. 点击“辅助分类构建”可查询政策文件，将有关文件要点输入此框构建分类体系。</div>
                     <div>4. 点击“上传分类学习资料”，提供分类释义、政策文件及历史分析报告，支撑大模型深度学习理解分类逻辑。</div>
                   </div>
+                  <button class="textarea-expand-btn" @click="openExpand('exact')" title="放大">⤢</button>
                 </template>
               </div>
 
@@ -706,7 +707,7 @@ export default {
 
 .category-template-input {
   width: 100%;
-  height: 140px;
+  height: 240px;
   min-height: 58px;
   resize: none;
   border: none;
