@@ -28,6 +28,7 @@ const API = {
   SEARCH_ZF: '/searchZF/search',
   SEARCH_ZF_2: '/searchZF/search2',
   SEARCH_ZF_ZS: '/searchZF/zhaiyao',
+  SEARCH_ZF_TREE: '/task/tree',
 
   // ========== 文件转换 ==========
   UPLOAD_FILE_TO_HTML: '/voice/uploadFlieToHtml',

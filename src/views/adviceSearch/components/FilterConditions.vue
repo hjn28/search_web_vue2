@@ -74,37 +74,100 @@
             </div>
           </div>
         </div>
-        <div >
+        <div>
           <div v-if="selectedCategory === 'jianyi'" class="outline-summary-filter">
             <div class="outline-summary-title">十五五<br />规划纲要</div>
             <div class="outline-summary-fields">
               <div class="optional-row">
                 <div class="optional-item">
                   <label class="optional-label">篇：</label>
-                  <el-select v-model="selectedPian" class="optional-el-select" placeholder="请选择" clearable @change="onPianChange">
-                    <el-option v-for="item in outlinePianOptions" :key="item.value" :label="item.label" :value="item.value" />
+                  <el-select
+                    v-model="selectedPian"
+                    class="optional-el-select"
+                    placeholder="请选择"
+                    popper-append-to-body
+                    popper-class="outline-tree-select-dropdown"
+                    @change="onPianChange"
+                  >
+                    <el-option
+                      v-for="item in outlinePianOptions"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    />
                   </el-select>
                 </div>
                 <div class="optional-item">
                   <label class="optional-label">章：</label>
-                  <el-select v-model="selectedZhang" class="optional-el-select" placeholder="请选择" clearable @change="onZhangChange">
-                    <el-option v-for="item in outlineZhangOptions" :key="item.value" :label="item.label" :value="item.value" />
+                  <el-select
+                    v-model="selectedZhang"
+                    class="optional-el-select"
+                    placeholder="请选择"
+                    popper-append-to-body
+                    popper-class="outline-tree-select-dropdown"
+                    @change="onZhangChange"
+                  >
+                    <el-option-group
+                      v-for="group in outlineZhangGroups"
+                      :key="group.value"
+                      :label="group.label"
+                    >
+                      <el-option
+                        v-for="item in group.children"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      />
+                    </el-option-group>
                   </el-select>
                 </div>
                 <div class="optional-item">
                   <label class="optional-label">节：</label>
-                  <el-select v-model="selectedJie" class="optional-el-select" placeholder="请选择" clearable @change="onJieChange">
-                    <el-option v-for="item in outlineJieOptions" :key="item.value" :label="item.label" :value="item.value" />
+                  <el-select
+                    v-model="selectedJie"
+                    class="optional-el-select"
+                    placeholder="请选择"
+                    popper-append-to-body
+                    popper-class="outline-tree-select-dropdown"
+                    @change="onJieChange"
+                  >
+                    <el-option-group
+                      v-for="group in outlineJieGroups"
+                      :key="group.value"
+                      :label="group.label"
+                    >
+                      <el-option
+                        v-for="item in group.children"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      />
+                    </el-option-group>
                   </el-select>
                 </div>
               </div>
               <div class="optional-row">
                 <div class="optional-item">
                   <label class="optional-label">句：</label>
-                  <!-- <input v-model="selectedJu" class="optional-select" placeholder="请输入" />
-                   -->
-                  <el-select v-model="selectedJu" class="optional-el-select" placeholder="请选择" clearable>
-                    <el-option v-for="item in outlineJuOptions" :key="item.value" :label="item.label" :value="item.value" />
+                  <el-select
+                    v-model="selectedJu"
+                    class="optional-el-select"
+                    placeholder="请选择"
+                    popper-append-to-body
+                    popper-class="outline-tree-select-dropdown"
+                  >
+                    <el-option-group
+                      v-for="group in outlineJuGroups"
+                      :key="group.value"
+                      :label="group.label"
+                    >
+                      <el-option
+                        v-for="item in group.children"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      />
+                    </el-option-group>
                   </el-select>
                 </div>
               </div>
@@ -117,7 +180,7 @@
               <label class="optional-label">关键词：</label>
               <div class="dual-textarea-wrapper">
                 <!-- <textarea v-model="exactWordInput" class="optional-select dual-text-input" placeholder="请输入精准检索词（以、分隔）" /> -->
-                <input v-model="exactWordInput" class="optional-select dual-text-input" placeholder="请输入精准检索词（以、分隔）" />
+                <textarea v-model="exactWordInput" class="optional-select dual-text-input" placeholder="请输入精准检索词（以中英文逗号或回车分隔）" />
                 <button class="textarea-expand-btn" @click="openExpand('exact')" title="放大">⤢</button>
               </div>
             </div>
@@ -129,56 +192,33 @@
 
     <!-- 标签检索弹框 -->
     <TagSearchModal :visible="tagModalVisible" @close="tagModalVisible = false" @quote="onTagQuote" />
-
+    <mask-editor
+      v-model="exactWordInput"
+      :visible.sync="showEditor"
+      title="关键词"
+      placeholder="请输入精准检索词（以中英文逗号或回车分隔）"
+      show-word-limit
+      @confirm="handleConfirm"
+      @cancel="handleCancel"
+    />
     <!-- 放大输入框 -->
-    <div v-if="expandedField" class="textarea-expand-mask" @click="closeExpand"></div>
-    <div v-if="expandedField" class="textarea-expand-overlay left-textarea-expand-overlay">
-      <div class="textarea-expand-header">
-        <span>关键词</span>
-        <button class="textarea-expand-close" @click="closeExpand">×</button>
-      </div>
-      <textarea v-model="exactWordInput" class="textarea-expand-input" placeholder="请输入精准检索词"></textarea>
-    </div>
   </div>
 </template>
 
 <script>
 import SearchHelper from '../../../utils/classes/SearchHelper'
 import { getjc } from '../../../api/zhaiyao'
+// import { getSearchTree } from '../../../api/login'
 import { ensureBzSession, doBzLogin } from '../../../utils/session'
 import { mapState } from 'vuex'
 import axios from 'axios'
 import TagSearchModal from './TagSearchModal.vue'
-const MOCK_OUTLINE_TREE = []
-const MOCK_OUTLINE_TREE2 = [
-  {
-    value: 'pian-1',
-    label: '第一篇 总体要求11111111111111111111',
-    children: [
-      {
-        value: 'zhang-1-1',
-        label: '第一章 发展基础2222222222222222222',
-        children: [
-          { value: 'jie-1-1-1', label: '第一节 发展成就3333333333333333发展成就3333333333333333', children: [{ value: 'ju-1-1-1-1', label: '坚持高质量发展主题44444444444444444发展成就3333333333333333' }, { value: 'ju-1-1-1-2', label: '推动发展方式转变发展成就3333333333333333发展成就3333333333333333' }] },
-          { value: 'jie-1-1-2', label: '第二节 发展环境发展成就3333333333333333发展成就3333333333333333', children: [{ value: 'ju-1-1-2-1', label: '把握重要战略机遇发展成就3333333333333333发展成就3333333333333333发展成就3333333333333333' }] }
-        ]
-      },
-      { value: 'zhang-1-2', label: '第二章 指导思想', children: [{ value: 'jie-1-2-1', label: '第一节 总体指导方针', children: [{ value: 'ju-1-2-1-1', label: '坚持以人民为中心' }] }] }
-    ]
-  },
-  {
-    value: 'pian-2',
-    label: '第二篇 重点任务',
-    children: [
-      { value: 'zhang-2-1', label: '第三章 科技创新', children: [{ value: 'jie-2-1-1', label: '第一节 创新体系建设', children: [{ value: 'ju-2-1-1-1', label: '提升自主创新能力' }] }] },
-      { value: 'zhang-2-2', label: '第四章 产业发展', children: [{ value: 'jie-2-2-1', label: '第一节 现代化产业体系', children: [{ value: 'ju-2-2-1-1', label: '推进产业基础高级化' }] }] }
-    ]
-  }
-]
+import MaskEditor from '@/components/MaskEditor.vue'
+import swwghJson from '../swwgh.json'
 
 export default {
   name: 'FilterConditions',
-  components: { TagSearchModal },
+  components: { TagSearchModal, MaskEditor },
   watch: {
     exactWordInput() {
       this.$emit('update:exact-word', this.exactWordInput)
@@ -213,12 +253,9 @@ export default {
     // 由父组件（AdviceClusterLeft）计算好的模糊词（含模糊词模板叶节点 + 入库区文件）
     fuzzyWords: { type: String, default: '' },
     // 入库区已选文件（仅用于操作历史展示）
-    warehouseLabels: { type: Array, default: () => [] },
-    // ===== 新增：十五五规划纲要选项 =====
-    pianOptions: { type: Array, default: () => [] },
-    zhangOptions: { type: Array, default: () => [] },
-    jieOptions: { type: Array, default: () => [] },
-    juOptions: { type: Array, default: () => [] }
+    warehouseLabels: { type: Array, default: () => [] }
+    // 说明：十五五规划纲要用到的数据现已完全由 getSearchTree() 接口提供，
+    // 不再接收父组件透传的 pianOptions / zhangOptions / jieOptions / juOptions。
   },
   emits: ['search', 'reset', 'category-change', 'update:exact-word', 'update:fuzzy-word'],
   data() {
@@ -234,38 +271,64 @@ export default {
       fuzzyWordInput: '',
       exactWordInput: '',
       optionalStuck: false,
-      expandedField: '',
       tagModalVisible: false,
       jieci: '',
       keyProposalList: [], // 重点建议（重命名避免与导入函数冲突）
       keyProposalLoading: false,
       keyProposalLoadFailed: false,
-      // ===== 新增：十五五规划纲要数据 =====
+      // ===== 十五五规划纲要：接口解析后的树数据 =====
+      outlineTreeData: [],
       selectedPian: '',
       selectedZhang: '',
       selectedJie: '',
-      selectedJu: ''
+      selectedJu: '',
+      showEditor: false
     }
   },
   computed: {
-    outlineTree() {
-      return this.pianOptions.length ? this.pianOptions : MOCK_OUTLINE_TREE
-    },
+    /* ==================== 十五五规划纲要下拉数据 ==================== */
+    // 篇下拉：无分组，直接平铺所有篇
     outlinePianOptions() {
-      return this.outlineTree.map(item => ({ value: item.value, label: item.label, children: item.children || [] }))
+      return this.outlineTreeData.map(p => this.buildOutlineItem(p))
     },
-    outlineZhangOptions() {
-      const pian = this.outlineTree.find(item => item.value === this.selectedPian)
-      return pian && Array.isArray(pian.children) ? pian.children : []
+
+    // 章下拉：未选篇时返回空，选了篇才展示该篇下的章（按篇分组）
+    outlineZhangGroups() {
+      if (!this.selectedPian) return []
+      const pian = this.outlineTreeData.find(p => p.value === this.selectedPian)
+      if (!pian) return []
+      return [{
+        value: pian.value,
+        label: pian.label,
+        children: (pian.children || []).map(z => this.buildOutlineItem(z))
+      }]
     },
-    outlineJieOptions() {
-      const zhang = this.outlineZhangOptions.find(item => item.value === this.selectedZhang)
-      return zhang && Array.isArray(zhang.children) ? zhang.children : []
+
+    // 节下拉：未选章时返回空，选了章才展示该章下的节（按章分组）
+    outlineJieGroups() {
+      if (!this.selectedZhang) return []
+      const zhang = this.findOutlineNodeById(this.selectedZhang, 2)
+      if (!zhang) return []
+      return [{
+        value: zhang.value,
+        label: zhang.label,
+        children: (zhang.children || []).map(j => this.buildOutlineItem(j))
+      }]
     },
-    outlineJuOptions() {
-      const jie = this.outlineJieOptions.find(item => item.value === this.selectedJie)
-      return jie && Array.isArray(jie.children) ? jie.children : []
+
+    // 句下拉：未选节时返回空，选了节才展示该节下的句（按节分组）
+    outlineJuGroups() {
+      if (!this.selectedJie) return []
+      const jie = this.findOutlineNodeById(this.selectedJie, 3)
+      if (!jie) return []
+      return [{
+        value: jie.value,
+        label: jie.label,
+        children: (jie.children || []).map(ju => this.buildOutlineItem(ju))
+      }]
     },
+
+    /* ==================== 字典相关 ==================== */
     // 字典全量数据统一从 dict store 读取（接口由 store action 拉取，不做用户范围过滤）
     ...mapState('dict', {
       dictDelegations: 'allDelegations',
@@ -310,6 +373,17 @@ export default {
       console.warn('bz 登录失败，重点建议可能不可用：', err)
     }).then(() => this.$store.dispatch('dict/fetchAll'))
       .then(() => this.fetchSessionInfo())
+
+    // 拉取十五五规划纲要树（swwgh.json 结构），解析为「篇/章/节/句」层级数据
+    console.log('[十五五规划纲要] 解析 swwgh.json，篇数：', swwghJson.data.tree.length)
+    this.outlineTreeData = this.parseOutlineTree(swwghJson.data.tree)
+    // getSearchTree().then((res) => {
+    //   const treeData = this.resolveTreeData(res)
+    //   this.outlineTreeData = this.parseOutlineTree(treeData)
+    //   console.log('[十五五规划纲要] 解析完成，篇数：', this.outlineTreeData.length)
+    // }).catch((err) => {
+    //   console.error('获取十五五规划纲要树失败：', err)
+    // })
   },
   methods: {
     /* ==================== 工具方法 ==================== */
@@ -322,6 +396,123 @@ export default {
         console.error(`解析 localStorage[${key}] 失败`, e)
         return null
       }
+    },
+
+    /* ==================== 十五五规划纲要：数据解析 ==================== */
+    // 兼容多种响应包装结构，取出真正的 tree 数组
+    // 常见结构（swwgh.json）：res.data.data.data.tree
+    resolveTreeData(res) {
+      if (!res) return []
+      const candidates = [
+        res?.data?.data?.data?.tree,
+        res?.data?.data?.tree,
+        res?.data?.tree,
+        res?.tree
+      ]
+      for (const c of candidates) {
+        if (Array.isArray(c) && c.length) return c
+      }
+      return []
+    },
+
+    // 根据 id + level 在解析后的树中查找节点
+    // level：1=篇 2=章 3=节
+    findOutlineNodeById(id, level) {
+      if (!id) return null
+      if (level === 1) {
+        return this.outlineTreeData.find(p => p.value === id) || null
+      }
+      if (level === 2) {
+        for (const p of this.outlineTreeData) {
+          const found = (p.children || []).find(z => z.value === id)
+          if (found) return found
+        }
+        return null
+      }
+      if (level === 3) {
+        for (const p of this.outlineTreeData) {
+          for (const z of (p.children || [])) {
+            const found = (z.children || []).find(j => j.value === id)
+            if (found) return found
+          }
+        }
+        return null
+      }
+      return null
+    },
+
+    // 把节点文本包装成下拉项：完整文本，不截断（换行由下拉项样式控制）
+    buildOutlineItem(node) {
+      const label = String(node.label || '').trim()
+      return {
+        value: node.value,
+        label
+      }
+    },
+
+    // 解析 swwgh.json 中的 tree 结构：
+    //   level 1 container（有 title）           -> 篇
+    //   level 2 container（有 title）           -> 章
+    //   level 3 block/container（有 title）     -> 节
+    //   level 4 sentence（有 content）          -> 句
+    parseOutlineTree(tree) {
+      if (!Array.isArray(tree)) return []
+      const result = []
+
+      tree.forEach(pian => {
+        if (pian?.level !== 1 || !pian?.title) return
+
+        const pianNode = {
+          value: pian.id,
+          label: pian.title,
+          children: []
+        }
+
+        // 章：level 2 且 role=container，必须有 title（过滤掉 1.1 这种无 title 的内容块）
+        const zhangList = (pian.children || []).filter(
+          ch => ch?.role === 'container' && ch?.title
+        )
+
+        zhangList.forEach(zhang => {
+          const zhangNode = {
+            value: zhang.id,
+            label: zhang.title,
+            children: []
+          }
+
+          // 节：level 3 且带 title（block / container 都兼容）
+          const jieList = (zhang.children || []).filter(jie => jie?.title)
+
+          jieList.forEach(jie => {
+            const jieNode = {
+              value: jie.id,
+              label: jie.title,
+              children: []
+            }
+
+            // 句：level 4 sentence，有 content
+            const juList = (jie.children || []).filter(
+              ju => ju?.role === 'sentence' && ju?.content
+            )
+
+            juList.forEach(ju => {
+              const text = String(ju.content).trim()
+              jieNode.children.push({
+                value: ju.id,
+                label: text
+              })
+            })
+
+            zhangNode.children.push(jieNode)
+          })
+
+          pianNode.children.push(zhangNode)
+        })
+
+        result.push(pianNode)
+      })
+
+      return result
     },
 
     /* ==================== 接口请求 ==================== */
@@ -382,18 +573,6 @@ export default {
         this.fetchKeyProposal(1, 0)
       }
     },
-    // fetchKeyProposal().then(res => {
-    //   if (res?.data && res.result === 0) {
-    //     this.keyProposalList = (res.data || [])
-    //       .filter(item => item.jieCi === this.jieci)
-    //       .map(item => ({ label: item.title, value: item.title }))
-    //   } else {
-    //     console.error('获取重点议题信息失败')
-    //   }
-    // }).catch(err => {
-    //   console.error('获取重点议题信息请求异常：', err)
-    // })
-
     /* ==================== 交互事件 ==================== */
     onSearch() {
       // 模糊词（含模糊词模板 + 入库区文件）由父组件合并计算后传入，此处直接使用
@@ -493,12 +672,12 @@ export default {
       this.emitTaskAiObjParams()
     },
 
+    // 篇章句联动：切换上级自动清空下级选中值
     onPianChange() {
       this.selectedZhang = ''
       this.selectedJie = ''
       this.selectedJu = ''
     },
-
     onZhangChange() {
       this.selectedJie = ''
       this.selectedJu = ''
@@ -506,6 +685,7 @@ export default {
     onJieChange() {
       this.selectedJu = ''
     },
+
     emitTaskAiObjParams() {
       this.$store.commit('taskAiParams/SET_PARAMS', {
         data_base: SearchHelper.CATEGORY_MAP[this.selectedCategory] || 'jianyi',
@@ -514,9 +694,17 @@ export default {
       })
     },
 
-    openExpand(field) { this.expandedField = field },
-    closeExpand() { this.expandedField = '' },
-
+    openExpand() {
+      this.showEditor = true
+    },
+    // 点击「确定」，参数是当前输入内容
+    handleConfirm(val) {
+      console.log('确认内容：', val)
+    },
+    // 点击「取消」，参数是回滚后的原值
+    handleCancel(val) {
+      console.log('取消，内容已回滚为：', val)
+    },
     // 标签检索弹框：引用某条标签 → 写入精准检索词（watch 会自动同步给父组件）
     onTagQuote(row) {
       if (!row || !row.tagName) return
@@ -592,5 +780,88 @@ export default {
   .outline-summary-title::after {
     right: 4px;
   }
+}
+</style>
+
+<!-- 十五五规划纲要下拉面板：弹层挂在 body 上，必须使用全局样式 -->
+<style>
+.outline-tree-select-dropdown {
+  min-width: 320px;
+  max-width: 560px;
+}
+.outline-tree-select-dropdown .el-select-dropdown__wrap {
+  max-height: 360px;
+}
+
+/* 分组标题 = 父级（篇 / 章 / 节），左对齐 + 红点标识，长文本自动换行 */
+.outline-tree-select-dropdown .el-select-group__title {
+  position: relative;
+  padding-left: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 20px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  color: #c9190b;
+  background: #fafafa;
+  white-space: normal;
+  word-break: break-all;
+  height: auto;
+}
+.outline-tree-select-dropdown .el-select-group__title::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 16px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #c9190b;
+}
+
+/* 子级选项 = 章 / 节 / 句：缩进 + 树形引导线，长文本直接换行完整展示 */
+.outline-tree-select-dropdown .el-select-group .el-select-dropdown__item {
+  position: relative;
+  padding-left: 36px;
+  padding-right: 12px;
+  height: auto;
+  min-height: 34px;
+  line-height: 20px;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  white-space: normal;
+  word-break: break-all;
+}
+/* 篇下拉（无分组）也允许换行，保持风格统一 */
+.outline-tree-select-dropdown .el-select-dropdown__item {
+  height: auto;
+  min-height: 34px;
+  line-height: 20px;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  white-space: normal;
+  word-break: break-all;
+}
+.outline-tree-select-dropdown .el-select-group .el-select-dropdown__item::before {
+  content: '';
+  position: absolute;
+  left: 20px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: #e4e7ed;
+}
+.outline-tree-select-dropdown .el-select-group .el-select-dropdown__item::after {
+  content: '';
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  width: 10px;
+  height: 1px;
+  background: #e4e7ed;
+}
+/* 最后一个子级：竖线只画到中点，避免"尾巴过长" */
+.outline-tree-select-dropdown .el-select-group .el-select-dropdown__item:last-child::before {
+  bottom: 50%;
 }
 </style>

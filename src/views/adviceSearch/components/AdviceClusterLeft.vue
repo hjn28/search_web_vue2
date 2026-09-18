@@ -125,7 +125,7 @@
                     <div>3. 点击“辅助分类构建”可查询政策文件，将有关文件要点输入此框构建分类体系。</div>
                     <div>4. 点击“上传分类学习资料”，提供分类释义、政策文件及历史分析报告，支撑大模型深度学习理解分类逻辑。</div>
                   </div>
-                  <button class="textarea-expand-btn" @click="openExpand('exact')" title="放大">⤢</button>
+                  <button class="textarea-expand-btn" @click="openTextareaExpand('semi','构建分析的分类体系')" title="放大">⤢</button>
                 </template>
               </div>
 
@@ -140,8 +140,8 @@
               <div v-show="assistExpanded" class="keyword-search-box">
                 <div class="keyword-search-title">输入与分类选择：</div>
                 <div class="textarea-with-expand keyword-textarea-wrap" style="position:relative">
-                  <textarea v-model="textInputs.word" class="text-input keyword-text-input" placeholder="请输入关键词，多个关键词用逗号分隔..."></textarea>
-                  <button class="textarea-expand-btn" @click="openTextareaExpand('word')" title="放大">⤢</button>
+                  <textarea v-model="textInputs.word" class="text-input keyword-text-input" placeholder="请输入词或句"></textarea>
+                  <button class="textarea-expand-btn" @click="openTextareaExpand('word','输入与分类选择')" title="放大">⤢</button>
                 </div>
                 <div class="keyword-search-actions">
                   <button class="btn btn-outline btn-sm" :disabled="!canOnceExpand" @click="handleOnceExpand">查询</button>
@@ -186,25 +186,15 @@
         <button class="btn btn-outline btn-sm left-fixed-btn" @click="handleBottomReset">重置</button>
         <button class="btn btn-sm left-fixed-btn" @click="handleBottomSearch">开始检索</button>
       </div>
-
-      <!-- <div v-if="expandedTextarea" class="textarea-expand-mask" @click="closeTextareaExpand"></div>
-      <div v-if="expandedTextarea" class="textarea-expand-overlay left-textarea-expand-overlay">
-        <div class="textarea-expand-header">
-          <span>{{
-            expandedTextarea === 'word' ? '关键词' :
-            expandedTextarea === 'sentence' ? '句子' :
-            expandedTextarea === 'semi' ? '模糊词' : '段落'
-          }}</span>
-          <button class="textarea-expand-close" @click="closeTextareaExpand">×</button>
-        </div>
-        <textarea v-if="expandedTextarea === 'word'" v-model="textInputs.word" class="textarea-expand-input" placeholder="请输入关键词"></textarea>
-        <textarea v-else-if="expandedTextarea === 'sentence'" v-model="textInputs.sentence" class="textarea-expand-input" placeholder="请输入句子"></textarea>
-        <textarea v-else-if="expandedTextarea === 'semi'" v-model="filterSemiFuzzyWord" class="textarea-expand-input" placeholder="请输入模糊检索词"></textarea>
-        <textarea v-else v-model="textInputs.paragraph" class="textarea-expand-input" placeholder="请输入段落"></textarea>
-      </div> -->
-
-      <!-- 一次拓展结果展示在右侧面板，请见 AdviceClusterRight.vue -->
-
+      <mask-editor
+        v-model="gjflDbInput"
+        :visible.sync="showGjfxEditor"
+        :title="giflDbTitle"
+        :placeholder="gjflDbPlaceholder"
+        show-word-limit
+        @confirm="handleConfirm"
+        @cancel="handleCancel"
+      />
     </template>
   </div>
 </template>
@@ -227,7 +217,7 @@
  * 不再使用父组件的 vm 引用，所有数据归本组件自管。
  */
 
-import { searchZF, uploadTaskFile, getSourceList } from '../../../api/login'
+import { searchZF, uploadTaskFile, getSourceList, getSearchTree } from '../../../api/login'
 import SearchHelper from '../../../utils/classes/SearchHelper'
 import CitationView from './CitationView.vue'
 import FilterConditions from './FilterConditions.vue'
@@ -236,12 +226,12 @@ import data from '../data.json'
 import DebounceHelper from '../../../utils/classes/DebounceHelper'
 import { mapState } from 'vuex'
 import { pinyin } from 'pinyin-pro'
-
+import MaskEditor from '@/components/MaskEditor.vue'
 const { mockSearchZFSearch2 } = data
 
 export default {
   name: 'AdviceClusterLeft',
-  components: { CitationView, FilterConditions },
+  components: { CitationView, FilterConditions, MaskEditor },
   props: {
     citationData: { type: Array, default: () => [] },
     activeKeyId: { type: String, default: '' }
@@ -287,12 +277,13 @@ export default {
       assistExpanded: false,
 
       /* ---- 入库区（分析材料入库区） ---- */
-      isShowZlsc: false, // 是否显示“资料上传”功能（由 authUrl 中是否包含 menu/zhfx/zlsc 决定）
+      // isShowZlsc: false, // 是否显示“资料上传”功能（由 authUrl 中是否包含 menu/zhfx/zlsc 决定）
       warehouseFiles: [],
       warehouseFileName: '',
-
-      /* ---- UI ---- */
-      expandedTextarea: ''
+      showGjfxEditor: false,
+      gjflDbInput: '',
+      gjflDbPlaceholder: '',
+      giflDbTitle: ''
     }
   },
   computed: {
@@ -407,7 +398,7 @@ export default {
       // ──── 1. 主关键词（按逗号分割）始终纳入 ────
       var mainWord = (this.textInputs.word || '').trim()
       if (mainWord) {
-        mainWord.split(/[，,]+/).forEach(function (w) {
+        mainWord.split(/[\r\n、，,]+/).forEach(function (w) {
           w = w.trim()
           if (w) words.push(w)
         })
@@ -419,17 +410,17 @@ export default {
 
       if (hasSemiOrFuzzy) {
         // ---- 2a. 半模糊/模糊有值 → 只取这两者，不取精准词 ----
-        ;(this.filterSemiFuzzyWord || '').split('\n').forEach(function (w) {
+        (this.filterSemiFuzzyWord || '').split(/[\r\n、，,]+/).forEach(function (w) {
           w = w.trim()
           if (w) words.push(w)
-        })
-        ;(this.filterFuzzyWord || '').split('\n').forEach(function (w) {
+        });
+        (this.filterFuzzyWord || '').split(/[\r\n、，,]+/).forEach(function (w) {
           w = w.trim()
           if (w) words.push(w)
         })
       } else {
         // ---- 2b. 半模糊/模糊均无值 → 单独使用精准词 ----
-        ;(this.filterExactWord || '').split('\n').forEach(function (w) {
+        (this.filterExactWord || '').split(/[\r\n、，,]+/).forEach(function (w) {
           w = w.trim()
           if (w) words.push(w)
         })
@@ -453,8 +444,53 @@ export default {
     },
 
     /* ==================== 输入辅助 ==================== */
-    openTextareaExpand(type) { this.expandedTextarea = type },
-    closeTextareaExpand() { this.expandedTextarea = '' },
+    openTextareaExpand(type, title) {
+      this.showGjfxEditor = true
+      if (type === 'semi') {
+        this.gjflDbInput = this.filterSemiFuzzyWord
+        this.giflDbTitle = title || '构建分析的分类体系'
+        this.gjflDbPlaceholder = '请输入分类体系（以中英文逗号或回车分隔）'
+      } else if (type === 'word') {
+        this.gjflDbInput = this.textInputs.word
+        this.giflDbTitle = title || '输入与分类选择'
+        this.gjflDbPlaceholder = '请输入词或句'
+      }
+      //   else this.$set(this.textInputs, type, value || '')
+      // const fields = {
+      //   word: { title: '关键词', value: this.textInputs.word, placeholder: '请输入关键词' },
+      //   semi: { title: '分类体系', value: this.filterSemiFuzzyWord, placeholder: '请输入分类体系' },
+      //   sentence: { title: '句子', value: this.textInputs.sentence, placeholder: '请输入句子' },
+      //   paragraph: { title: '段落', value: this.textInputs.paragraph, placeholder: '请输入段落' }
+      // }
+      // const field = fields[type]
+      // if (!field) return
+
+      // this.$prompt(field.placeholder, field.title, {
+      //   inputType: 'textarea',
+      //   inputValue: field.value || '',
+      //   customClass: 'textarea-expand-message-box',
+      //   confirmButtonText: '确定',
+      //   cancelButtonText: '取消',
+      //   closeOnClickModal: true
+      // }).then(({ value }) => {
+      //   if (type === 'semi') this.filterSemiFuzzyWord = value || ''
+      //   else this.$set(this.textInputs, type, value || '')
+      // }).catch(() => {})
+    },
+    handleConfirm(val) {
+      console.log('确认内容：', val)
+      if (this.giflDbTitle === '构建分析的分类体系') {
+        this.filterSemiFuzzyWord = val || ''
+      } else if (this.giflDbTitle === '输入与分类选择') {
+        this.textInputs.word = val || ''
+      }
+      // 这里发请求保存
+      // await api.save(val)
+    },
+    // 点击「取消」，参数是回滚后的原值
+    handleCancel(val) {
+      console.log('取消，内容已回滚为：', val)
+    },
     triggerFile() { this.$refs.fileInput && this.$refs.fileInput.click() },
 
     handleFileChange(e) {
@@ -536,7 +572,7 @@ export default {
       const text = (this.textInputs.word || '').trim()
       if (!text) { this.showAlert('请输入搜索内容后再进行一次拓展'); return }
 
-      const params = { text: this.textInputs.word, content: '' }
+      const params = { text: '', content: this.textInputs.word }
 
       searchZF(params).then(res => {
         const apiList = Array.isArray(res && res.data) ? res.data : []

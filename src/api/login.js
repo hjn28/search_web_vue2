@@ -74,3 +74,6 @@ export const uploadTaskFile = (data) =>
 // 来源库数据
 export const getSourceList = (data) =>
   httpGet({ url: API.GET_SOURCE_LIST, data })
+
+export const getSearchTree = (data) =>
+  httpGet({ url: API.SEARCH_ZF_TREE, data })

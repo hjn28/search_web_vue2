@@ -391,7 +391,7 @@ export default {
       const child = { id: nextChildId, name: newName, text: '', children: [] }
       if (!parent.children) parent.children = []
       parent.children.push(child)
-      this.selectNode(child)
+      // this.selectNode(child)
       this.form.name = ''
       this.$message && this.$message.success('添加子目录成功')
     },

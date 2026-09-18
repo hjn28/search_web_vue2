@@ -138,7 +138,7 @@
           <button class="btn btn-outline btn-sm" :disabled="!tableData.length" @click="toggleSelectAll">{{ isAllChecked ? '取消全选' : '全选' }}</button>
           <button class="btn btn-outline btn-sm" :disabled="!selectedIds.length" @click="openGenerateReportModal">生成报告</button>
           <!-- 字体设置为楷体 -->
-          <div style="font-family: 'KaiTi', 'STKaiti', '楷体', serif !important;font-size: 12px;">
+          <div style="font-family: 'KaiTi', 'STKaiti', '楷体', serif !important;font-size: 12px;margin-right:10px;">
             <div style="color: red; float:left; height:28px;font-family: inherit;">#</div>
             <div style="height:16px;line-height: 16px; float:left; margin-left: 5px;font-family: inherit;">
               <span style="font-family: inherit;">按分类汇总原文内容</span><br />
@@ -256,7 +256,7 @@ export default {
   },
   props: {
     tableData: { type: Array, default: () => [] },
-    pagination: { type: Object, default: () => ({ page: 1, page_size: 10, total: 0 }) },
+    pagination: { type: Object, default: () => ({ page: 1, page_size: 15, total: 0 }) },
     viewMode: { type: String, default: 'table' },
     detail: { type: Object, default: () => ({ visible: false, html: '', matchType: '' }) },
     leftKeywords: { type: Array, default: () => [] },

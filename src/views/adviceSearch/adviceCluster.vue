@@ -93,7 +93,7 @@ export default {
 
       /* ---- 右侧面板数据（父组件中转） ---- */
       rightTableData: [],
-      rightPagination: { page: 1, page_size: 10, total: 0 },
+      rightPagination: { page: 1, page_size: 15, total: 0 },
       rightViewMode: 'table',
       rightDetail: { visible: false, html: '', matchType: '' },
       rightZhaiyaoData: [],
