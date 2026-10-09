@@ -1,11 +1,3 @@
-<!--
- * @Author: wangli wangli@123.com
- * @Date: 2026-07-23 16:43:33
- * @LastEditors: wangli wangli@123.com
- * @LastEditTime: 2026-07-24 14:41:27
- * @FilePath: \search_web\src\views\adviceSearch\components\FilterConditions.vue
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
--->
 <template>
   <div class="panel ai-expand-section">
     <div style="margin-top: 12px;">
@@ -27,8 +19,8 @@
             </div>
             <div class="optional-item">
               <label class="optional-label">会议届次：</label>
-              <el-select v-model="selectedSession" multiple collapse-tags popper-append-to-body popper-class="optional-el-select-dropdown" class="optional-el-select" placeholder="全部">
-                <el-option v-for="s in filterSessions" :key="s.value" :label="s.label" :value="s.value"></el-option>
+              <el-select v-model="selectedSession" multiple collapse-tags popper-append-to-body popper-class="optional-el-select-dropdown" class="optional-el-select" placeholder="全部" @change="onSessionChange">
+                <el-option v-for="s in availableSessions" :key="s.value" :label="s.label" :value="s.value"></el-option>
               </el-select>
             </div>
           </div>
@@ -180,7 +172,7 @@
               <label class="optional-label">关键词：</label>
               <div class="dual-textarea-wrapper">
                 <!-- <textarea v-model="exactWordInput" class="optional-select dual-text-input" placeholder="请输入精准检索词（以、分隔）" /> -->
-                <textarea v-model="exactWordInput" class="optional-select dual-text-input" placeholder="请输入精准检索词（以中英文逗号或回车分隔）" />
+                <textarea v-model="exactWordInput" class="optional-select dual-text-input" placeholder="请输入精准检索词（以回车分隔）" />
                 <button class="textarea-expand-btn" @click="openExpand('exact')" title="放大">⤢</button>
               </div>
             </div>
@@ -196,7 +188,7 @@
       v-model="exactWordInput"
       :visible.sync="showEditor"
       title="关键词"
-      placeholder="请输入精准检索词（以中英文逗号或回车分隔）"
+      placeholder="请输入精准检索词（以回车分隔）"
       show-word-limit
       @confirm="handleConfirm"
       @cancel="handleCancel"
@@ -208,13 +200,13 @@
 <script>
 import SearchHelper from '../../../utils/classes/SearchHelper'
 import { getjc } from '../../../api/zhaiyao'
-// import { getSearchTree } from '../../../api/login'
+import { getSearchTree } from '../../../api/login'
 import { ensureBzSession, doBzLogin } from '../../../utils/session'
 import { mapState } from 'vuex'
 import axios from 'axios'
 import TagSearchModal from './TagSearchModal.vue'
 import MaskEditor from '@/components/MaskEditor.vue'
-import swwghJson from '../swwgh.json'
+// import swwghJson from '../swwgh.json'
 
 export default {
   name: 'FilterConditions',
@@ -244,7 +236,7 @@ export default {
   },
   props: {
     categories: { type: Array, default: () => [] },
-    filterSessions: { type: Array, default: () => [] },
+    // filterSessions: { type: Array, default: () => [] },
     filterCblx: { type: Array, default: () => [] },
     budgetExactWords: { type: Array, default: () => [] },
     showHeaderActions: { type: Boolean, default: true },
@@ -273,6 +265,8 @@ export default {
       optionalStuck: false,
       tagModalVisible: false,
       jieci: '',
+      dynamicSessionOptions: [],
+      sessionSelectionTouched: false,
       keyProposalList: [], // 重点建议（重命名避免与导入函数冲突）
       keyProposalLoading: false,
       keyProposalLoadFailed: false,
@@ -286,6 +280,11 @@ export default {
     }
   },
   computed: {
+    availableSessions() {
+      // return this.dynamicSessionOptions.length ? this.dynamicSessionOptions : this.filterSessions
+      return this.dynamicSessionOptions.length ? this.dynamicSessionOptions : []
+    },
+
     /* ==================== 十五五规划纲要下拉数据 ==================== */
     // 篇下拉：无分组，直接平铺所有篇
     outlinePianOptions() {
@@ -359,8 +358,8 @@ export default {
     }
   },
   created() {
-    if (this.filterSessions.length) {
-      this.selectedSession = [this.filterSessions[0].value]
+    if (this.availableSessions.length) {
+      this.selectedSession = [this.availableSessions[0].value]
     }
     this.userInfo = this.getLocalStorageJSON('userInfo') || {}
     this.emitTaskAiObjParams()
@@ -375,15 +374,15 @@ export default {
       .then(() => this.fetchSessionInfo())
 
     // 拉取十五五规划纲要树（swwgh.json 结构），解析为「篇/章/节/句」层级数据
-    console.log('[十五五规划纲要] 解析 swwgh.json，篇数：', swwghJson.data.tree.length)
-    this.outlineTreeData = this.parseOutlineTree(swwghJson.data.tree)
-    // getSearchTree().then((res) => {
-    //   const treeData = this.resolveTreeData(res)
-    //   this.outlineTreeData = this.parseOutlineTree(treeData)
-    //   console.log('[十五五规划纲要] 解析完成，篇数：', this.outlineTreeData.length)
-    // }).catch((err) => {
-    //   console.error('获取十五五规划纲要树失败：', err)
-    // })
+    // console.log('[十五五规划纲要] 解析 swwgh.json，篇数：', swwghJson.data.tree.length)
+    // this.outlineTreeData = this.parseOutlineTree(swwghJson.data.tree)
+    getSearchTree().then((res) => {
+      const treeData = this.resolveTreeData(res)
+      this.outlineTreeData = this.parseOutlineTree(treeData)
+      console.log('[十五五规划纲要] 解析完成，篇数：', this.outlineTreeData.length)
+    }).catch((err) => {
+      console.error('获取十五五规划纲要树失败：', err)
+    })
   },
   methods: {
     /* ==================== 工具方法 ==================== */
@@ -520,7 +519,18 @@ export default {
     fetchSessionInfo() {
       getjc().then(res => {
         if (res?.data && res.result === 0) {
-          this.jieci = (res.data.jh + '-' + res.data.ch) || ''
+          const { jh, ch } = res.data
+          const options = this.buildSessionOptions(jh, ch)
+          if (!options.length) {
+            console.error('获取届次信息失败：响应中的jh/ch无效')
+            this.fetchKeyProposal()
+            return
+          }
+          this.jieci = `${jh}-${ch}`
+          this.dynamicSessionOptions = options
+          if (!this.sessionSelectionTouched) {
+            this.selectedSession = [this.jieci]
+          }
           this.fetchKeyProposal()
         } else {
           console.error('获取届次信息失败')
@@ -528,6 +538,28 @@ export default {
       }).catch(err => {
         console.error('获取届次信息请求异常：', err)
       })
+    },
+
+    buildSessionOptions(jh, ch) {
+      const currentJH = Number(jh)
+      const currentCH = Number(ch)
+      if (
+        !Number.isInteger(currentJH) || currentJH < 1 ||
+        !Number.isInteger(currentCH) || currentCH < 1 || currentCH > 5
+      ) {
+        return []
+      }
+
+      const firstJH = Math.max(1, currentJH - 1)
+      const sessions = []
+      for (let sessionJH = firstJH; sessionJH <= currentJH; sessionJH += 1) {
+        const lastCH = sessionJH === currentJH ? currentCH : 5
+        for (let sessionCH = 1; sessionCH <= lastCH; sessionCH += 1) {
+          const value = `${sessionJH}-${sessionCH}`
+          sessions.push({ value, label: value })
+        }
+      }
+      return SearchHelper.sortSessionsDesc(sessions)
     },
 
     // 获取重点议题（依赖届次数据已就绪）
@@ -572,6 +604,9 @@ export default {
       if (visible && this.keyProposalLoadFailed && !this.keyProposalLoading) {
         this.fetchKeyProposal(1, 0)
       }
+    },
+    onSessionChange() {
+      this.sessionSelectionTouched = true
     },
     /* ==================== 交互事件 ==================== */
     onSearch() {
@@ -629,8 +664,10 @@ export default {
     },
 
     onReset() {
-      this.selectedCategory = '建议库'
-      this.selectedSession = this.filterSessions.length ? [this.filterSessions[0].value] : []
+      this.selectedCategory = 'jianyi'
+      this.sessionSelectionTouched = false
+      const defaultSession = this.jieci || this.availableSessions[0]?.value
+      this.selectedSession = defaultSession ? [defaultSession] : []
       // 代表团只有一个值时固定选中，重置不清除
       if (this.delegationList.length !== 1) {
         this.selectedDelegation = []
@@ -651,13 +688,13 @@ export default {
     },
 
     onCategoryChange() {
-      if (this.selectedCategory === '预算库') {
+      if (this.selectedCategory === 'yusuan') {
         this.exactWordInput = (Array.isArray(this.budgetExactWords) ? this.budgetExactWords : SearchHelper.DEFAULT_BUDGET_WORDS)
           .map(item => String(item || '').trim()).filter(Boolean).join('\n')
       } else {
         this.exactWordInput = ''
       }
-      if (this.selectedCategory !== '建议库') {
+      if (this.selectedCategory !== 'jianyi') {
         this.selectedCbdw = ''
         this.selectedCblx = []
         this.selectedKeyProposal = []

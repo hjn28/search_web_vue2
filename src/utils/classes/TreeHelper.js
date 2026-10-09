@@ -81,6 +81,31 @@ class TreeHelper {
   }
 
   /**
+   * 递归收集树的叶子节点名称（无 children 的节点）
+   * 用于「分类模板 → 检索关键词」这类只需要最末级分类的场景
+   * @param {Array} nodes - 树节点数组
+   * @returns {string[]} 叶子节点的 name 值列表
+   */
+  static collectLeafNames(nodes) {
+    const result = []
+    const walk = items => {
+      if (!Array.isArray(items)) return
+      items.forEach(item => {
+        if (!item) return
+        const children = Array.isArray(item.children) ? item.children : []
+        if (children.length) {
+          walk(children)
+          return
+        }
+        const nodeName = String(item.name || '').trim()
+        if (nodeName) result.push(nodeName)
+      })
+    }
+    walk(nodes)
+    return result
+  }
+
+  /**
    * 规范化树结构为两层（根 → 子节点），超出两层的子节点被截断
    * @param {Array} tree - 原始树结构
    * @returns {Array} 最大两层的规范化树

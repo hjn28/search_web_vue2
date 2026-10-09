@@ -69,8 +69,7 @@ class SearchHelper {
     const delegationList = this.toArray(selectedDelegation)
     const cblxList = this.toArray(selectedCblx)
     const bhList = this.splitMulti(String(selectedBh || ''))
-    const isSuggestion = selectedCategory === '建议库'
-
+    const isSuggestion = selectedCategory === 'jianyi'
     return {
       data_base: dataBase,
       theme: this.parseMultiLine(semiFuzzyWordInput),

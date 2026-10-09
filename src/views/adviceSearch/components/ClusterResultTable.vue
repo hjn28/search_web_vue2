@@ -39,7 +39,10 @@
         </tbody>
       </table>
     </div>
-    <div v-else class="result-empty">{{ hasSearched ? '暂无数据' : '暂无数据，请先检索' }}</div>
+    <div v-else class="result-empty">
+      <!-- {{ hasSearched ? '暂无数据' : '暂无数据，请先检索' }} -->
+      <EmptyState :title="hasSearched ? '暂无数据' : '暂无数据，请先检索'" />
+    </div>
     <div v-if="tableData.length" class="pagination">
       <el-pagination small background layout="total, prev, pager, next, sizes, jumper" :total="pagination.total"
         :current-page="pagination.page" :page-size="pagination.page_size" :page-sizes="[15, 30, 60, 100, 200, 400]"
@@ -49,8 +52,10 @@
 </template>
 
 <script>
+import EmptyState from '@/components/empty.vue'
 export default {
   name: 'ClusterResultTable',
+  components: { EmptyState },
   props: {
     tableData: { type: Array, default: () => [] },
     pagination: { type: Object, default: () => ({ page: 1, page_size: 15, total: 0 }) },

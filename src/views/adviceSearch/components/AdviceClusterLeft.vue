@@ -1,22 +1,19 @@
 <template>
   <div class="left-container" ref="leftContainer">
-    <!-- ======== 引文替换视图 ======== -->
-    <template v-if="citationData && citationData.length">
-      <CitationView
-        :citation-data="citationData"
-        :active-key-id="activeKeyId"
-        @close-citation="$emit('close-citation')"
-      />
-    </template>
+    <!-- ======== 引文替换视图（右侧点击引文进入） ======== -->
+    <CitationView
+      v-if="citationVisible"
+      :citation-data="citationData"
+      :active-key-id="activeKeyId"
+      @close-citation="closeCitation"
+    />
 
     <!-- ======== 正常主面板 ======== -->
     <template v-else>
       <div class="left-scroll-area" ref="leftScrollArea">
-
-        <!-- ======== 顶部：选定分析的范围 ======== -->
+        <!-- ---- 顶部：选定分析的范围 ---- -->
         <FilterConditions
           ref="filterConditions"
-          v-if="leftMode === 'input'"
           :categories="categories"
           :filter-sessions="filterSessions"
           :filter-cblx="filterCblx"
@@ -26,174 +23,127 @@
           :external-selected-segment-contents="selectedSegmentContents"
           :fuzzy-words="mergedFuzzyWords"
           :warehouse-labels="warehouseFiles"
-          @search="onFilterSearch"
-          @reset="onFilterReset"
+          @search="runClusterSearch"
+          @reset="resetLeftFilters"
           @category-change="onFilterCategoryChange"
-          @update:exact-word="onFilterExactChange"
-          @update:fuzzy-word="onFilterFuzzyChange"
+          @update:exact-word="filterExactWord = $event"
+          @update:fuzzy-word="filterFuzzyWord = $event"
         />
 
-        <!-- ======== 中部：构建分析的分类体系 ======== -->
+        <!-- ---- 中部：构建分析的分类体系 ---- -->
         <div class="panel">
           <div class="section-title">
             <span>构建分析的分类体系</span>
             <div class="section-actions section-actions-compact">
-              <!-- <button
-                class="title-icon-btn"
-                title="开始上传资料"
-                @click="onWarehouseUpload"
-              >
-                <img class="warehouse-upload-icon" src="~@/assets/img/study.svg" alt="上传文件" />
-                <el-tooltip
-                  content="提供分类释义、政策文件及历史分析报告，支撑大模型深度学习理解分类逻辑"
-                  placement="top"
-                  popper-class="icon-badge-tooltip"
-                  :open-delay="300"
+              <button class="btn btn-outline btn-sm" @click="openWordTemplateModal">上传分类模板</button>
+              <button class="btn btn-outline btn-sm" @click="assistExpanded = !assistExpanded">辅助分类构建</button>
+              <button class="btn btn-outline btn-sm" @click="pickWarehouseFiles">上传分类学习资料</button>
+            </div>
+          </div>
+
+          <!-- 分类体系内部下方内容（模板输入区 / 辅助构建 / 输入与分类选择）：左右间距 30px -->
+          <div class="category-build-wrap">
+            <div class="category-template-card">
+              <!-- 模板已上传：只读树展示 -->
+              <div v-if="flatWordTree.length" class="word-tree-items category-template-tree">
+                <div
+                  v-for="node in flatWordTree"
+                  :key="node.id"
+                  class="word-tree-node"
+                  :style="{ paddingLeft: node.depth * 20 + 'px' }"
                 >
-                  <span
-                    class="icon-badge"
-                    @click.stop="showAlert('提供分类释义、政策文件及历史分析报告，支撑大模型深度学习理解分类逻辑')"
-                  >?</span>
-                </el-tooltip>
-              </button> -->
-              <button class="btn btn-outline btn-sm" @click="onEditWord">上传分类模板</button>
-              <button class="btn btn-outline btn-sm" @click="toggleAssistBuild">辅助分类构建</button>
-              <button class="btn btn-outline btn-sm" @click="onWarehouseUpload">上传分类学习资料</button>
-              <!-- <button class="title-icon-btn" @click="onEditWord" title="上传模板">
-                <img class="warehouse-upload-icon" src="~@/assets/img/upload_template.svg" alt="上传模板" />
-              </button> -->
-            </div>
-          </div>
-
-          <div v-if="leftMode === 'fileSearch'" class="file-search-panel">
-            <div class="file-search-row">
-              <input v-model="fileSearchQuery" class="file-search-input" placeholder="输入关键字搜索议案 / 建议" />
-              <button class="btn" @click="searchFiles">搜索</button>
-            </div>
-            <div v-if="fileSearchResults && fileSearchResults.length" class="result-table-container file-search-results">
-              <table class="result-table file-search-table">
-                <thead>
-                  <tr>
-                    <th>编号</th>
-                    <th>标题</th>
-                    <th>代表</th>
-                    <th>代表团</th>
-                    <th class="action-col">操作</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(item, idx) in fileSearchResults" :key="item.id || idx">
-                    <td>{{ item.id || '-' }}</td>
-                    <td :title="item.title">{{ item.title || '未命名' }}</td>
-                    <td>{{ item.representative || '-' }}</td>
-                    <td>{{ item.delegation || '-' }}</td>
-                    <td class="action-col">
-                      <button class="btn btn-sm" @click="addSearchResultToCluster(item)">添加</button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div v-else class="file-search-empty">请输入关键词后搜索，或无匹配结果</div>
-          </div>
-
-          <template v-else>
-            <!-- 分类体系内部下方内容（模板输入区 / 辅助构建 / 输入与分类选择）：左右间距 30px -->
-            <div class="category-build-wrap">
-              <div class="category-template-card">
-                <template v-if="templateHasData">
-                  <div class="word-tree-items category-template-tree">
-                    <div
-                      v-for="node in flatWordTree"
-                      :key="node.id"
-                      class="word-tree-node"
-                      :style="{ paddingLeft: (node.depth * 20) + 'px' }"
-                    >
-                      <span class="word-tree-label">{{ node.name }}</span>
-                    </div>
-                  </div>
-                </template>
-                <template v-else>
-                  <textarea
-                    v-model="filterSemiFuzzyWord"
-                    class="optional-select dual-text-input category-template-input"
-                    placeholder=""
-                  />
-                  <div v-if="!filterSemiFuzzyWord" class="category-template-hint">
-                    <div>1. 单层分类可直接输入此框。</div>
-                    <div>2. 多层分类可点击“上传分类模板”上传。</div>
-                    <div>3. 点击“辅助分类构建”可查询政策文件，将有关文件要点输入此框构建分类体系。</div>
-                    <div>4. 点击“上传分类学习资料”，提供分类释义、政策文件及历史分析报告，支撑大模型深度学习理解分类逻辑。</div>
-                  </div>
-                  <button class="textarea-expand-btn" @click="openTextareaExpand('semi','构建分析的分类体系')" title="放大">⤢</button>
-                </template>
+                  <span class="word-tree-label">{{ node.name }}</span>
+                </div>
               </div>
+              <!-- 未上传模板：文本输入 -->
+              <template v-else>
+                <textarea
+                  v-model="filterSemiFuzzyWord"
+                  class="optional-select dual-text-input category-template-input"
+                  placeholder=""
+                />
+                <div v-if="!filterSemiFuzzyWord" class="category-template-hint">
+                  <div>1. 单层分类可直接输入此框。</div>
+                  <div>2. 多层分类可点击“上传分类模板”上传。</div>
+                  <div>3. 点击“辅助分类构建”可查询政策文件，将有关文件要点输入此框构建分类体系。</div>
+                  <div>4. 点击“上传分类学习资料”，提供分类释义、政策文件及历史分析报告，支撑大模型深度学习理解分类逻辑。</div>
+                </div>
+                <button class="textarea-expand-btn" title="放大" @click="openEditor('semi')">⤢</button>
+              </template>
+            </div>
 
-              <!-- <div class="assist-build-row">
-                <button class="assist-build-trigger dropdown-control" type="button" @click="toggleAssistBuild">
-                  <span>辅助构建</span>
-                  <i :class="assistExpanded ? 'el-icon-arrow-up' : 'el-icon-arrow-down'"></i>
+            <div v-show="assistExpanded" class="keyword-search-box">
+              <div class="keyword-search-title">输入与分类相关的关键词：</div>
+              <div class="textarea-with-expand keyword-textarea-wrap" style="position: relative">
+                <textarea v-model="keywordInput" class="text-input keyword-text-input" placeholder="请输入词或句"></textarea>
+                <button class="textarea-expand-btn" title="放大" @click="openEditor('word')">⤢</button>
+              </div>
+              <div class="keyword-search-actions">
+                <button class="btn btn-outline btn-sm" :disabled="!canExpand" @click="runExpandSearch">查询</button>
+                <button class="btn btn-outline btn-sm" :disabled="!expandResults.length" @click="showExpandResults">
+                  查看结果
                 </button>
-                <span class="assist-build-hint">(查询政策文件辅助构建分析分类)</span>
-              </div> -->
-
-              <div v-show="assistExpanded" class="keyword-search-box">
-                <div class="keyword-search-title">输入与分类选择：</div>
-                <div class="textarea-with-expand keyword-textarea-wrap" style="position:relative">
-                  <textarea v-model="textInputs.word" class="text-input keyword-text-input" placeholder="请输入词或句"></textarea>
-                  <button class="textarea-expand-btn" @click="openTextareaExpand('word','输入与分类选择')" title="放大">⤢</button>
-                </div>
-                <div class="keyword-search-actions">
-                  <button class="btn btn-outline btn-sm" :disabled="!canOnceExpand" @click="handleOnceExpand">查询</button>
-                  <button class="btn btn-outline btn-sm" :disabled="!(primaryResults && primaryResults.length)" @click="showExpandResults">
-                    查看结果
-                  </button>
-                </div>
               </div>
             </div>
-          </template>
+          </div>
         </div>
 
-        <!-- ======== 底部：分析材料入库区 ======== -->
+        <!-- ---- 底部：分析材料入库区（文件库） ---- -->
         <div v-if="isShowZlsc" class="panel">
           <div class="section-title"><span>分析材料入库区</span></div>
-          <!-- 学习文件区域：左右间距 30px -->
           <div class="warehouse-upload-wrap">
             <div class="optional-row warehouse-upload-row">
               <div class="optional-item">
-                <label class="optional-label scxxzl">入库分析资料：</label>
-                <input v-model="warehouseFileName" class="optional-select" placeholder="" />
+                <label class="optional-label scxxzl">文件库：</label>
+                <select v-model="activeLibraryId" class="optional-select warehouse-library-select">
+                  <option value="">请选择文件库</option>
+                  <option v-for="lib in fileLibraries" :key="lib.id" :value="lib.id">{{ lib.name }}</option>
+                </select>
               </div>
               <div class="optional-item">
-                <!-- <button class="warehouse-upload-btn icon-only" @click="onWarehouseUpload" title="上传学习资料">
-                  <img class="warehouse-upload-icon" src="~@/assets/img/upload_file.svg" alt="上传文件" />
-                </button> -->
-                <button class="btn btn-outline btn-sm" @click="onWarehouseUpload">上传文件</button>
+                <button class="btn btn-outline btn-sm" @click="addFileLibrary">添加文件库</button>
+                <button
+                  class="btn btn-outline btn-sm"
+                  :disabled="!activeLibrary"
+                  @click="pickWarehouseFiles"
+                >
+                  上传文件
+                </button>
               </div>
             </div>
-            <div v-if="warehouseFiles.length" class="warehouse-file-list">
-              <div v-for="f in warehouseFiles" :key="f" class="warehouse-file-item">
-                <span class="warehouse-file-name" :title="f">{{ f }}</span>
-                <span class="warehouse-file-remove" @click="removeWarehouseFile(f)" title="移除">×</span>
+
+            <!-- 当前文件库已上传的文件列表 -->
+            <div v-if="activeLibraryFiles.length" class="warehouse-file-list">
+              <div v-for="file in activeLibraryFiles" :key="file" class="warehouse-file-item">
+                <span class="warehouse-file-name" :title="file">{{ file }}</span>
+                <span class="warehouse-file-remove" title="移除" @click="removeWarehouseFile(file)">×</span>
               </div>
             </div>
-            <input ref="warehouseFileInput" type="file" multiple class="hidden-file-input" @change="onWarehouseFileChange" />
+
+            <input
+              ref="warehouseFileInput"
+              type="file"
+              multiple
+              class="hidden-file-input"
+              @change="onWarehouseFileChange"
+            />
           </div>
         </div>
       </div>
 
+      <!-- ---- 固定底部操作栏 ---- -->
       <div class="left-fixed-footer">
-        <button class="btn btn-outline btn-sm left-fixed-btn" @click="handleBottomReset">重置</button>
-        <button class="btn btn-sm left-fixed-btn" @click="handleBottomSearch">开始检索</button>
+        <button class="btn btn-outline btn-sm left-fixed-btn" @click="resetAllFilters">重置</button>
+        <button class="btn btn-sm left-fixed-btn" @click="searchWithFilters">开始检索</button>
       </div>
+
       <mask-editor
-        v-model="gjflDbInput"
-        :visible.sync="showGjfxEditor"
-        :title="giflDbTitle"
-        :placeholder="gjflDbPlaceholder"
+        v-model="editor.value"
+        :visible.sync="editor.visible"
+        :title="editor.title"
+        :placeholder="editor.placeholder"
         show-word-limit
-        @confirm="handleConfirm"
-        @cancel="handleCancel"
+        @confirm="onEditorConfirm"
       />
     </template>
   </div>
@@ -201,525 +151,434 @@
 
 <script>
 /**
- * AdviceClusterLeft - 左侧面板组件
+ * AdviceClusterLeft - 左侧面板（检索条件的输入与组织）
  *
  * 职责：
- *   1. 检索输入（词/句/段/篇）
- *   2. 条件筛选（库类型、届次、代表团等）
- *   3. 一次拓展检索（searchZF）
- *   4. 二次聚类检索（searchZFSearch2）→ 通过事件传给父组件
+ *   1. 检索输入（词/句）与一次拓展检索（searchZF）
+ *   2. 条件筛选（来源库、届次、代表团等，委托 FilterConditions）
+ *   3. 分析分类体系的构建（分类模板上传 / 文本输入 / 辅助构建）
+ *   4. 二次聚类检索（委托 FilterConditions 组装参数）→ 结果写入 store 由右侧展示
+ *   5. 分析材料入库区：按「文件库」组织上传的分类学习资料
  *
- * 布局（左侧自上而下三个区域）：
- *   1. 选定分析的范围  → FilterConditions 组件（范围筛选 + 精准词）
- *   2. 构建分析的分类体系 → 关键词输入 + 拓展按钮 + 模糊词一栏
- *   3. 分析材料入库区  → 学习文件上传（点击选择）
- *
- * 不再使用父组件的 vm 引用，所有数据归本组件自管。
+ * 与右侧面板的数据交互一律通过 adviceCluster store：
+ *   - 本组件写入：leftKeywords、expandResults、视图模式、聚类检索结果
+ *   - 本组件读取：citationData/activeKeyId（引文）、expandResults/expandSelection（一次拓展勾选）
+ * 本组件不再向父组件 emit 任何事件，也不再被父组件通过 $refs 反向调用内部方法。
  */
-
-import { searchZF, uploadTaskFile, getSourceList, getSearchTree } from '../../../api/login'
+import { searchZF, uploadTaskFile, getSourceList } from '../../../api/login'
 import SearchHelper from '../../../utils/classes/SearchHelper'
+import TreeHelper from '../../../utils/classes/TreeHelper'
 import CitationView from './CitationView.vue'
 import FilterConditions from './FilterConditions.vue'
-import TemplateModalBus from '../../../utils/classes/TemplateModalBus'
-import data from '../data.json'
-import DebounceHelper from '../../../utils/classes/DebounceHelper'
+import MaskEditor from '@/components/MaskEditor.vue'
 import { mapState } from 'vuex'
 import { pinyin } from 'pinyin-pro'
-import MaskEditor from '@/components/MaskEditor.vue'
-const { mockSearchZFSearch2 } = data
+import data from '../data.json'
+import { TEMPLATE_MODAL_MODE, VIEW_MODE } from '../../../store/modules/adviceCluster'
+
+/** 关键词分隔符：'中英文逗号、顿号、换行'改为 '换行' */
+// const KEYWORD_SEPARATOR = /[\r\n、，,]+/
+const KEYWORD_SEPARATOR = /[\r\n]+/
+
+/**
+ * 按分隔符切分并去重（保持原顺序）
+ * @param {string} text - 原始文本
+ * @param {Array} [existed] - 已存在的词，用于跨来源去重
+ * @returns {string[]} 词列表
+ */
+function splitKeywords(text, existed) {
+  const result = Array.isArray(existed) ? existed : []
+  String(text || '')
+    .split(KEYWORD_SEPARATOR)
+    .forEach(word => {
+      const value = word.trim()
+      if (value && !result.includes(value)) result.push(value)
+    })
+  return result
+}
+
+/**
+ * 将树结构拍平为带缩进层级的一维数组（只读展示用）
+ * @param {Array} nodes - 树节点
+ * @param {number} depth - 当前层级
+ * @param {Array} [result] - 结果收集数组
+ * @returns {Array} [{ id, name, depth }]
+ */
+function flattenTree(nodes, depth = 0, result = []) {
+  if (!Array.isArray(nodes)) return result
+  nodes.forEach(node => {
+    if (!node) return
+    result.push({ id: node.id, name: node.name, depth })
+    flattenTree(node.children, depth + 1, result)
+  })
+  return result
+}
 
 export default {
   name: 'AdviceClusterLeft',
   components: { CitationView, FilterConditions, MaskEditor },
-  props: {
-    citationData: { type: Array, default: () => [] },
-    activeKeyId: { type: String, default: '' }
-  },
   data() {
     return {
-      /* ---- 输入 ---- */
-      inputTab: 'word',
-      textInputs: { word: '', sentence: '', paragraph: '' },
-      fileName: '',
-      searchType: '1',
+      /* ---- 输入与筛选条件 ---- */
+      keywordInput: '',
+      filterExactWord: '',
+      filterSemiFuzzyWord: '',
+      filterFuzzyWord: '',
 
-      /* ---- 筛选（传递给 FilterConditions 组件） ---- */
       categories: [
-        // { label: '建议库', value: '建议库' },
-        // { label: '议案库', value: '议案库' },
-        // { label: '预算库', value: '预算库' }
         { label: '建议库', value: 'jianyi' },
         { label: '议案库', value: 'yian' },
         { label: '预算库', value: 'yusuan' }
       ],
       budgetExactWords: SearchHelper.DEFAULT_BUDGET_WORDS,
       filterSessions: SearchHelper.sortSessionsDesc((data.filters && data.filters.sessions) || []),
-      filterRepresentatives: (data.filters && data.filters.representatives) || [],
-      filterCblx: (Array.isArray(data.filters && data.filters.filterCblx) && data.filters.filterCblx.length)
-        ? data.filters.filterCblx : SearchHelper.DEFAULT_CBLX_OPTIONS,
+      filterCblx:
+        Array.isArray(data.filters && data.filters.filterCblx) && data.filters.filterCblx.length
+          ? data.filters.filterCblx
+          : SearchHelper.DEFAULT_CBLX_OPTIONS,
 
-      /* ---- 检索条件输入（模糊词直接绑定，精准词由 FilterConditions 同步） ---- */
-      filterExactWord: '',
-      filterSemiFuzzyWord: '',
-      filterFuzzyWord: '',
-
-      /* ---- 一次拓展 ---- */
-      primaryResults: [],
-      selectedKeywords: [],
-      selectedSegmentContents: [],
-      selectedPrimary: [],
-      highlightedPrimary: [],
-      /* ---- 其他 ---- */
-      leftMode: 'input',
-      fileSearchQuery: '',
-      fileSearchResults: [],
+      /* ---- 辅助构建 ---- */
       assistExpanded: false,
 
-      /* ---- 入库区（分析材料入库区） ---- */
-      // isShowZlsc: false, // 是否显示“资料上传”功能（由 authUrl 中是否包含 menu/zhfx/zlsc 决定）
-      warehouseFiles: [],
-      warehouseFileName: '',
-      showGjfxEditor: false,
-      gjflDbInput: '',
-      gjflDbPlaceholder: '',
-      giflDbTitle: ''
+      /* ---- 分析材料入库区：文件库 ---- */
+      // [{ id, name, indexName, files: string[] }]
+      fileLibraries: [],
+      activeLibraryId: '',
+
+      /* ---- 放大编辑弹窗：field 标识回写目标，避免用标题字符串做路由 ---- */
+      editor: { visible: false, field: '', value: '', title: '', placeholder: '' }
     }
   },
   computed: {
-    canOnceExpand() {
-      if (this.inputTab === 'word') return !!(this.textInputs.word || '').trim()
-      if (this.inputTab === 'sentence') return !!(this.textInputs.sentence || '').trim()
-      if (this.inputTab === 'paragraph') return !!(this.textInputs.paragraph || '').trim()
-      return false
-    },
-    // 从 Vuex 读取模糊词模板数据（独立于汇总要点/分析报告共用的 template 模块，
-    // 回显展示仅由模糊词生成触发，汇总要点/分析报告保存不会写到这里）
+    ...mapState('dict', { isShowZlsc: 'isShowZlsc' }),
+    // 模糊词模板（wordTemplate 模块）独立于汇总要点/分析报告共用的 template 模块，
+    // 其回显展示仅由「上传分类模板」触发
     ...mapState('wordTemplate', {
       templateHasData: 'hasData',
-      templateTree: 'tree',
-      templateFileName: 'wordFileName'
+      templateTree: 'tree'
     }),
-    ...mapState('dict', {
-      isShowZlsc: 'isShowZlsc'
-    }),
-    // 从树结构中提取所有叶节点名称（不含父节点），用于检索聚类
+    ...mapState('adviceCluster', ['citationVisible', 'citationData', 'activeKeyId', 'expandResults', 'expandSelection']),
+
+    /** 一次拓展的勾选结果，作为二次检索的附加条件 */
+    selectedKeywords() {
+      return this.expandSelection.selectedKeywords
+    },
+    selectedSegmentContents() {
+      return this.expandSelection.selectedSegmentContents
+    },
+
+    /** 分类模板的叶节点名称：模板已上传时作为模糊词参与检索 */
     templateLeafWords() {
-      const result = []
-      const walk = (nodes) => {
-        if (!Array.isArray(nodes)) return
-        nodes.forEach(node => {
-          if (node.children && node.children.length) {
-            walk(node.children)
-          } else if (node.name) {
-            result.push(String(node.name).trim())
-          }
-        })
-      }
-      walk(this.templateTree)
-      return result.filter(Boolean)
+      return TreeHelper.collectLeafNames(this.templateTree)
     },
-    // 将树结构拍平为带缩进层级的一维数组，用于只读树展示
+    /** 分类模板拍平后用于只读树展示 */
     flatWordTree() {
-      const list = []
-      const walk = (nodes, depth) => {
-        if (!Array.isArray(nodes)) return
-        nodes.forEach(node => {
-          list.push({ id: node.id, name: node.name, depth })
-          if (node.children && node.children.length) walk(node.children, depth + 1)
-        })
-      }
-      walk(this.templateTree, 0)
-      return list
+      return flattenTree(this.templateTree)
     },
-    // 合并后的模糊词：模糊词模板有值时用叶节点，否则用输入框内容；再追加入库区文件
+
+    /** 当前选中的文件库 */
+    activeLibrary() {
+      return this.fileLibraries.find(lib => lib.id === this.activeLibraryId) || null
+    },
+    /** 当前文件库下的文件列表 */
+    activeLibraryFiles() {
+      return this.activeLibrary ? this.activeLibrary.files : []
+    },
+    /** 所有文件库中的文件名（跨库去重），作为模糊词的一部分参与检索 */
+    warehouseFiles() {
+      const result = []
+      this.fileLibraries.forEach(lib => {
+        ;(lib.files || []).forEach(name => {
+          if (!result.includes(name)) result.push(name)
+        })
+      })
+      return result
+    },
+
+    /**
+     * 交给 FilterConditions 的模糊词：
+     * 模板有值时取模板叶节点，否则取输入框；两者之后再追加入库区文件
+     */
     mergedFuzzyWords() {
-      const fuzzyValue = this.templateHasData && this.templateLeafWords?.length
-        ? this.templateLeafWords.join('\n')
-        : (this.filterSemiFuzzyWord || '')
-      const warehouseValue = (this.warehouseFiles || []).join('\n')
-      return fuzzyValue ? fuzzyValue + '\n' + warehouseValue : warehouseValue
+      const fuzzy =
+        this.templateHasData && this.templateLeafWords.length
+          ? this.templateLeafWords.join('\n')
+          : this.filterSemiFuzzyWord || ''
+      const warehouse = this.warehouseFiles.join('\n')
+      return fuzzy && warehouse ? `${fuzzy}\n${warehouse}` : fuzzy || warehouse
+    },
+
+    /**
+     * 同步给右侧的关键词（右侧生成报告时作为目录树的兜底数据）
+     * 规则：主关键词始终纳入；半模糊/模糊词有值时只取这两者，否则单独取精准词
+     */
+    leftKeywords() {
+      let words = splitKeywords(this.keywordInput)
+      const hasSemiOrFuzzy = !!this.filterSemiFuzzyWord.trim() || !!this.filterFuzzyWord.trim()
+      if (hasSemiOrFuzzy) {
+        words = splitKeywords(this.filterSemiFuzzyWord, words)
+        words = splitKeywords(this.filterFuzzyWord, words)
+      } else {
+        words = splitKeywords(this.filterExactWord, words)
+      }
+      return words
+    },
+
+    canExpand() {
+      return !!this.keywordInput.trim()
     }
-    /* citationRenderNodes → CitationView 组件内计算 */
-  },
-  created() {
-    this.onSearch = DebounceHelper.debounce(this.onSearch, 500, this)
   },
   watch: {
-    /**
-     * 监听关键词变化，同步给父组件（用于右侧生成汇总要点时导入模板树）
-     */
-    textInputs: {
-      deep: true,
-      handler: 'emitKeywords'
+    /** 关键词派生结果 → 写入 store（替代原先散落各处的 emitKeywords 手动调用） */
+    leftKeywords: {
+      immediate: true,
+      handler(words) {
+        this.$store.commit('adviceCluster/SET_LEFT_KEYWORDS', words)
+      }
     },
-    filterSemiFuzzyWord() { this.emitKeywords() },
-    // 模板保存后，用叶节点内容替换模糊词输入框的值；模板清空后切换回输入框模式时，输入框值同步置空
-    templateHasData(val) {
-      if (!val) {
-        this.filterSemiFuzzyWord = ''
-      } else if (this.templateLeafWords?.length) {
-        this.filterSemiFuzzyWord = this.templateLeafWords.join('\n')
+    /** 模板保存后同步到模糊词输入框；模板清空则清掉输入框，避免残留旧值 */
+    templateHasData: {
+      immediate: true,
+      handler() {
+        this.syncFuzzyWordFromTemplate()
       }
     },
     templateTree: {
       deep: true,
       handler() {
-        if (this.templateHasData && this.templateLeafWords?.length) {
-          this.filterSemiFuzzyWord = this.templateLeafWords.join('\n')
-        }
+        this.syncFuzzyWordFromTemplate()
       }
     }
-    /* activeKeyId / citationData 的滚动逻辑 → CitationView 组件内处理 */
-    /* exactWordInput / fuzzyWordInput → FilterConditions 组件内处理 */
   },
   mounted() {
-    this.emitKeywords()
-    getSourceList().then((res) => {
-      if (res && res.data && Array.isArray(res.data)) {
-        // this.categories 拼接上来源库数据，value 使用拼音简写
-        this.categories = [
-          { label: '建议库', value: 'jianyi' },
-          { label: '议案库', value: 'yian' },
-          { label: '预算库', value: 'yusuan' },
-          ...res.data.map(item => ({
-            label: item.label,
-            value: item.value
-          }))
-        ]
-      }
-    })
+    this.fetchCategories()
   },
   methods: {
-    /** 收集关键词并同步给父组件（用于右侧生成汇总要点时导入目录树） */
-    emitKeywords() {
-      var words = []
-
-      // ──── 1. 主关键词（按逗号分割）始终纳入 ────
-      var mainWord = (this.textInputs.word || '').trim()
-      if (mainWord) {
-        mainWord.split(/[\r\n、，,]+/).forEach(function (w) {
-          w = w.trim()
-          if (w) words.push(w)
-        })
-      }
-
-      // ──── 2. 判断半模糊/模糊词是否有值 ────
-      var hasSemiOrFuzzy = (this.filterSemiFuzzyWord || '').trim() !== '' ||
-                           (this.filterFuzzyWord || '').trim() !== ''
-
-      if (hasSemiOrFuzzy) {
-        // ---- 2a. 半模糊/模糊有值 → 只取这两者，不取精准词 ----
-        (this.filterSemiFuzzyWord || '').split(/[\r\n、，,]+/).forEach(function (w) {
-          w = w.trim()
-          if (w) words.push(w)
-        });
-        (this.filterFuzzyWord || '').split(/[\r\n、，,]+/).forEach(function (w) {
-          w = w.trim()
-          if (w) words.push(w)
-        })
-      } else {
-        // ---- 2b. 半模糊/模糊均无值 → 单独使用精准词 ----
-        (this.filterExactWord || '').split(/[\r\n、，,]+/).forEach(function (w) {
-          w = w.trim()
-          if (w) words.push(w)
-        })
-      }
-
-      this.$emit('keywords-change', words)
+    showAlert(message) {
+      this.$alert(message, '提示', { confirmButtonText: '确定' })
+    },
+    addHistory(action, content) {
+      this.$store.dispatch('adviceCluster/addHistory', { action, content })
     },
 
-    showAlert(message) { this.$alert(message, '提示', { confirmButtonText: '确定' }) },
-    addHistory(action, content) { this.$emit('add-history', action, content) },
-
-    /* scrollToActiveKeyId / exportCitation → CitationView 组件内处理 */
-
-    /** 统一处理高亮标签：<em> → 红色 <span> */
-    handleGl(html) {
-      if (!html) return ''
-      return String(html)
-        .replace(/<em>/g, '<span style="color: var(--primary-red)">')
-        .replace(/<\/em>/g, '</span>')
-        .replace(/\n\n/g, '\n')
+    /* ==================== 来源库选项 ==================== */
+    fetchCategories() {
+      // getSourceList()
+      //   .then(res => {
+      //     const first = res && Array.isArray(res.data) ? res.data[0] : null
+      //     if (!first || !first.qdNeedObj) return
+      //     this.categories = [
+      //       ...this.categories.slice(0, 3),
+      //       {
+      //         label: first.qdNeedObj.chineseName,
+      //         value: first.qdNeedObj.englishName
+      //       }
+      //     ]
+      //   })
+      //   // 来源库为附加选项，接口失败时保持前三项默认值即可
+      //   .catch(() => {})
     },
 
-    /* ==================== 输入辅助 ==================== */
-    openTextareaExpand(type, title) {
-      this.showGjfxEditor = true
-      if (type === 'semi') {
-        this.gjflDbInput = this.filterSemiFuzzyWord
-        this.giflDbTitle = title || '构建分析的分类体系'
-        this.gjflDbPlaceholder = '请输入分类体系（以中英文逗号或回车分隔）'
-      } else if (type === 'word') {
-        this.gjflDbInput = this.textInputs.word
-        this.giflDbTitle = title || '输入与分类选择'
-        this.gjflDbPlaceholder = '请输入词或句'
-      }
-      //   else this.$set(this.textInputs, type, value || '')
-      // const fields = {
-      //   word: { title: '关键词', value: this.textInputs.word, placeholder: '请输入关键词' },
-      //   semi: { title: '分类体系', value: this.filterSemiFuzzyWord, placeholder: '请输入分类体系' },
-      //   sentence: { title: '句子', value: this.textInputs.sentence, placeholder: '请输入句子' },
-      //   paragraph: { title: '段落', value: this.textInputs.paragraph, placeholder: '请输入段落' }
-      // }
-      // const field = fields[type]
-      // if (!field) return
-
-      // this.$prompt(field.placeholder, field.title, {
-      //   inputType: 'textarea',
-      //   inputValue: field.value || '',
-      //   customClass: 'textarea-expand-message-box',
-      //   confirmButtonText: '确定',
-      //   cancelButtonText: '取消',
-      //   closeOnClickModal: true
-      // }).then(({ value }) => {
-      //   if (type === 'semi') this.filterSemiFuzzyWord = value || ''
-      //   else this.$set(this.textInputs, type, value || '')
-      // }).catch(() => {})
+    /* ==================== 分类模板与模糊词 ==================== */
+    /** 模板有值时用叶节点回填模糊词输入框，否则清空 */
+    syncFuzzyWordFromTemplate() {
+      this.filterSemiFuzzyWord =
+        this.templateHasData && this.templateLeafWords.length ? this.templateLeafWords.join('\n') : ''
     },
-    handleConfirm(val) {
-      console.log('确认内容：', val)
-      if (this.giflDbTitle === '构建分析的分类体系') {
-        this.filterSemiFuzzyWord = val || ''
-      } else if (this.giflDbTitle === '输入与分类选择') {
-        this.textInputs.word = val || ''
-      }
-      // 这里发请求保存
-      // await api.save(val)
+    /** 打开统一目录模板弹窗（mode = word-edit，保存路由见 store） */
+    openWordTemplateModal() {
+      this.$store.dispatch('adviceCluster/openTemplateModal', TEMPLATE_MODAL_MODE.WORD_EDIT)
     },
-    // 点击「取消」，参数是回滚后的原值
-    handleCancel(val) {
-      console.log('取消，内容已回滚为：', val)
-    },
-    triggerFile() { this.$refs.fileInput && this.$refs.fileInput.click() },
-
-    handleFileChange(e) {
-      const file = e.target.files && e.target.files[0]
-      this.fileName = file ? file.name : ''
-      if (file) this.addHistory('文件上传', `上传文件：${file.name}`)
-    },
-
-    /* ==================== 检索聚类（FilterConditions 桥接） ==================== */
-    onFilterSearch(payload) {
-      // 直接透传 FilterConditions 发出的搜索事件
-      this.$emit('cluster-results', payload)
-    },
-    onFilterReset() {
-      this.selectedKeywords = []
-      this.selectedSegmentContents = []
-      this.selectedPrimary = []
-      this.highlightedPrimary = []
-      // 模糊词一栏与入库区属于本组件（中部/底部区域），随重置一并清空
+    onFilterCategoryChange() {
+      // 切换来源库后原有的分类体系不再适用，一并清空（taskAiParams 由 FilterConditions 自行提交）
       this.filterSemiFuzzyWord = ''
-      this.warehouseFiles = []
-      this.warehouseFileName = ''
-      // 重置时同时清除模糊词模板数据（仅清除模糊词独立模板，不影响汇总要点/分析报告共用模板）
+      this.$store.commit('wordTemplate/CLEAR_TEMPLATE')
+    },
+
+    /* ==================== 放大编辑 ==================== */
+    openEditor(field) {
+      const targets = {
+        semi: {
+          title: '构建分析的分类体系',
+          placeholder: '请输入分类体系（以回车分隔）',
+          value: this.filterSemiFuzzyWord
+        },
+        word: {
+          title: '输入与分类选择',
+          placeholder: '请输入词或句',
+          value: this.keywordInput
+        }
+      }
+      const target = targets[field]
+      if (!target) return
+      this.editor = { visible: true, field, ...target }
+    },
+    onEditorConfirm(value) {
+      if (this.editor.field === 'semi') {
+        this.filterSemiFuzzyWord = value || ''
+      } else if (this.editor.field === 'word') {
+        this.keywordInput = value || ''
+      }
+    },
+
+    /* ==================== 检索聚类（FilterConditions 组装参数） ==================== */
+    runClusterSearch({ params, historyText }) {
+      this.$store.dispatch('adviceCluster/fetchClusterResults', { params, historyText })
+    },
+    /** FilterConditions 自身重置后的联动：清空一次拓展勾选与分类体系 */
+    resetLeftFilters() {
+      this.$store.commit('adviceCluster/CLEAR_EXPAND_SELECTION')
+      this.filterSemiFuzzyWord = ''
+      this.fileLibraries = []
+      this.activeLibraryId = ''
+      // 只清除模糊词独立模板，不影响汇总要点/分析报告共用的 template 模块
       if (this.templateHasData) {
         this.$store.dispatch('wordTemplate/clearTemplate')
       }
     },
-    onFilterCategoryChange() {
-      this.filterSemiFuzzyWord = ''
-      this.$store.commit('wordTemplate/CLEAR_TEMPLATE')
-      this.$store.commit('taskAiParams/SET_PARAMS', {
-        data_base: SearchHelper.CATEGORY_MAP[this.$refs.filterConditions.selectedCategory] || 'jianyi',
-        theme: [],
-        term_theme: SearchHelper.parseMultiLine(this.filterExactWord)
-      })
+    /** 底部固定按钮：重置（交由 FilterConditions 统一重置筛选条件） */
+    resetAllFilters() {
+      const filters = this.$refs.filterConditions
+      if (filters) filters.onReset()
+      else this.resetLeftFilters()
     },
-    onFilterExactChange(val) { this.filterExactWord = val; this.emitKeywords() },
-    onFilterFuzzyChange(val) { this.filterFuzzyWord = val; this.emitKeywords() },
-
-    /** 辅助构建：仅控制下方输入与分类选择区域显示/隐藏 */
-    toggleAssistBuild() {
-      this.assistExpanded = !this.assistExpanded
+    /** 底部固定按钮：开始检索 */
+    searchWithFilters() {
+      const filters = this.$refs.filterConditions
+      if (filters) filters.onSearch()
     },
 
-    /** 固定底部按钮：重置 */
-    handleBottomReset() {
-      const filterVm = this.$refs.filterConditions
-      if (filterVm && typeof filterVm.onReset === 'function') {
-        filterVm.onReset()
-      } else {
-        this.onFilterReset()
-      }
-    },
-
-    /** 固定底部按钮：开始检索 */
-    handleBottomSearch() {
-      const filterVm = this.$refs.filterConditions
-      if (filterVm && typeof filterVm.onSearch === 'function') {
-        filterVm.onSearch()
-      }
-    },
-
-    /* ==================== 模糊词一栏 ==================== */
-    /** 编辑模糊词：通过事件总线打开统一模板弹窗 */
-    onEditWord() {
-      TemplateModalBus.$emit('open-template-modal', {
-        type: 'word-edit',
-        initialTree: this.templateTree,
-        initialFileName: this.templateFileName || ''
-      })
+    /* ==================== 引文 ==================== */
+    closeCitation() {
+      this.$store.commit('adviceCluster/CLEAR_CITATION')
     },
 
     /* ==================== 一次拓展 ==================== */
-    handleOnceExpand() {
-      this.onSearch()
+    runExpandSearch() {
+      const text = this.keywordInput.trim()
+      if (!text) {
+        this.showAlert('请输入搜索内容后再进行一次拓展')
+        return
+      }
+
+      searchZF({ text: this.keywordInput, content: '' })
+        .then(res => {
+          const list = Array.isArray(res && res.data) ? res.data : []
+          this.$store.commit('adviceCluster/SET_EXPAND_RESULTS', list)
+          this.$store.commit('adviceCluster/SET_VIEW_MODE', VIEW_MODE.EXPAND)
+          this.addHistory('一次拓展（接口）', `搜索关键词：${text}`)
+          if (!list.length) this.showAlert('一次拓展接口无数据')
+        })
+        .catch(() => {
+          this.$store.commit('adviceCluster/SET_EXPAND_RESULTS', [])
+          this.addHistory('一次拓展（接口异常）', `关键词：${text}`)
+          this.showAlert('一次拓展接口异常')
+        })
     },
-
-    onSearch() {
-      const text = (this.textInputs.word || '').trim()
-      if (!text) { this.showAlert('请输入搜索内容后再进行一次拓展'); return }
-
-      const params = { text: '', content: this.textInputs.word }
-
-      searchZF(params).then(res => {
-        const apiList = Array.isArray(res && res.data) ? res.data : []
-        this.primaryResults = apiList
-        this.selectedKeywords = []
-        this.selectedSegmentContents = []
-        this.selectedPrimary = []
-        // 将一次拓展结果发射到父组件，由右侧面板展示
-        this.$emit('expand-results', apiList)
-        this.addHistory('一次拓展（接口）', `搜索关键词：${text}`)
-        if (!apiList.length) this.showAlert('一次拓展接口无数据')
-      }).catch(err => {
-        console.error('searchZF error:', err)
-        this.primaryResults = []
-        this.selectedKeywords = []
-        this.selectedSegmentContents = []
-        this.selectedPrimary = []
-        this.addHistory('一次拓展（接口异常）', `关键词：${text}`)
-        this.showAlert('一次拓展接口异常')
-      })
-    },
-
-    /** 将已有的一次拓展结果发射到父组件，由右侧面板展示 */
+    /** 把已缓存在 store 的一次拓展结果重新切到右侧展示 */
     showExpandResults() {
-      if (this.primaryResults && this.primaryResults.length) {
-        this.$emit('expand-results', this.primaryResults)
-      }
+      if (!this.expandResults.length) return
+      this.$store.commit('adviceCluster/SET_VIEW_MODE', VIEW_MODE.EXPAND)
     },
 
-    /* ==================== 关键词高亮/选中同步 ==================== */
-    togglePrimaryHighlight(kw, item, originIndex, kwIndex) {
-      if (!kw) return
-      const key = 'primary:' + originIndex + ':' + kwIndex
-      const i = this.highlightedPrimary.indexOf(key)
-      if (i === -1) {
-        this.highlightedPrimary.push(key)
-        if (!this.selectedKeywords.includes(kw)) this.selectedKeywords.push(kw)
-        const t = item && item.title
-        if (t && (!this.selectedPrimary || !this.selectedPrimary.includes(t))) {
-          if (!this.selectedPrimary) this.selectedPrimary = []
-          this.selectedPrimary.push(t)
+    /* ==================== 分析材料入库区（文件库） ==================== */
+    /**
+     * 添加文件库：弹窗输入名称，成功后自动选中该文件库
+     * 说明：文件库名称会转为拼音（无声调）作为上传接口的 indexName，
+     *      同一文件库内的文件共享该索引名。
+     */
+    addFileLibrary() {
+      this.$prompt('请输入文件库名称', '添加文件库', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputValidator: value => {
+          const name = String(value || '').trim()
+          if (!name) return '文件库名称不能为空'
+          if (this.fileLibraries.some(lib => lib.name === name)) return '该文件库已存在'
+          return true
         }
-      } else {
-        this.highlightedPrimary.splice(i, 1)
-        this.selectedKeywords = this.selectedKeywords.filter(k => k !== kw)
-      }
-    },
-
-    onItemTitleChange(item) {
-      const checked = this.selectedPrimary && this.selectedPrimary.includes(item.title)
-      if (checked) {
-        (item.segments || []).forEach(seg => {
-          if (seg && seg.content && !this.selectedSegmentContents.includes(seg.content)) this.selectedSegmentContents.push(seg.content)
-        })
-        ;(item.keywords || []).forEach(kw => { if (!this.selectedKeywords.includes(kw)) this.selectedKeywords.push(kw) })
-      } else {
-        (item.segments || []).forEach(seg => {
-          if (seg && seg.content) this.selectedSegmentContents = this.selectedSegmentContents.filter(s => s !== seg.content)
-        })
-        ;(item.keywords || []).forEach(kw => { this.selectedKeywords = this.selectedKeywords.filter(k => k !== kw) })
-        const prefix = 'primary:' + String((this.primaryResults || []).indexOf(item)) + ':'
-        this.highlightedPrimary = this.highlightedPrimary.filter(k => !k.startsWith(prefix))
-      }
-    },
-
-    /* ==================== 二次检索聚类（委托给 FilterConditions 组件） ==================== */
-    /* secondarySearch / clearLeftSelections → FilterConditions.vue */
-
-    /* ==================== 文件搜索（简化/本地） ==================== */
-    searchFiles() {
-      const q = (this.fileSearchQuery || '').trim()
-      if (!q) { this.showAlert('请输入搜索内容'); return }
-      const base = Array.isArray(mockSearchZFSearch2) ? mockSearchZFSearch2 : []
-      const filtered = base.filter(item => {
-        const txt = `${item.id || ''} ${item.title || ''} ${item.representative || ''} ${item.delegation || ''} ${item.content || ''}`.toLowerCase()
-        return txt.includes(q.toLowerCase())
       })
-      this.fileSearchResults = filtered.length ? filtered : base
-      this.addHistory('文件搜索', `${filtered.length ? '过滤结果' : '全部示例'}，关键词：${q}`)
+        .then(({ value }) => {
+          const name = String(value).trim()
+          const library = {
+            id: `lib_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+            name,
+            indexName: this.toPinyin(name),
+            files: []
+          }
+          this.fileLibraries.push(library)
+          this.activeLibraryId = library.id
+          this.addHistory('添加文件库', `文件库：${name}`)
+          this.$message && this.$message.success('文件库添加成功')
+        })
+        .catch(() => {})
     },
-
-    addSearchResultToCluster(item) {
-      if (!item) return
-      // 通过父组件传递到右侧
-      this.$emit('add-to-cluster', item)
-      this.addHistory('添加到聚类结果', `编号：${item.id}`)
-      this.showAlert('已添加到右侧聚类结果')
-    },
-
-    /* ==================== 分析材料入库区 ==================== */
-    /** 触发文件上传 */
-    onWarehouseUpload() {
-      if (this.$refs.warehouseFileInput) {
-        this.$refs.warehouseFileInput.value = ''
-        this.$refs.warehouseFileInput.click()
+    /** 打开系统文件选择框（未选中文件库时不放行） */
+    pickWarehouseFiles() {
+      if (!this.activeLibrary) {
+        this.showAlert('请先选择或添加文件库')
+        return
       }
+      const input = this.$refs.warehouseFileInput
+      if (!input) return
+      input.value = ''
+      input.click()
     },
-    /** 文件选择框变化：上传文件并在成功后加入入库文件列表 */
-    onWarehouseFileChange(e) {
-      const files = e && e.target && e.target.files
-      if (!files || !files.length) return
-      this.uploadWarehouseFiles(files)
-      if (e && e.target) e.target.value = ''
+    onWarehouseFileChange(event) {
+      const files = event && event.target && event.target.files
+      if (files && files.length) this.uploadWarehouseFiles(files)
+      if (event && event.target) event.target.value = ''
     },
-    /** 上传文件到分类学习资料索引，接口成功后再加入入库区 */
+    /**
+     * 逐个上传到「当前选中文件库」，接口成功后再加入该文件库的文件列表
+     * indexName 取自文件库，fileName 取自文件本身
+     */
     uploadWarehouseFiles(files) {
+      const library = this.activeLibrary
+      if (!library) {
+        this.showAlert('请先选择或添加文件库')
+        return
+      }
+
       Array.prototype.forEach.call(files, file => {
         const fileName = String((file && file.name) || '').split('.')[0].trim()
         if (!fileName) return
+        if (library.files.indexOf(fileName) > -1) {
+          this.showAlert(`文件库「${library.name}」中已存在同名文件：${fileName}`)
+          return
+        }
+
         const formData = new FormData()
         formData.append('file', file)
         formData.append('fileName', fileName)
-        formData.append('indexName', this.toPinyin(fileName))
+        formData.append('indexName', library.indexName)
         formData.append('force', false)
 
-        uploadTaskFile(formData).then(res => {
-          if (res && (res.code === 0 || res.success === true)) {
-            const label = fileName.replace(/\.\w+$/, '')
-            if (label && this.warehouseFiles.indexOf(label) === -1) {
-              this.warehouseFiles.push(label)
+        uploadTaskFile(formData)
+          .then(res => {
+            if (!res || (res.code !== 0 && res.success !== true)) {
+              this.showAlert((res && (res.message || res.msg)) || '文件上传失败，请重试')
+              return
             }
-            this.warehouseFileName = label
-            this.addHistory('文件上传', `上传文件：${fileName}`)
+            if (library.files.indexOf(fileName) === -1) library.files.push(fileName)
+            this.addHistory('文件上传', `文件库「${library.name}」上传文件：${fileName}`)
             this.$message && this.$message.success('文件上传成功')
-          } else {
-            this.showAlert((res && (res.message || res.msg)) || '文件上传失败，请重试')
-          }
-        }).catch(error => {
-          console.error('分类学习资料上传失败:', error)
-          this.showAlert('文件上传失败，请重试')
-        })
+          })
+          .catch(() => {
+            this.showAlert('文件上传失败，请重试')
+          })
       })
     },
-    /** 将中文来源库名称转换为接口需要的无声调全拼索引名 */
+    /** 中文文件名转无声调全拼，作为接口需要的索引名 */
     toPinyin(value) {
-      return pinyin(String(value || ''), {
-        toneType: 'none',
-        pattern: 'pinyin'
-      }).replace(/\s+/g, '')
+      return pinyin(String(value || ''), { toneType: 'none', pattern: 'pinyin' }).replace(/\s+/g, '')
     },
-    /** 移除单个入库文件 */
-    removeWarehouseFile(label) {
-      const i = this.warehouseFiles.indexOf(label)
-      if (i !== -1) this.warehouseFiles.splice(i, 1)
-      if (this.warehouseFileName === label) {
-        this.warehouseFileName = this.warehouseFiles[0] || ''
-      }
+    /** 从当前文件库移除某个文件 */
+    removeWarehouseFile(fileName) {
+      const library = this.activeLibrary
+      if (!library) return
+      const index = library.files.indexOf(fileName)
+      if (index > -1) library.files.splice(index, 1)
     }
   }
 }
@@ -779,93 +638,10 @@ export default {
   margin-right: 0;
 }
 
-.title-icon-btn {
-  position: relative;
-  width: 24px;
-  height: 24px;
-  border: none;
-  background: #fff;
-  border-radius: 2px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  padding: 0;
-  color: #fff;
-}
-
-.title-icon-btn:hover {
-  background: #f8e8e6;
-}
-
-.icon-badge {
-  position: absolute;
-  top: -6px;
-  right: -6px;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: #333;
-  color: #fff;
-  font-size: 9px;
-  line-height: 12px;
-  text-align: center;
-}
-
-/* 构建分析分类体系：辅助构建行 */
-.assist-build-row {
-  display: flex;
-  align-items: center;
-  margin-top: 10px;
-  margin-bottom: 8px;
-}
-.assist-build-row > * {
-  margin-right: 8px;
-}
-.assist-build-row > *:last-child {
-  margin-right: 0;
-}
-
-.dropdown-control {
-  margin-bottom: 2px;
-}
-
-.assist-build-trigger {
-  width: 94px;
-  height: 30px;
-  border: 1px solid var(--border-color, #d5d5d5);
-  border-radius: 2px;
-  background: #fff;
-  font-size: 12px;
-  color: #333;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  flex-shrink: 0;
-  cursor: pointer;
-  padding: 0;
-}
-
-.assist-build-hint {
-  flex: 1;
-  min-width: 0;
-  height: 30px;
-  font-size: 12px;
-  color: #888;
-  display: flex;
-  align-items: center;
-  padding: 0 10px;
-  box-sizing: border-box;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 /* 构建分析分类体系：输入与分类选择 */
 /* 分类体系内部下方内容（模板输入区 / 辅助构建 / 输入与分类选择）：左右间距 30px */
 .category-build-wrap {
-  padding-left:20px;
+  padding-left: 20px;
 }
 
 .keyword-search-box {
@@ -875,11 +651,6 @@ export default {
   border-radius: 4px;
   background: #fafafa;
   padding: 10px;
-}
-
-/* 去掉关键词输入框右下角拖拽手柄（全局 .text-input 默认 resize: vertical） */
-.keyword-text-input {
-  resize: none;
 }
 
 .keyword-search-title {
@@ -892,10 +663,12 @@ export default {
   margin-bottom: 10px;
 }
 
+/* 去掉关键词输入框右下角拖拽手柄（全局 .text-input 默认 resize: vertical） */
 .keyword-text-input {
   min-height: 72px;
   border: 1px solid #f2b7b1;
   border-radius: 2px;
+  resize: none;
 }
 
 .keyword-search-actions {
@@ -931,25 +704,14 @@ export default {
   box-sizing: border-box;
 }
 
-/* 模糊词编辑模板只读树展示 */
-.word-edit-display {
-  flex: 1;
-  display: flex;
-  align-items: flex-start;
-}
-.word-edit-display > * {
-  margin-right: 8px;
-}
-.word-edit-display > *:last-child {
-  margin-right: 0;
-}
+/* 分类模板只读树展示 */
 .word-tree-items {
   flex: 1;
   border: 1px solid var(--border-color, #d5d5d5);
   border-radius: 4px;
   padding: 4px 8px;
   background: #fafafa;
-  height: 58px;
+  height: 240px;
   overflow-y: auto;
   box-sizing: border-box;
 }
@@ -962,42 +724,22 @@ export default {
   color: #333;
 }
 
-/* 分析材料入库区：学习文件区域左右间距 30px */
+/* 分析材料入库区：文件库区域左右间距 30px */
 .warehouse-upload-wrap {
   padding: 0 30px;
 }
 
-/* 分析材料入库区：学习文件输入行（复用 optional-* 样式，与"代表"输入框同宽同高） */
 .warehouse-upload-row {
   margin-bottom: 8px;
 }
 
-.warehouse-upload-btn {
-  display: inline-flex;
-  align-items: center;
-  margin-right: 0;
-  flex-shrink: 0;
-  border: none;
-  background: #fff;
-  border-radius: 2px;
-  cursor: pointer;
-  padding: 0;
+/* 文件库下拉框宽度（沿用 optional-select 的边框/字号风格） */
+.warehouse-library-select {
+  min-width: 160px;
+  height: 26px;
+  line-height: 26px;
 }
 
-.warehouse-upload-btn.icon-only {
-  width: 30px;
-  height: 32px;
-  justify-content: center;
-}
-
-.warehouse-upload-btn:hover {
-  background: #f8e8e6;
-}
-
-.warehouse-upload-icon {
-  width: 16px;
-  height: 14px;
-}
 .warehouse-file-list {
   margin-top: 10px;
   display: flex;
@@ -1036,14 +778,7 @@ export default {
 </style>
 
 <style>
-/* 问号角标 tooltip：限宽并支持换行（popper 挂载在 body 上，须用全局样式） */
-.icon-badge-tooltip {
-  max-width: 260px;
-  line-height: 1.6;
-  word-break: break-word;
-  white-space: normal;
-}
 .optional-row .optional-item {
-  margin-right:14px;
+  margin-right: 14px;
 }
 </style>

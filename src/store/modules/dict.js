@@ -71,7 +71,7 @@ export default {
       delegationsReq = platloginBz(userInfo.userId || '')
         .then(res => {
           // 判断authUrl中是否包含'menu/zhfx/zlsc'
-          const isShowZlsc = res.data?.authUrl?.includes('menu/zhfx/zlsc')
+          const isShowZlsc = res.data?.authURI?.includes('/menu/zhfx/zlsc')
           commit('SET_SHOW_ZLSC', isShowZlsc)
           // 获取代表团
           if (!res?.data || res.result !== 0) {

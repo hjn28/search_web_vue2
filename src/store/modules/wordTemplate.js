@@ -13,6 +13,8 @@ export default {
     tree: [], // 目录树结构 [{ id, name, children }]
     words: [], // 所有节点名称列表（叶子节点文本）
     wordFileName: '' // 模板文件名称
+    // 说明：生成报告弹窗的「生成方式」与模板无关，已独立到 reportOption 模块，
+    //       避免模板编辑与生成报告两个场景共用同一字段而互相污染。
   },
   mutations: {
     SET_TEMPLATE(state, { tree, words, wordFileName }) {
