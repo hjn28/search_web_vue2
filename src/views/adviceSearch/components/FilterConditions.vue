@@ -206,7 +206,6 @@ import { mapState } from 'vuex'
 import axios from 'axios'
 import TagSearchModal from './TagSearchModal.vue'
 import MaskEditor from '@/components/MaskEditor.vue'
-// import swwghJson from '../swwgh.json'
 
 export default {
   name: 'FilterConditions',
@@ -236,8 +235,6 @@ export default {
   },
   props: {
     categories: { type: Array, default: () => [] },
-    // filterSessions: { type: Array, default: () => [] },
-    filterCblx: { type: Array, default: () => [] },
     budgetExactWords: { type: Array, default: () => [] },
     showHeaderActions: { type: Boolean, default: true },
     externalSelectedKeywords: { type: Array, default: () => [] },
@@ -276,7 +273,14 @@ export default {
       selectedZhang: '',
       selectedJie: '',
       selectedJu: '',
-      showEditor: false
+      showEditor: false,
+      filterCblx: [
+        { value: '主办', label: '主办' },
+        { value: '独办', label: '独办' },
+        { value: '协办', label: '协办' },
+        { value: '分办', label: '分办' },
+        { value: '参阅', label: '参阅' }
+      ]
     }
   },
   computed: {
@@ -373,9 +377,7 @@ export default {
     }).then(() => this.$store.dispatch('dict/fetchAll'))
       .then(() => this.fetchSessionInfo())
 
-    // 拉取十五五规划纲要树（swwgh.json 结构），解析为「篇/章/节/句」层级数据
-    // console.log('[十五五规划纲要] 解析 swwgh.json，篇数：', swwghJson.data.tree.length)
-    // this.outlineTreeData = this.parseOutlineTree(swwghJson.data.tree)
+    // 拉取十五五规划纲要树（结构），解析为「篇/章/节/句」层级数据
     getSearchTree().then((res) => {
       const treeData = this.resolveTreeData(res)
       this.outlineTreeData = this.parseOutlineTree(treeData)

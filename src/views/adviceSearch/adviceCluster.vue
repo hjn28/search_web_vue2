@@ -36,24 +36,6 @@ import AdviceClusterLeft from './components/AdviceClusterLeft.vue'
 import AdviceClusterRight from './components/AdviceClusterRight.vue'
 import GenerateReportModal from './components/GenerateReportModal.vue'
 import { mapState } from 'vuex'
-import zsbgNew from './zsbgNew.json'
-
-/**
- * 递归查找树中首个可用 keyId（供开发调试工具定位引文节点）
- * @param {Array} nodes - 树节点
- * @returns {string|null} keyId
- */
-function findFirstKeyId(nodes) {
-  if (!Array.isArray(nodes)) return null
-  for (const node of nodes) {
-    if (!node) continue
-    const firstContent = Array.isArray(node.content) ? node.content[0] : null
-    if (firstContent && firstContent.keyId) return firstContent.keyId
-    const found = findFirstKeyId(node.children)
-    if (found) return found
-  }
-  return null
-}
 
 export default {
   name: 'AdviceCluster',
@@ -68,10 +50,6 @@ export default {
   mounted() {
     // 代表团/承办单位字典由 dict store 统一拉取（幂等，其他组件也会兜底触发）
     this.$store.dispatch('dict/fetchAll')
-
-    if (process.env.NODE_ENV !== 'production') {
-      this.installDebugHelpers()
-    }
   },
   methods: {
     /* ==================== 统一目录模板弹窗 ==================== */
@@ -91,38 +69,6 @@ export default {
     },
     showAlert(message) {
       this.$alert(message, '提示', { confirmButtonText: '确定' })
-    },
-
-    /* ==================== 开发调试（仅非生产环境挂载） ==================== */
-    /**
-     * 控制台调试入口：
-     *   window.localYwTest(keyId?) - 用 zsbgNew.json 渲染左侧引文视图
-     *   window.zsbgLocal()         - 用 zsbgNew.json 渲染右侧分析报告视图
-     */
-    installDebugHelpers() {
-      window.localYwTest = keyId => {
-        const data = Array.isArray(zsbgNew.data) ? zsbgNew.data : []
-        if (!data.length) {
-          this.showAlert('zsbgNew.json 无数据')
-          return
-        }
-        this.$store.commit('adviceCluster/SET_CITATION', {
-          data,
-          keyId: keyId || findFirstKeyId(data) || ''
-        })
-      }
-
-      window.zsbgLocal = () => {
-        const data = Array.isArray(zsbgNew.data) ? zsbgNew.data : []
-        if (!data.length) {
-          this.showAlert('zsbgNew.json 无数据')
-          return
-        }
-        this.$store.commit('adviceCluster/CLEAR_CITATION')
-        this.$store.commit('adviceCluster/SET_DETAIL', { visible: false })
-        const right = this.$refs.rightPanel
-        if (right) right.showLocalReport(data)
-      }
     }
   }
 }

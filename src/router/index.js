@@ -1,21 +1,3 @@
-/**
- * ============================================================================
- * 路由配置
- * ============================================================================
- *
- * 定义应用的所有页面路由：
- *   1. 默认路由：/adviceCluster（议案建议聚类主页）
- *   2. 搜索页：/adviceSearch
- *   3. 本地数据页：/localZhaiyaoData
- *   4. RAG 流程页：/ragflow
- *   5. 公安相关：/police, /searchDetail
- *   6. 测试页：/test
- *
- * 路由守卫：自动从 iframe 父容器获取 userId 进行登录鉴权
- *
- * @module router/index
- */
-
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
@@ -24,27 +6,13 @@ Vue.use(VueRouter)
 
 const routes = [
   { path: '/', redirect: '/adviceCluster' },
-  {
-    path: '/adviceSearch',
-    name: 'adviceSearch',
-    component: () => import('../views/adviceSearch/index.vue')
-  },
+  { path: '/index', redirect: '/adviceCluster' },
   {
     path: '/adviceCluster',
     name: 'adviceCluster',
     component: () => import('../views/adviceSearch/adviceCluster.vue')
   },
-  { path: '/index', redirect: '/adviceSearch' },
-  {
-    path: '/localZhaiyaoData',
-    name: 'localZhaiyaoData',
-    component: () => import('../views/adviceSearch/localZhaiyaoData.vue')
-  },
-  {
-    path: '/ragflow',
-    name: 'ragflow',
-    component: () => import('../views/ragflow.vue')
-  },
+  // police searchDetail 是法律法规库对应的路由
   {
     path: '/police',
     name: 'police',
@@ -54,11 +22,6 @@ const routes = [
     path: '/searchDetail',
     name: 'searchDetail',
     component: () => import('../views/police/detail.vue')
-  },
-  {
-    path: '/test',
-    name: 'test',
-    component: () => import('../views/test.vue')
   }
 ]
 

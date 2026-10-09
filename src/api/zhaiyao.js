@@ -1,13 +1,9 @@
 /**
  * ============================================================================
- * 汇总要点（生成/删除/重生成）API 模块
+ * 汇总要点（生成 / 删除 / 重生成）API 模块
  * ============================================================================
  *
- * 提供汇总要点生命周期管理接口：
- *   1. 获取汇总要点 billId
- *   2. 删除已有汇总要点
- *   3. 获取/重新生成汇总要点
- *   4. 本地化汇总要点生成（调用 AI 接口）
+ * 提供汇总要点生命周期管理接口，以及相关元数据接口。
  *
  * @module api/zhaiyao
  */
@@ -17,74 +13,82 @@ import API from './config'
 
 /**
  * 生成当前时间戳（秒级）
- * @returns {number} 秒级时间戳
+ * @returns {number}
  */
 export const getTimestamp = () => Math.floor(Date.now() / 1000)
 
 /**
  * 获取汇总要点 billId（根据建议编号查询）
  * @param {number|string} ynbh 建议编号
- * @returns {Promise<Object>} 包含 billId 的响应
  */
 export const getBillId = (ynbh) =>
   httpGet({
-    url: API.GET_BILL_ID,
-    params: { flType: 3, type: 1, begin: 1, step: 10, ynbh: ynbh, _r: getTimestamp() }
+    url: API.summary.billId,
+    params: { flType: 3, type: 1, begin: 1, step: 10, ynbh, _r: getTimestamp() }
   })
 
 /**
  * 删除指定建议的 Redis 汇总要点缓存
- * @param {string} billId 汇总要点 billId
- * @returns {Promise<Object>} 删除结果
+ * @param {string} billId
  */
 export const delZhaiyao = (billId) =>
   httpGet({
-    url: API.DEL_ZHAIYAO,
+    url: API.summary.del,
     params: { key: 'proposal:summary:' + billId }
   })
 
 /**
  * 获取指定建议的汇总要点结果
- * @param {string} billId 建议 billId
- * @returns {Promise<Object>} 汇总要点数据
+ * @param {string} billId
  */
 export const getSummary = (billId) =>
   httpGet({
-    url: API.GET_SUMMARY,
+    url: API.summary.get,
     params: { jyId: billId, _r: getTimestamp() }
   })
 
 /**
- * 本地打印：重新根据关键字生成汇总要点（调用 AI 接口）
- * @param {Object} data 请求参数（含 model, messages 等）
- * @returns {Promise<Object>} 生成的汇总要点内容
+ * 重新根据关键字生成汇总要点（调用 AI 接口）
  */
 export const reGetZhaiyao = (data) =>
   httpPost({
-    url: API.AI_CHAT,
+    url: API.summary.aiChat,
     headers: { 'Content-Type': 'application/json' },
-    data: data
+    data
   })
+
+/**
+ * 获取部门信息
+ */
 export const getDeptInfo = () =>
   httpGet({
-    url: API.GET_DEPT_INFO,
+    url: API.meta.deptInfo,
     params: { _r: getTimestamp() }
   })
 
+/**
+ * 获取重点议题下拉列表
+ */
 export const keyProposalSelect = () =>
   httpGet({
-    url: API.KEY_PROPOSAL_SELECT,
+    url: API.meta.keyProposal,
     params: { _r: getTimestamp() }
   })
 
+/**
+ * 获取届次信息
+ */
 export const getjc = () =>
   httpGet({
-    url: API.GET_JC,
+    url: API.meta.session,
     params: { _r: getTimestamp() }
   })
 
+/**
+ * 平台登录（bz）
+ */
 export const platloginBz = (userid) =>
   httpGet({
-    url: API.platlogin_bz(userid),
+    url: API.auth.platLoginBz(userid),
     params: { _r: getTimestamp() }
   })

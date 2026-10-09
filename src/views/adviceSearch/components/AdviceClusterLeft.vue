@@ -15,8 +15,6 @@
         <FilterConditions
           ref="filterConditions"
           :categories="categories"
-          :filter-sessions="filterSessions"
-          :filter-cblx="filterCblx"
           :budget-exact-words="budgetExactWords"
           :show-header-actions="false"
           :external-selected-keywords="selectedKeywords"
@@ -165,7 +163,8 @@
  *   - 本组件读取：citationData/activeKeyId（引文）、expandResults/expandSelection（一次拓展勾选）
  * 本组件不再向父组件 emit 任何事件，也不再被父组件通过 $refs 反向调用内部方法。
  */
-import { searchZF, uploadTaskFile, getSourceList } from '../../../api/login'
+// import { getSourceList } from '../../../api/login'
+import { searchZF, uploadTaskFile } from '../../../api/login'
 import SearchHelper from '../../../utils/classes/SearchHelper'
 import TreeHelper from '../../../utils/classes/TreeHelper'
 import CitationView from './CitationView.vue'
@@ -173,7 +172,6 @@ import FilterConditions from './FilterConditions.vue'
 import MaskEditor from '@/components/MaskEditor.vue'
 import { mapState } from 'vuex'
 import { pinyin } from 'pinyin-pro'
-import data from '../data.json'
 import { TEMPLATE_MODAL_MODE, VIEW_MODE } from '../../../store/modules/adviceCluster'
 
 /** 关键词分隔符：'中英文逗号、顿号、换行'改为 '换行' */
@@ -231,15 +229,8 @@ export default {
         { label: '预算库', value: 'yusuan' }
       ],
       budgetExactWords: SearchHelper.DEFAULT_BUDGET_WORDS,
-      filterSessions: SearchHelper.sortSessionsDesc((data.filters && data.filters.sessions) || []),
-      filterCblx:
-        Array.isArray(data.filters && data.filters.filterCblx) && data.filters.filterCblx.length
-          ? data.filters.filterCblx
-          : SearchHelper.DEFAULT_CBLX_OPTIONS,
-
       /* ---- 辅助构建 ---- */
       assistExpanded: false,
-
       /* ---- 分析材料入库区：文件库 ---- */
       // [{ id, name, indexName, files: string[] }]
       fileLibraries: [],

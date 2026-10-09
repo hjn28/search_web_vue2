@@ -155,7 +155,7 @@
 import VueOfficeDocx from '@vue-office/docx'
 import { saveAs } from 'file-saver'
 import '@vue-office/docx/lib/index.css'
-import { searchZFZhaiyao, taskQuery, taskIdQuery, deletIds, updateResult, getNewResult } from '../../../api/zytask'
+import { searchZFZhaiyao, taskQuery, taskIdQuery, deleteIds, updateResult, getNewResult } from '../../../api/zytask'
 import ClusterResultTable from './ClusterResultTable.vue'
 import ExpandResultsView from './ExpandResultsView.vue'
 import SummaryReportView from './SummaryReportView.vue'
@@ -649,7 +649,7 @@ export default {
       this.zyDetail(payload.id, payload.type, payload.words)
     },
     zyDel(id) {
-      deletIds([id])
+      deleteIds([id])
         .then(res => {
           if (res.code === API_CODE.OK) {
             this.$message({ message: '删除成功', type: 'success' })
