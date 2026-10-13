@@ -17,7 +17,7 @@
  * @module api/config
  */
 
-import { base64Encode } from '@/utils'
+import { base64Encode } from '@/utils/index.js'
 
 const API = {
   // ========== 鉴权 ==========

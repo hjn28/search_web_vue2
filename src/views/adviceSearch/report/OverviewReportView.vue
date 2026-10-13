@@ -62,11 +62,11 @@
 </template>
 
 <script>
-import LineChartWithTable from '../../../Echarts/LineChartWithTable.vue'
-import LinePercentChart from '../../../Echarts/LinePercentChart.vue'
-import ProvinceLineChart from '../../../Echarts/ProvinceLineChart.vue'
-import BarChartWithTable from '../../../Echarts/BarChartWithTable.vue'
-import MapChart from '../../../Echarts/mapChart.vue'
+import LineChartWithTable from '@/Echarts/LineChartWithTable.vue'
+import LinePercentChart from '@/Echarts/LinePercentChart.vue'
+import ProvinceLineChart from '@/Echarts/ProvinceLineChart.vue'
+import BarChartWithTable from '@/Echarts/BarChartWithTable.vue'
+import MapChart from '@/Echarts/mapChart.vue'
 
 export default {
   name: 'OverviewReportView',

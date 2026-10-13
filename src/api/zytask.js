@@ -12,7 +12,7 @@
  * @module api/zytask
  */
 
-import { httpPost, httpGet } from '../utils/req'
+import { httpPost, httpGet } from './req'
 import API from './config'
 
 /**
@@ -35,7 +35,7 @@ export const taskQuery = (userId) =>
  * @param {string} taskId
  */
 export const taskIdQuery = (taskId) =>
-  httpGet({ url: API.task.result, params: { taskId } })
+  httpGet({ url: API.task.result, params: { taskId }, loading: true })
 
 /**
  * 批量删除指定 ID 的任务

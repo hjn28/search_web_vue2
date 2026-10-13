@@ -8,7 +8,7 @@
  * @module api/zhaiyao
  */
 
-import { httpPost, httpGet } from '../utils/req'
+import { httpPost, httpGet } from './req'
 import API from './config'
 
 /**

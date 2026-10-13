@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import SummaryFormatter from '../../../utils/classes/SummaryFormatter'
+import SummaryFormatter from '@/utils/classes/SummaryFormatter'
 
 export default {
   name: 'SummaryReportView',

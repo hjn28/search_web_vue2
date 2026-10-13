@@ -1,28 +1,5 @@
-/**
- * ============================================================================
- * HTTP 请求模块（基于 Axios）
- * ============================================================================
- *
- * 统一封装项目的所有 HTTP 请求，提供：
- *   1. 统一的基础 URL、超时、跨域配置
- *   2. 请求拦截器：自动注入 Token、加载动画
- *   3. 响应拦截器：统一鉴权校验、错误处理
- *   4. 便捷方法：httpGet / httpPost / httpPut / httpDelete / getFile / postFile
- *
- * 使用方式：
- *   import { httpGet, httpPost } from '@/utils/req'
- *   httpGet({ url: '/api/data', params: { id: 1 }, loading: true })
- *
- * @module utils/req
- */
-
 import axios from 'axios'
 import Vue from 'vue'
-import router from '../router'
-
-// ---------------------------------------------------------------------------
-// 1. 全局 axios 配置
-// ---------------------------------------------------------------------------
 
 // 生产环境启用相对路径（rest/），开发环境走代理
 if (process.env.NODE_ENV !== 'development') {
@@ -32,14 +9,6 @@ axios.defaults.timeout = Number(process.env.VUE_APP_API_TIMEOUT || 20000)
 axios.defaults.withCredentials =
   String(process.env.VUE_APP_API_WITH_CREDENTIALS || 'false') === 'true'
 
-// ---------------------------------------------------------------------------
-// 2. 通用工具函数
-// ---------------------------------------------------------------------------
-
-/**
- * 统一错误提示（兼容 Element-UI $message 和 Vant $toast）
- * @param {string} message
- */
 function notifyError(message) {
   if (
     Vue.prototype.$message &&
@@ -63,18 +32,16 @@ let authErrorLock = false
 function solveAuthError() {
   if (authErrorLock) return
   authErrorLock = true
-  notifyError('登录失效，请重新登录')
-  router.push('/')
-  // 1.5 秒后解锁，允许下一次异常触发（避免被永久锁死）
+  notifyError('登录状态已失效，请刷新页面重试')
   setTimeout(() => {
     authErrorLock = false
   }, 1500)
 }
-
 /**
  * 根据 HTTP 响应错误对象，获取可读的错误消息
  * @param {Object} error Axios 错误对象
  * @returns {string}
+ * 涉及到的响应接口方式 包括：信息化平台result 0 成功， 综合分析 code 0 成功，非这两项的是失败
  */
 function getHttpErrorMessage(error) {
   if (!error || !error.response) {
@@ -93,10 +60,7 @@ function getHttpErrorMessage(error) {
   return '请求失败，请稍后重试'
 }
 
-// ---------------------------------------------------------------------------
-// 3. 全局加载动画管理器（计数器方案，支持并发）
-// ---------------------------------------------------------------------------
-
+// 全局加载动画管理器（计数器方案，支持并发）根据请求中的参数loading来决定是否显示加载动画
 let loadingInstance = null
 let loadingCount = 0
 
@@ -122,11 +86,6 @@ function endLoading() {
     loadingInstance = null
   }
 }
-
-// ---------------------------------------------------------------------------
-// 4. 拦截器
-// ---------------------------------------------------------------------------
-
 /**
  * 请求拦截器：注入 Token 和加载动画
  */
@@ -193,10 +152,6 @@ axios.interceptors.response.use(
     return Promise.reject(error)
   }
 )
-
-// ---------------------------------------------------------------------------
-// 5. 内部通用请求封装
-// ---------------------------------------------------------------------------
 
 /**
  * 通用请求封装（内部函数）

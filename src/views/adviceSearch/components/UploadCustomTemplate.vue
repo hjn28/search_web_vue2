@@ -164,7 +164,7 @@ export default {
   },
   mounted() {
     // 把 cengjimulu.json 挂到全局，方便控制台测试
-    // var jsonData = require('./cengjimulu.json')
+    // var jsonData = require('../data/cengjimulu.json')
     // window.mbtest = (function (vm) {
     //   return function () {
     //     vm.loadDirectoryTreeFromJson(jsonData)

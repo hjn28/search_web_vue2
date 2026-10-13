@@ -80,7 +80,7 @@ export default {
     showFooter: { type: Boolean, default: true },
     closeOnClickMask: { type: Boolean, default: false }, // 点遮罩关闭
     closeOnPressEscape: { type: Boolean, default: true }, // ESC 关闭
-    rollbackOnCancel: { type: Boolean, default: true },   // 取消时回滚内容
+    rollbackOnCancel: { type: Boolean, default: true }, // 取消时回滚内容
     autoFocus: { type: Boolean, default: true },
 
     /* ---------- 布局 ---------- */
@@ -91,98 +91,98 @@ export default {
   data() {
     return {
       innerValue: this.value,
-      backupValue: this.value,
-    };
+      backupValue: this.value
+    }
   },
   computed: {
     panelStyle() {
-      return { width: this.width, height: this.height };
+      return { width: this.width, height: this.height }
     }
   },
   watch: {
     value(val) {
-      this.innerValue = val;
+      this.innerValue = val
     },
     visible(val) {
-      val ? this.onOpen() : this.onClose();
+      val ? this.onOpen() : this.onClose()
     }
   },
   mounted() {
-    console.log('value', this.value);
-    if (this.visible) this.onOpen();
+    console.log('value', this.value)
+    if (this.visible) this.onOpen()
   },
   beforeDestroy() {
-    document.removeEventListener('keydown', this.handleKeydown);
-    this.lockScroll(false);
+    document.removeEventListener('keydown', this.handleKeydown)
+    this.lockScroll(false)
   },
   methods: {
     /* ---------- 生命周期相关 ---------- */
     onOpen() {
-      this.backupValue = this.value;
-      this.innerValue = this.value;
-      document.addEventListener('keydown', this.handleKeydown);
-      this.lockScroll(true);
+      this.backupValue = this.value
+      this.innerValue = this.value
+      document.addEventListener('keydown', this.handleKeydown)
+      this.lockScroll(true)
       if (this.autoFocus) {
         this.$nextTick(() => {
-          const el = this.$refs.editor && this.$refs.editor.$el.querySelector('textarea');
-          el && el.focus();
-        });
+          const el = this.$refs.editor && this.$refs.editor.$el.querySelector('textarea')
+          el && el.focus()
+        })
       }
-      this.$emit('open');
+      this.$emit('open')
     },
     onClose() {
-      document.removeEventListener('keydown', this.handleKeydown);
-      this.lockScroll(false);
+      document.removeEventListener('keydown', this.handleKeydown)
+      this.lockScroll(false)
     },
     lockScroll(lock) {
       if (lock) {
-        this._oldOverflow = document.body.style.overflow;
-        document.body.style.overflow = 'hidden';
+        this._oldOverflow = document.body.style.overflow
+        document.body.style.overflow = 'hidden'
       } else {
-        document.body.style.overflow = this._oldOverflow || '';
+        document.body.style.overflow = this._oldOverflow || ''
       }
     },
 
     /* ---------- 事件 ---------- */
     handleInput(val) {
       // 实时同步给父组件（v-model）
-      this.$emit('input', val);
+      this.$emit('input', val)
     },
     handleKeydown(e) {
       if (e.keyCode === 27 && this.closeOnPressEscape) {
-        this.handleCancel();
+        this.handleCancel()
       }
     },
     handleMaskClick() {
-      if (this.closeOnClickMask) this.handleCancel();
+      if (this.closeOnClickMask) this.handleCancel()
     },
     handleClose() {
-      this.$emit('update:visible', false);
-      this.$emit('close');
+      this.$emit('update:visible', false)
+      this.$emit('close')
     },
     handleCancel() {
       // 回滚内容，保证"取消"语义
       if (this.rollbackOnCancel && this.innerValue !== this.backupValue) {
-        this.innerValue = this.backupValue;
-        this.$emit('input', this.backupValue);
+        this.innerValue = this.backupValue
+        this.$emit('input', this.backupValue)
       }
-      this.$emit('update:visible', false);
-      this.$emit('cancel', this.backupValue);
+      this.$emit('update:visible', false)
+      this.$emit('cancel', this.backupValue)
     },
     handleConfirm() {
-      this.$emit('confirm', this.innerValue);
-      this.$emit('update:visible', false);
+      this.$emit('confirm', this.innerValue)
+      this.$emit('update:visible', false)
     },
 
     /* ---------- 对外暴露的方法 ---------- */
     open() {
-      this.$emit('update:visible', true);
+      this.$emit('update:visible', true)
     },
     close() {
-      this.handleClose();
+      this.handleClose()
     }
   }
-};
+}
 </script>
 
 <style scoped>

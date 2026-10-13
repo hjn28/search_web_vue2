@@ -205,7 +205,7 @@ import { ensureBzSession, doBzLogin } from '../../../utils/session'
 import { mapState } from 'vuex'
 import axios from 'axios'
 import TagSearchModal from './TagSearchModal.vue'
-import MaskEditor from '@/components/MaskEditor.vue'
+import MaskEditor from './MaskEditor.vue'
 
 export default {
   name: 'FilterConditions',

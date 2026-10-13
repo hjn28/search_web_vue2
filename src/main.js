@@ -50,7 +50,7 @@ Vue.config.errorHandler = function (err, vm, info) {
 
 window.addEventListener('unhandledrejection', function (event) {
   const reason = event.reason
-  // 已由 req.js 拦截器处理的 Promise.reject 不再重复日志
+  // 已由拦截器处理的 Promise.reject 不再重复日志
   if (reason && reason.__handledByInterceptor) return
   console.error('[未捕获的Promise异常]', reason)
 })

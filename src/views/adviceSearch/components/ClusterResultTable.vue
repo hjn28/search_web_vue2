@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import EmptyState from '@/components/empty.vue'
+import EmptyState from './empty.vue'
 export default {
   name: 'ClusterResultTable',
   components: { EmptyState },

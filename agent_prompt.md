@@ -669,3 +669,9 @@
 - 原始提示词：<div class="optional-item">               <label class="optional-label">会议届次：</label>               <el-select v-model="selectedSession" multiple collapse-tags popper-append-to-body popper-class="optional-el-select-dropdown" class="optional-el-select" placeholder="全部">                 <el-option v-for="s in filterSessions" :key="s.value" :label="s.label" :value="s.value"></el-option>               </el-select>             </div>   这里是会议届次，有接口getjc可以获取到的数据；在获取届次的时候，同时将会议届次变为同步的；当前的jh是14，ch是4；那么当前…（截断）
 - 接收时间：2026-10-09 10:45:14
 - 处理状态：处理中
+
+## 2026-10-10
+### 16:47:28
+- 原始提示词：#sym:handleView 通过点击查看，可以到汇总要点展示界面，在通过点击生成报告，打开生成报告的模板；这个时候就出现了一个问题，选中代表团模板、承办单位模板的时候，内部的下拉选择不能使用了；排查这个地方出现了什么问题
+- 接收时间：2026-10-10 16:47:28
+- 处理状态：处理中

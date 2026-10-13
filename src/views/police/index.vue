@@ -133,9 +133,9 @@
 
 <script>
 import { zcSearch } from '@/api/login.js'
-import ReturnTop from '@/components/returnTop.vue'
-import Empty from '@/components/empty.vue'
-import DebounceHelper from '@/utils/classes/DebounceHelper'
+import ReturnTop from './returnTop.vue'
+import Empty from './empty.vue'
+import DebounceHelper from './classes/DebounceHelper.js'
 
 export default {
   name: 'PoliceIndex',

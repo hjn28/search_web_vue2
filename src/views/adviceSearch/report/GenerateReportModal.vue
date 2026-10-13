@@ -115,8 +115,8 @@
  */
 import axios from 'axios'
 import { mapState } from 'vuex'
-import TreeHelper from '../../../utils/classes/TreeHelper'
-import { REPORT_OPTION } from '../../../store/modules/reportOption'
+import TreeHelper from '@/utils/classes/TreeHelper'
+import { REPORT_OPTION } from '@/store/modules/reportOption'
 
 /** 弹窗模式，取值由调用方（adviceCluster store / AdviceClusterRight）传入 */
 export const MODAL_MODE = {
@@ -187,7 +187,7 @@ export default {
     /** 生成方式：唯一数据源 = reportOption store */
     selectedOption: {
       get() {
-        return !this.showSummaryOptions ? REPORT_OPTION.REPORT_DEFAULT : this.$store.state.reportOption.selectedOption
+        return this.$store.state.reportOption.selectedOption
       },
       set(value) {
         this.$store.commit('reportOption/SET_SELECTED_OPTION', value)
@@ -439,7 +439,9 @@ export default {
         this.warn('未找到当前目录')
         return
       }
-      if (!Array.isArray(parent.children)) parent.children = []
+      if (!Array.isArray(parent.children)) {
+        this.$set(parent, 'children', [])
+      }
       parent.children.push({ id: this.getNextTreeId(parent.children, parent.id), name, text: '', children: [] })
       this.form.name = ''
       this.tip('添加子目录成功')
