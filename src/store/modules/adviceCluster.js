@@ -95,6 +95,12 @@ export default {
     pagination: createPagination(),
     selectedIds: [],
     hasSearched: false,
+    /**
+     * 当前结果集的来源库（检索接口的 data_base）。
+     * 与 taskAiParams.data_base 的区别：后者跟随左侧库类型选择即时变化，
+     * 本字段只在检索返回后随结果一起更新，保证「结果列展示」与「来源库」始终一致。
+     */
+    resultDataBase: 'jianyi',
 
     /* ---- 右侧视图模式与详情内容 ---- */
     viewMode: VIEW_MODE.TABLE,
@@ -162,6 +168,10 @@ export default {
     },
     SET_HAS_SEARCHED(state, value) {
       state.hasSearched = !!value
+    },
+    /** 记录当前结果集的来源库（与结果列表同一次检索写入） */
+    SET_RESULT_DATA_BASE(state, dataBase) {
+      state.resultDataBase = dataBase || 'jianyi'
     },
     SET_VIEW_MODE(state, mode) {
       state.viewMode = mode || VIEW_MODE.TABLE
@@ -330,6 +340,8 @@ export default {
           const rows = normalizeRows(pickList(res))
           commit('SET_TABLE_DATA', rows)
           commit('SET_PAGINATION', { page: 1, total: rows.length })
+          // 来源库随结果一起落地：有结果才更新，避免仅切换库类型（未检索）就改变结果列展示
+          if (rows.length) commit('SET_RESULT_DATA_BASE', params && params.data_base)
         })
         .catch(() => {
           // 接口异常时清空列表，右侧以「暂无数据」呈现，hasSearched 已置位

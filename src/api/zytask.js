@@ -35,14 +35,14 @@ export const taskQuery = (userId) =>
  * @param {string} taskId
  */
 export const taskIdQuery = (taskId) =>
-  httpGet({ url: API.task.result, params: { taskId }, loading: true })
+  httpGet({ url: API.task.result, params: { taskId } })
 
 /**
  * 批量删除指定 ID 的任务
  * @param {string[]} data 任务 ID 数组
  */
 export const deleteIds = (data) =>
-  httpPost({ url: API.task.delete, data, loading: true })
+  httpPost({ url: API.task.delete, data })
 
 /**
  * 更新任务结果

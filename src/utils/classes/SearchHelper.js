@@ -13,11 +13,17 @@ class SearchHelper {
    * @type {Object<string, string>}
    */
   static CATEGORY_MAP = {
-    建议库: 'jianyi',
-    议案库: 'yian',
-    大会简报: 'dhjb',
-    预算库: 'yusuan'
+    jianyi: 'jianyi',
+    yian: 'yian',
+    dhjb: 'dhjb',
+    yusuan: 'yusuan'
   }
+  // static CATEGORY_MAP = {
+  //   建议库: 'jianyi',
+  //   议案库: 'yian',
+  //   大会简报: 'dhjb',
+  //   预算库: 'yusuan'
+  // }
 
   /**
    * 默认承办类型选项（接口数据缺失时使用）

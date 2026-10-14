@@ -57,19 +57,19 @@
           </div>
           <div :ref="`menuList_${i}`" v-show="isRootExpanded(i)" class="sidebar-sub">
             <ul class="no-bullets" style="padding-inline-start: 0px">
-              <li v-for="(m, ind1) in v?.children" :key="ind1">
+              <li v-for="(m, ind1) in v.children" :key="ind1">
                 <div class="sub-item-row">
                   <var
                     v-show="m.children && m.children.length > 0"
                     :ref="`showTb_${i}_${ind1}`"
                     :class="getFolderIconClass(`${i}_${ind1}`)"
                     style="cursor:pointer"
-                    @click="showList(`${i}_${ind1}`, m.children?.length > 0)"
+                    @click="showList(`${i}_${ind1}`, m.children.length > 0)"
                   ></var>
                   <a
                     class="sub-link"
                     :ref="`showListZtfl_${i}_${ind1}`"
-                    @click="doSiderSearch(m, m.chaxun, `showListZtfl_${i}_${ind1}`, [v]), showList(`${i}_${ind1}`, m.children?.length > 0)"
+                    @click="doSiderSearch(m, m.chaxun, `showListZtfl_${i}_${ind1}`, [v]), showList(`${i}_${ind1}`, m.children.length > 0)"
                   >{{ m.name }}({{ m.value }})</a>
                 </div>
                 <ul

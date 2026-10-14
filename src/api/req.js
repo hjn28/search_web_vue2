@@ -9,16 +9,50 @@ axios.defaults.timeout = Number(process.env.VUE_APP_API_TIMEOUT || 20000)
 axios.defaults.withCredentials =
   String(process.env.VUE_APP_API_WITH_CREDENTIALS || 'false') === 'true'
 
+/**
+ * 错误提示展示时长（毫秒）。
+ * Element Message 默认 3000ms，且鼠标悬停在提示上会暂停计时、移开后按完整时长重新计时，
+ * 实际停留时间往往远大于 3 秒，故显式收敛并用定时器兜底关闭。
+ */
+const ERROR_TOAST_DURATION = 2000
+
+/**
+ * 相同文案的去重窗口（毫秒）：取展示时长，保证同一提示不会前后堆叠。
+ * 页面初始化/并发操作会同时发出多个请求，全部失败时若不合并会出现一整列相同提示。
+ */
+const ERROR_TOAST_DEDUPE_WINDOW = ERROR_TOAST_DURATION
+
+/** 最近一次错误提示的文案与时间，用于去重 */
+let lastErrorText = ''
+let lastErrorAt = 0
+
+/**
+ * 统一错误提示（兼容 Element-UI $message 和 Vant $toast）
+ * @param {string} message 提示文案
+ */
 function notifyError(message) {
+  const text = String(message || '')
+  const now = Date.now()
+  if (text && text === lastErrorText && now - lastErrorAt < ERROR_TOAST_DEDUPE_WINDOW) return
+  lastErrorText = text
+  lastErrorAt = now
+
   if (
     Vue.prototype.$message &&
     typeof Vue.prototype.$message.error === 'function'
   ) {
-    Vue.prototype.$message.error(message)
+    const instance = Vue.prototype.$message.error({
+      message: text,
+      duration: ERROR_TOAST_DURATION
+    })
+    // 兜底关闭：Element 的鼠标悬停会 clearTimer，仅靠 duration 无法保证按时消失
+    if (instance && typeof instance.close === 'function') {
+      setTimeout(() => instance.close(), ERROR_TOAST_DURATION)
+    }
     return
   }
   if (Vue.prototype.$toast && typeof Vue.prototype.$toast === 'function') {
-    Vue.prototype.$toast({ message, position: 'bottom' })
+    Vue.prototype.$toast({ message: text, position: 'bottom', duration: ERROR_TOAST_DURATION })
   }
 }
 

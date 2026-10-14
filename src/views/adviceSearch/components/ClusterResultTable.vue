@@ -11,7 +11,7 @@
             <th>标题</th>
             <th>届次</th>
             <th>代表团</th>
-            <th>承办单位</th>
+            <th v-if="showCbxx">承办信息</th>
             <th class="action-col">操作</th>
           </tr>
         </thead>
@@ -27,7 +27,7 @@
             <td :title="item.title">{{ shortTitle(item.title) }}</td>
             <td>{{ item.session }}</td>
             <td>{{ item.delegation }}</td>
-            <td :title="item.cbxx">{{ item.cbxx.length > 12 ? item.cbxx.slice(0, 12) + '...' : item.cbxx }}</td>
+            <td v-if="showCbxx" class="cbxx-col" :title="item.cbxx">{{ (item.cbxx && item.cbxx.length > 12) ? item.cbxx.slice(0, 12) + '...' : item.cbxx }}</td>
             <td class="action-col">
               <button class="btn btn-outline btn-sm action-btn" @click="onShowDetail(item)">详情</button>
               <img v-if="item.disabled" class="toggle-state-icon" src="~@/assets/img/qiyong.svg" alt="启用"
@@ -61,7 +61,9 @@ export default {
     pagination: { type: Object, default: () => ({ page: 1, page_size: 15, total: 0 }) },
     selectedIds: { type: Array, default: () => [] },
     taggingMap: { type: Object, default: () => ({}) },
-    hasSearched: { type: Boolean, default: false }
+    hasSearched: { type: Boolean, default: false },
+    /** 是否为建议库来源：仅建议库有承办信息，其他来源库隐藏该列（表头与单元格一起隐藏） */
+    showCbxx: { type: Boolean, default: true }
   },
   emits: ['update:selected-ids', 'update:pagination', 'view-detail', 'open-bq'],
   data() {

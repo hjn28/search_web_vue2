@@ -61,7 +61,7 @@ export function ensureBzSession() {
  * @returns {Promise<Object>} 登录成功响应数据
  */
 export function doBzLogin() {
-  return axios.post(API.OPEN_LOGIN, { userId: getUserId() }).then(res => {
+  return axios.post(API.auth.platLoginBz, { userId: getUserId() }).then(res => {
     const data = res && res.data
     if (data && data.result === 0) {
       localStorage.setItem('userInfo', JSON.stringify(data.data.user_info || data.data.userInfo))

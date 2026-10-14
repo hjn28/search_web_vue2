@@ -170,7 +170,7 @@ import TreeHelper from '../../../utils/classes/TreeHelper'
 import CitationView from './CitationView.vue'
 import FilterConditions from './FilterConditions.vue'
 import MaskEditor from './MaskEditor.vue'
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import { pinyin } from 'pinyin-pro'
 import { TEMPLATE_MODAL_MODE, VIEW_MODE } from '../../../store/modules/adviceCluster'
 
@@ -248,7 +248,10 @@ export default {
       templateHasData: 'hasData',
       templateTree: 'tree'
     }),
-    ...mapState('adviceCluster', ['citationVisible', 'citationData', 'activeKeyId', 'expandResults', 'expandSelection']),
+    ...mapState('adviceCluster', ['citationData', 'activeKeyId', 'expandResults', 'expandSelection']),
+    // citationVisible 在 store 中是 getter（由 citationData 派生），必须用 mapGetters 取；
+    // 之前混在 mapState 里取的是 state.citationVisible（不存在），恒为 undefined，引文视图因此永不渲染
+    ...mapGetters('adviceCluster', ['citationVisible']),
 
     /** 一次拓展的勾选结果，作为二次检索的附加条件 */
     selectedKeywords() {

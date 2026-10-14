@@ -675,3 +675,29 @@
 - 原始提示词：#sym:handleView 通过点击查看，可以到汇总要点展示界面，在通过点击生成报告，打开生成报告的模板；这个时候就出现了一个问题，选中代表团模板、承办单位模板的时候，内部的下拉选择不能使用了；排查这个地方出现了什么问题
 - 接收时间：2026-10-10 16:47:28
 - 处理状态：处理中
+
+## 2026-10-13
+### 09:22:09
+- 原始提示词：在任务队列中，点击删除的时候会调用接口，删除成功后，会持续弹出删除成功的提示，怎么优化会更美观；当点击查看的时候，会调用接口，接口加载的时候会有加载状态，但在任务队列弹框的下面是无法看到的，也是需要优化处理的l
+- 接收时间：2026-10-13 09:22:09
+- 处理状态：处理中
+### 15:04:52
+- 原始提示词：需要在这里获取到来源库的信息，用来判断来源库不是'jianyi'的时候承办信息和对应的表格数据是不显示的；
+- 接收时间：2026-10-13 15:04:52
+- 处理状态：已完成
+- 执行说明：已完成（取值方式于 15:19:20 调整为「结果集来源库」）。adviceCluster store 新增 resultDataBase 状态与 SET_RESULT_DATA_BASE，在 fetchClusterResults 检索返回且有结果时写入 params.data_base；AdviceClusterRight.vue 映射 resultDataBase 并算 showCbxx（resultDataBase === 'jianyi'），经 :show-cbxx 下传给 ClusterResultTable.vue；该组件的「承办信息」表头与单元格改为 v-if="showCbxx"，非建议库来源时整列（含数据）不显示。子组件保持纯 props/events 形态、不直连 store，prop 默认 true 兼容未传值场景。ESLint 通过。
+### 15:19:20
+- 原始提示词：切换来源库时该列不能主动变，而是在查询之后，有结果的时候才发生改变；再次排查下  src/style.css:602 的 td:nth-child(8) { text-align: left; width: 100px }   是按列位置写给承办信息列的，列一旦隐藏，操作列就会顶到第 8 列而命中这条规则，详情/启停按钮会整列左移。已在组件内加了   .result-table td.action-col { text-align: center } 兜住（scoped 特异性高于全局那条，不用动共享样式表）。  这样修改是否是没问题的；
+- 接收时间：2026-10-13 15:19:20
+- 处理状态：已完成
+- 执行说明：已完成两项。① 列改为「随检索结果变化」：来源库不再取 taskAiParams.data_base（该值跟随左侧库类型选择即时变化），改由 adviceCluster store 新增的 resultDataBase 承载，仅在 fetchClusterResults 检索成功且返回 rows.length 时写入 params.data_base；查询无结果或接口异常时保持旧值，不因切换库类型而主动变列。② style.css 位置型选择器复核结论：原 .result-table td:nth-child(8) 特异性 (0,2,1)，此前在组件内加的 .result-table td.action-col（scoped 编译为 .result-table td.action-col[data-v-x]）特异性 (0,3,1)，确实能压住全局那条，方案成立、按钮不会左移；但本质是与位置规则做特异性对抗，全局规则一旦加 !important 或扩展到 th 就会失效，故改为更稳的类名定位——style.css 该条改为 .result-table td.cbxx-col，组件承办信息单元格加 class="cbxx-col"，并撤掉组件内的兜底规则：列隐藏时该规则随元素一起消失，操作列回到 .result-table td 基础样式的居中（该列本就无位置型规则，第 8 位不再有特殊样式）。另确认该规则里的 width: 100px 在 table-layout: fixed 下不参与列宽计算（固定布局只取首行 th 的宽度，表头未隐藏故列宽不变），仅有 text-align: left 是实际生效的声明。ESLint 通过。
+### 15:28:22
+- 原始提示词：在接口报错，抛出异常的时候，弹框持续的时间有点长，排查下这个问题
+- 接收时间：2026-10-13 15:28:22
+- 处理状态：已完成
+- 执行说明：已排查并修复。根因（按影响排序）：① Element Message 的计时并非"到期即关"——main.vue 模板上 @mouseenter="clearTimer"、@mouseleave="startTimer"，鼠标一旦移到提示上计时就被清掉，移开后又按完整 duration 重新计时（startTimer 用的是 setTimeout(duration) 而非剩余时间），所以只要光标落到提示区域，错误提示可以停留远超默认值；② notifyError 调 $message.error(message) 未传 duration，走 Element 默认 3000ms；③ 无去重：页面初始化/并发操作同时发多个请求，全部失败时每条各弹一条，Element 不限条数会纵向堆叠，观感上像"一条提示一直不消失"。修复（src/api/req.js 的 notifyError）：显式 duration=ERROR_TOAST_DURATION(2000ms)，并用 Message 返回的实例 setTimeout(() => instance.close(), duration) 兜底强制关闭（instance.close 幂等，重复调用安全），悬停不再延长展示；新增 ERROR_TOAST_DEDUPE_WINDOW（取展示时长）对相同文案去重，窗口内重复出现的同文案直接忽略，避免堆叠。另记录两处同位问题（本次未改，等确认）：一是组件层 catch 里还会再提示一次（如 AdviceClusterRight.vue 的 showAlert/$message），与拦截器提示重复；二是 main.js 全局 Vue 异常提示同样未传 duration，存在一样的悬停暂停问题。ESLint 通过。
+### 16:26:13
+- 原始提示词：点击引文的按钮时，左侧的引文没有显现出来，排查这部分的逻辑，是不是哪里给漏了
+- 接收时间：2026-10-13 16:26:13
+- 处理状态：已完成
+- 执行说明：已排查并修复。逐段核对引文链路：右侧入口没丢——OverviewReportView.vue 的【引文】徽标 @click.stop="onCitationClick(node)" → $emit('citation-click', { data: jljgzsData, keyId }) → AdviceClusterRight.vue 的 onCitationClick 提交 adviceCluster/SET_CITATION，store 里 citationData / activeKeyId 均已正确写入；漏的是左侧闸门：AdviceClusterLeft.vue 模板第 5 行 <CitationView v-if="citationVisible"> 里的 citationVisible 在 store 中是 getter（adviceCluster.js:141 由 citationData.length > 0 派生），却被写进了 ...mapState('adviceCluster', [...]) 列表，mapState 取的是 state.adviceCluster.citationVisible——该字段不存在，恒为 undefined，v-if 永远为假，引文视图一次都渲染不出来，左侧始终停在主面板（现象与"点击后没反应"完全吻合）。修复：把 citationVisible 从 mapState 移到 ...mapGetters('adviceCluster', ['citationVisible'])（同文件第 173 行补 mapGetters 导入），citationData / activeKeyId 属 state，仍留在 mapState。用 git log -S "citationVisible" 回溯，getter 与这条 mapState 用法是同一个提交 219cec3（流程图更改，代码优化）引入的，即自该提交起引文视图就没显示过，非本次未提交改动所致。另确认 CitationView 只渲染 isyinwen === true 的节点，纯属数据条件，无引文时为"无引文数据"空态，不是本次问题。ESLint 通过。

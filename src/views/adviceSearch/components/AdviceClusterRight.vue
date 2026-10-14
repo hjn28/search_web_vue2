@@ -5,9 +5,11 @@
       :visible="taskQueueVisible"
       :items="taskQueueItems"
       :refreshing="refreshing"
+      :deleting-task-ids="deletingTaskIds"
+      :detail-loading="detailLoading"
       @close="closeTaskQueue"
       @refresh="rwdlQuery"
-      @delete-task="_debouncedZyDel"
+      @delete-task="zyDel"
       @view-detail="onTaskViewDetail"
     />
 
@@ -106,6 +108,7 @@
           :pagination="pagination"
           :selected-ids="selectedIds"
           :has-searched="hasSearched"
+          :show-cbxx="showCbxx"
           @update:selected-ids="onUpdateSelectedIds"
           @update:pagination="onUpdatePagination"
           @view-detail="onViewDetail"
@@ -168,7 +171,6 @@ import * as echarts from 'echarts'
 import ReportBuilder from '../../../utils/classes/ReportBuilder'
 import TreeHelper from '../../../utils/classes/TreeHelper'
 import EditableReportStore from '../utils/EditableReportStore'
-import DebounceHelper from '../../../utils/classes/DebounceHelper'
 import { mapState, mapGetters } from 'vuex'
 import { TEMPLATE_MODAL_MODE, VIEW_MODE } from '../../../store/modules/adviceCluster'
 import {
@@ -220,12 +222,14 @@ export default {
       currentTaskId: '',
       /** 任务详情的请求序号，用于丢弃乱序返回的旧响应 */
       detailRequestSeq: 0,
+      detailLoading: false,
       jljgzsData: [],
 
       /* ---- 任务队列 ---- */
       taskQueueVisible: false,
       taskQueueItems: [],
       refreshing: false,
+      deletingTaskIds: [],
       /** 当前是否从任务队列进入生成报告流程 */
       generateReportFromTaskQueue: false,
       taskQueueReportTree: [],
@@ -257,6 +261,7 @@ export default {
     }),
     ...mapState('adviceCluster', [
       'tableData',
+      'resultDataBase',
       'pagination',
       'selectedIds',
       'hasSearched',
@@ -273,16 +278,21 @@ export default {
     /** 供模板直接引用常量，避免魔法字符串 */
     SummaryFormatter() { return SummaryFormatter },
     VIEW_MODE() { return VIEW_MODE },
-    SUMMARY_TYPE() { return SUMMARY_TYPE }
+    SUMMARY_TYPE() { return SUMMARY_TYPE },
+
+    /**
+     * 承办信息仅建议库（来源库 jianyi）有数据，其他来源库不展示该列。
+     * 取当前结果集的来源库（检索返回时写入），不跟随左侧库类型的即时切换。
+     */
+    showCbxx() {
+      return this.resultDataBase === 'jianyi'
+    }
   },
   watch: {
     /** 共享弹窗的「立即生成」载荷（由父组件经 store 转交） */
     templateGenerate(payload) {
       if (payload) this.handleTemplateGenerate(payload)
     }
-  },
-  created() {
-    this._debouncedZyDel = DebounceHelper.debounceImmediate(this.zyDel, 500, this)
   },
   mounted() {
     const el = this.$refs.resultContent
@@ -300,9 +310,6 @@ export default {
   beforeDestroy() {
     const el = this.$refs.resultContent
     if (el) el.removeEventListener('scroll', this.handleRightScroll)
-    if (this._debouncedZyDel && typeof this._debouncedZyDel.cancel === 'function') {
-      this._debouncedZyDel.cancel()
-    }
   },
   methods: {
     showAlert(msg) { this.$alert(msg, '提示', { confirmButtonText: '确定' }) },
@@ -636,7 +643,7 @@ export default {
     rwdlQuery() {
       this.refreshing = true
       this.taskQueueVisible = true
-      taskQuery(this.userId)
+      return taskQuery(this.userId)
         .then(res => { this.taskQueueItems = res.data || [] })
         .catch(() => {})
         .finally(() => { this.refreshing = false })
@@ -648,20 +655,27 @@ export default {
         : []
       this.zyDetail(payload.id, payload.type, payload.words)
     },
-    zyDel(id) {
-      deleteIds([id])
-        .then(res => {
-          if (res.code === API_CODE.OK) {
-            this.$message({ message: '删除成功', type: 'success' })
-            this.rwdlQuery()
-          }
-        })
-        .catch(() => {
-          this.$message && this.$message({ message: '删除失败', type: 'error' })
-        })
+    async zyDel(id) {
+      const taskId = String(id)
+      if (this.deletingTaskIds.includes(taskId)) return
+      this.deletingTaskIds.push(taskId)
+      try {
+        const res = await deleteIds([id])
+        if (res.code === API_CODE.OK) {
+          this.$message({ message: '删除成功', type: 'success', duration: 1500 })
+          await this.rwdlQuery()
+        } else {
+          this.$message && this.$message({ message: res.message || '删除失败', type: 'error' })
+        }
+      } catch (_) {
+        this.$message && this.$message({ message: '删除失败', type: 'error' })
+      } finally {
+        this.deletingTaskIds = this.deletingTaskIds.filter(item => item !== taskId)
+      }
     },
     zyDetail(id, type, words) {
       const seq = ++this.detailRequestSeq
+      this.detailLoading = true
       this.lastReportWords = ReportBuilder.normalizeWordArray(words)
       this.currentTaskId = String(id || '')
       if (String(type) === '2' || String(type) === '3') {
@@ -672,7 +686,10 @@ export default {
         .then(res => {
           // 丢弃乱序返回的旧响应
           if (seq !== this.detailRequestSeq) return
-          if (res.code !== API_CODE.OK) return
+          if (res.code !== API_CODE.OK) {
+            this.$message && this.$message({ message: res.message || '查询任务结果失败', type: 'error' })
+            return
+          }
           this.jljgzsData = res.data?.data || []
           this.taskQueueVisible = false
           if (String(type) === '1') {
@@ -685,7 +702,12 @@ export default {
           }
         })
         .catch(() => {
-          this.$message && this.$message({ message: '查询任务结果失败', type: 'error' })
+          if (seq === this.detailRequestSeq) {
+            this.$message && this.$message({ message: '查询任务结果失败', type: 'error' })
+          }
+        })
+        .finally(() => {
+          if (seq === this.detailRequestSeq) this.detailLoading = false
         })
     },
 

@@ -12,7 +12,12 @@
         </div>
         <span class="task-queue-close" @click="$emit('close')">×</span>
       </div>
-      <div class="task-queue-body">
+      <div
+        class="task-queue-body"
+        v-loading="detailLoading"
+        element-loading-text="正在加载任务详情..."
+        element-loading-background="rgba(255, 255, 255, 0.82)"
+      >
         <table class="task-queue-table">
           <thead>
             <tr>
@@ -45,8 +50,10 @@
                 <el-tag v-show="item.status === '2'" size="mini" class="task-tag task-tag--status-failed">失败</el-tag>
               </td>
               <td class="task-action-cell">
-                <button class="btn btn-outline btn-sm action-btn" @click="handleDelete(item.id)" :disabled="item.status === '0'">删除</button>
-                <button class="btn btn-outline btn-sm action-btn" @click="handleView(item)" :disabled="item.status === '0' || item.status === '2'">查看</button>
+                <button class="btn btn-outline btn-sm action-btn" @click="handleDelete(item.id)" :disabled="item.status === '0' || isDeleting(item.id)">
+                  {{ isDeleting(item.id) ? '删除' : '删除' }}
+                </button>
+                <button class="btn btn-outline btn-sm action-btn" @click="handleView(item)" :disabled="detailLoading || item.status === '0' || item.status === '2'">查看</button>
               </td>
             </tr>
           </tbody>
@@ -62,7 +69,9 @@ export default {
   props: {
     visible: { type: Boolean, default: false },
     items: { type: Array, default: () => [] },
-    refreshing: { type: Boolean, default: false }
+    refreshing: { type: Boolean, default: false },
+    deletingTaskIds: { type: Array, default: () => [] },
+    detailLoading: { type: Boolean, default: false }
   },
   emits: ['close', 'refresh', 'delete-task', 'view-detail'],
   methods: {
@@ -82,10 +91,15 @@ export default {
     taskTypeTagClass(item) {
       return String(item && item.type) === '1' ? 'task-tag--summary' : 'task-tag--overview'
     },
+    isDeleting(id) {
+      return this.deletingTaskIds.includes(String(id))
+    },
     handleDelete(id) {
+      if (this.isDeleting(id)) return
       this.$emit('delete-task', id)
     },
     handleView(item) {
+      if (this.detailLoading) return
       this.$emit('view-detail', { id: item.id, type: item.type, words: item.qdNeedObj && item.qdNeedObj.words, tree: item.qdNeedObj && item.qdNeedObj.tree })
     }
   }
@@ -103,6 +117,7 @@ export default {
 .task-name-cell { max-width: 140px; }
 .task-name-text { display: inline-block; max-width: 140px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; vertical-align: middle; }
 .task-type-cell { white-space: nowrap; }
+.task-queue-body { position: relative; }
 
 :deep(.task-tag) {
   border-radius: 12px;

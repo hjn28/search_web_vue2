@@ -599,7 +599,9 @@ body {
 .result-table td:nth-child(5) { text-align: left; width: 150px; }
 .result-table td:nth-child(6) { width: 70px; }
 .result-table td:nth-child(7) { width: 70px; }
-.result-table td:nth-child(8) { text-align: left; width: 100px; }
+/* 承办信息列：按类名而非位置定位——该列会在非建议库来源时隐藏，
+   用 nth-child(8) 会在隐藏后误命中顶到第 8 列的操作列（text-align: left） */
+.result-table td.cbxx-col { text-align: left; width: 100px; }
 
 /* ---- 标签单元格 ---- */
 .tag-cell {
