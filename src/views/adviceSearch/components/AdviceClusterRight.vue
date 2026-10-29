@@ -58,7 +58,7 @@
 
       <!-- ---- 操作栏 ---- -->
       <div class="action-bar">
-        <div v-if="viewMode === VIEW_MODE.TABLE" class="action-row">
+        <div v-if="viewMode === viewModeEnum.table" class="action-row">
           <button class="btn btn-outline btn-sm" :disabled="!tableData.length" @click="toggleSelectAll">
             {{ isAllChecked ? '取消全选' : '全选' }}
           </button>
@@ -76,10 +76,10 @@
           <button class="btn btn-outline btn-sm" @click="resetTableSelection">重置</button>
         </div>
 
-        <div v-else-if="viewMode === VIEW_MODE.SUMMARY" class="detail-header-actions">
+        <div v-else-if="viewMode === viewModeEnum.summary" class="detail-header-actions">
           <button class="btn btn-outline btn-sm" @click="backToTable">返回列表</button>
           <button class="btn btn-outline btn-sm" @click="rwdlQuery">任务队列</button>
-          <template v-if="currentSummaryType === SUMMARY_TYPE.DIGEST">
+          <template v-if="currentSummaryType === summaryType.digest">
             <button class="btn btn-outline btn-sm" @click="exportSummary">导出汇总要点</button>
             <button
               class="btn btn-outline btn-sm"
@@ -96,6 +96,9 @@
           </template>
         </div>
 
+        <div v-else-if="viewMode === viewModeEnum.importantFile" class="detail-header-actions">
+          <button class="btn btn-outline btn-sm" @click="backToTable">返回</button>
+        </div>
         <div v-else class="detail-header-actions">
           <button class="btn btn-outline btn-sm" @click="backToTable">返回列表</button>
         </div>
@@ -103,7 +106,7 @@
 
       <!-- ---- 可滚动内容区域 ---- -->
       <div class="result-content" ref="resultContent">
-        <ClusterResultTable v-if="viewMode === VIEW_MODE.TABLE"
+        <ClusterResultTable v-if="viewMode === viewModeEnum.table"
           :table-data="tableData"
           :pagination="pagination"
           :selected-ids="selectedIds"
@@ -113,8 +116,8 @@
           @update:pagination="onUpdatePagination"
           @view-detail="onViewDetail"
         />
-        <template v-else-if="viewMode === VIEW_MODE.SUMMARY">
-          <OverviewReportView v-if="currentSummaryType === SUMMARY_TYPE.REPORT"
+        <template v-else-if="viewMode === viewModeEnum.summary">
+          <OverviewReportView v-if="currentSummaryType === summaryType.report"
             :zsbg-render-nodes="zsbgRenderNodes"
             :active-key-id="activeKeyId"
             :zsbg-edit-mode="zsbgEditMode"
@@ -124,13 +127,17 @@
           />
           <SummaryReportView v-else :zhaiyao-data="zhaiyaoData" />
         </template>
-        <ExpandResultsView v-else-if="viewMode === VIEW_MODE.EXPAND"
+        <ExpandResultsView v-else-if="viewMode === viewModeEnum.expand"
           :expand-results="expandResults"
           :expand-selection="expandSelection"
           @expand-item-check="onExpandItemCheck"
           @expand-keyword-click="onExpandKeywordClick"
           @expand-segment-change="onExpandSegmentChange"
         />
+        <div v-else-if="viewMode === viewModeEnum.importantFile" class="important-file-right-view">
+          <div class="important-file-right-title">{{ importantFile && importantFile.name }}</div>
+          <div v-loading="importantContentLoading" class="important-file-right-content" v-html="importantFileHtml"></div>
+        </div>
         <DetailView v-else :detail="detail" @back="backToTable" />
       </div>
     </div>
@@ -151,14 +158,18 @@
  *   - 仅本组件使用的状态（汇总要点/分析报告数据、任务队列列表、预览弹窗等）
  *     留在 data 中；
  *   - 「生成报告」弹窗全页只有一个，挂在父组件上由 adviceCluster.templateModal
- *     驱动。本组件不自行实例化弹窗，只负责：① 按入口准备初始目录树后
- *     dispatch openTemplateModal 打开它；② 监听 store 转交的「立即生成」载荷
- *     并调用对应接口。
+ *     驱动。本组件不自行实例化弹窗，只负责：
+ *     ① 按入口准备初始目录树后 dispatch openTemplateModal 打开它；
+ *     ② 监听 store 转交的「立即生成」载荷并调用对应接口。
+ *
+ * 生成方式枚举（ReportOption / validReportOptions 等）统一从
+ * report/GenerateReportModal.vue 导入，避免多份定义不同步。
  */
 import VueOfficeDocx from '@vue-office/docx'
 import { saveAs } from 'file-saver'
 import '@vue-office/docx/lib/index.css'
 import { searchZFZhaiyao, taskQuery, taskIdQuery, deleteIds, updateResult, getNewResult } from '../../../api/zytask'
+import { uploadFlieToHtml } from '../../../api/login'
 import ClusterResultTable from './ClusterResultTable.vue'
 import ExpandResultsView from './ExpandResultsView.vue'
 import SummaryReportView from '../report/SummaryReportView.vue'
@@ -174,24 +185,24 @@ import EditableReportStore from '../utils/EditableReportStore'
 import { mapState, mapGetters } from 'vuex'
 import { TEMPLATE_MODAL_MODE, VIEW_MODE } from '../../../store/modules/adviceCluster'
 import {
-  VALID_REPORT_OPTIONS,
-  SUMMARY_OPTIONS,
-  SUMMARY_MODULE_MAP,
-  REPORT_LABELS,
-  REPORT_OPTION
-} from '../../../store/modules/reportOption'
+  ReportOption,
+  validReportOptions,
+  summaryOptions,
+  summaryModuleMap,
+  reportLabels
+} from '../report/GenerateReportModal.vue'
 
 /** 结果类型：'1' 汇总要点，'2' 分析报告 */
-const SUMMARY_TYPE = { DIGEST: '1', REPORT: '2' }
+const summaryType = { digest: '1', report: '2' }
 
 /** 任务状态：'0' 执行中 */
-const TASK_STATUS = { RUNNING: '0' }
+const taskStatus = { running: '0' }
 
 /** 接口返回码 */
-const API_CODE = { OK: 0, CONFLICT: 999 }
+const apiCode = { ok: 0, conflict: 999 }
 
 /** 预览弹窗的文档类型 */
-const PREVIEW_TYPE = { PDF: 'pdf', DOCX: 'docx' }
+const previewType = { pdf: 'pdf', docx: 'docx' }
 
 export default {
   name: 'AdviceClusterRight',
@@ -208,9 +219,10 @@ export default {
     return {
       showBackTop: false,
       userId: '',
+      importantContentLoading: false,
 
       /* ---- 汇总要点 / 分析报告结果（仅本组件消费） ---- */
-      currentSummaryType: SUMMARY_TYPE.DIGEST,
+      currentSummaryType: summaryType.digest,
       zhaiyaoData: [],
       summaryContent: '',
 
@@ -238,7 +250,7 @@ export default {
 
       /* ---- 当前页面内预览 ---- */
       previewVisible: false,
-      previewType: PREVIEW_TYPE.PDF,
+      previewType: previewType.pdf,
       previewTitle: '',
       docxSrc: 'static/综合分析功能说明手册.docx',
 
@@ -247,7 +259,6 @@ export default {
     }
   },
   computed: {
-    // 代表团/承办单位全量与当前选中值统一从 dict store 读取（接口由 store action 拉取）
     ...mapState('dict', {
       cbdwList: 'allCbdw',
       delegationList: 'allDelegations'
@@ -267,6 +278,8 @@ export default {
       'hasSearched',
       'viewMode',
       'detail',
+      'importantFile',
+      'importantFileHtml',
       'leftKeywords',
       'expandResults',
       'expandSelection',
@@ -275,10 +288,10 @@ export default {
     ]),
     ...mapGetters('adviceCluster', ['selectedRows', 'isAllChecked']),
 
-    /** 供模板直接引用常量，避免魔法字符串 */
+    /* ---- 模板中直接引用的常量（避免魔法字符串） ---- */
+    viewModeEnum() { return VIEW_MODE },
+    summaryType() { return summaryType },
     SummaryFormatter() { return SummaryFormatter },
-    VIEW_MODE() { return VIEW_MODE },
-    SUMMARY_TYPE() { return SUMMARY_TYPE },
 
     /**
      * 承办信息仅建议库（来源库 jianyi）有数据，其他来源库不展示该列。
@@ -292,9 +305,13 @@ export default {
     /** 共享弹窗的「立即生成」载荷（由父组件经 store 转交） */
     templateGenerate(payload) {
       if (payload) this.handleTemplateGenerate(payload)
+    },
+    importantFile(file) {
+      if (file) this.loadImportantFile(file)
     }
   },
   mounted() {
+    if (this.viewMode === VIEW_MODE.importantFile && this.importantFile) this.loadImportantFile(this.importantFile)
     const el = this.$refs.resultContent
     if (el) {
       el.addEventListener('scroll', this.handleRightScroll)
@@ -314,6 +331,30 @@ export default {
   methods: {
     showAlert(msg) { this.$alert(msg, '提示', { confirmButtonText: '确定' }) },
     addHistory(action, content) { this.$store.dispatch('adviceCluster/addHistory', { action, content }) },
+    loadImportantFile(file) {
+      this.importantContentLoading = false
+      if (!file || !file.file) {
+        this.$store.commit('adviceCluster/SET_IMPORTANT_FILE_HTML', '<div class="important-empty-content">暂无可展示的文件正文，请上传对应文件后查看。</div>')
+        return
+      }
+      const formData = new FormData()
+      formData.append('file', file.file)
+      this.importantContentLoading = true
+      uploadFlieToHtml(formData)
+        .then(res => {
+          const content = res && res.data !== undefined ? res.data : res
+          let html = ''
+          if (typeof content === 'string') html = content
+          else if (content && typeof content === 'object') html = String(content.html || content.content || content.data || '')
+          this.$store.commit('adviceCluster/SET_IMPORTANT_FILE_HTML', html || '<div class="important-empty-content">暂无可展示的文件正文</div>')
+        })
+        .catch(() => {
+          this.$store.commit('adviceCluster/SET_IMPORTANT_FILE_HTML', '<div class="important-empty-content">文件内容加载失败，请重试</div>')
+        })
+        .finally(() => {
+          this.importantContentLoading = false
+        })
+    },
 
     /* ==================== 子组件事件 → store ==================== */
     onUpdateSelectedIds(ids) {
@@ -343,18 +384,18 @@ export default {
 
     /* ==================== 流程图 / 使用手册预览 ==================== */
     previewFlowChart() {
-      this.previewType = PREVIEW_TYPE.PDF
+      this.previewType = previewType.pdf
       this.previewTitle = '综合分析流程图'
       this.previewVisible = true
     },
     previewManual() {
-      this.previewType = PREVIEW_TYPE.DOCX
+      this.previewType = previewType.docx
       this.previewTitle = '综合分析功能说明手册'
       this.previewVisible = true
     },
     closePreview() {
       this.previewVisible = false
-      this.previewType = PREVIEW_TYPE.PDF
+      this.previewType = previewType.pdf
       this.previewTitle = ''
     },
     async downloadCurrentDocx() {
@@ -369,7 +410,6 @@ export default {
         if (!response.ok) throw new Error('fetch failed')
         saveAs(await response.blob(), fileName)
       } catch (_) {
-        // 静态资源不支持 fetch 时回退到 <a download> 触发下载
         const link = document.createElement('a')
         link.href = src
         link.download = fileName
@@ -385,7 +425,6 @@ export default {
       const el = this.$refs.resultContent
       el && el.scrollTo({ top: 0, behavior: 'smooth' })
     },
-    /** 滚动事件按帧节流，避免高频 setter */
     handleRightScroll() {
       if (this._rafPending) return
       this._rafPending = true
@@ -425,14 +464,15 @@ export default {
         html,
         matchType: proposal.matchType || '正文'
       })
-      this.$store.commit('adviceCluster/SET_VIEW_MODE', VIEW_MODE.DETAIL)
+      this.$store.commit('adviceCluster/SET_VIEW_MODE', VIEW_MODE.detail)
       this.addHistory('查看详情', proposal.id ? `查看了议案【${proposal.id}】的内容` : '查看了一条议案内容')
     },
     backToTable() {
       this.generateReportFromTaskQueue = false
       this.taskQueueReportTree = []
-      this.$store.commit('adviceCluster/SET_VIEW_MODE', VIEW_MODE.TABLE)
+      this.$store.commit('adviceCluster/SET_VIEW_MODE', VIEW_MODE.table)
       this.$store.commit('adviceCluster/SET_DETAIL', { visible: false })
+      this.$store.commit('adviceCluster/SET_IMPORTANT_FILE', null)
     },
 
     /* ==================== 打开生成报告弹窗（全页共用一个） ==================== */
@@ -442,10 +482,8 @@ export default {
       let initialFileName = ''
 
       if (fromTaskQueue && this.taskQueueReportTree.length) {
-        // 任务队列入口：沿用该任务返回的目录树
         initialTree = this.taskQueueReportTree
       } else {
-        // 普通入口优先使用左侧上传模板目录，其次回退到共享模板，最后用关键词兜底
         const wordTemplate = this.$store.state.wordTemplate
         const savedTemplate = this.$store.state.template
         if (wordTemplate.hasData && Array.isArray(wordTemplate.tree) && wordTemplate.tree.length) {
@@ -459,7 +497,7 @@ export default {
       }
 
       this.$store.dispatch('adviceCluster/openTemplateModal', {
-        mode: TEMPLATE_MODAL_MODE.REPORT,
+        mode: TEMPLATE_MODAL_MODE.report,
         initialTree,
         initialFileName,
         showSummaryOptions: !options.hideSummaryOptions
@@ -471,26 +509,23 @@ export default {
       this.$store.dispatch('adviceCluster/clearTemplateGenerate')
 
       const option = payload.selectedOption ? String(payload.selectedOption) : ''
-      if (!VALID_REPORT_OPTIONS.has(option)) {
+      if (!validReportOptions.has(option)) {
         this.showAlert('请选择有效的生成方式')
         return
       }
       const tree = Array.isArray(payload.tree) ? payload.tree : []
 
-      // 从任务队列继续生成：基于该任务已返回的分析数据，不需要重新勾选记录
       if (this.generateReportFromTaskQueue) {
         this.$store.dispatch('adviceCluster/closeTemplateModal')
         this.submitTaskReportGenerate(option, payload, tree)
         return
       }
 
-      // 汇总/报告均基于已勾选的记录生成
       const selected = this.selectedRows
       if (!selected.length) {
         this.showAlert('请先勾选要生成汇总/报告的记录')
         return
       }
-      // 生成的目录树写入共享模板 store，供汇总要点/分析报告后续复用
       if (tree.length) {
         this.$store.dispatch('template/saveTemplate', {
           tree,
@@ -499,15 +534,14 @@ export default {
       }
       this.$store.dispatch('adviceCluster/closeTemplateModal')
 
-      if (SUMMARY_OPTIONS.has(option)) this.submitSummaryGenerate(option, tree, selected)
+      if (summaryOptions.has(option)) this.submitSummaryGenerate(option, tree, selected)
       else this.submitReportGenerate(option, payload, tree, selected)
     },
     /**
      * 按分类汇总原文内容（type '1'）：三个选项以 aiObj.module 区分
      */
     submitSummaryGenerate(option, tree, selected) {
-      const module = SUMMARY_MODULE_MAP[option] || ''
-      // 叶子词按原接口要求去重
+      const module = summaryModuleMap[option] || ''
       const word = Array.from(new Set(TreeHelper.collectLeafNames(tree)))
       const qdNeedObj = tree.length
         ? { words: word, tree, module }
@@ -516,7 +550,7 @@ export default {
       this.addHistory('分类要点汇总', '使用模板目录结构提交分类要点汇总生成')
       taskQuery(this.userId)
         .then(res => {
-          if ((res.data || []).some(item => item.status === TASK_STATUS.RUNNING)) {
+          if ((res.data || []).some(item => item.status === taskStatus.running)) {
             this.showAlert('当前已存在正在执行的任务，请点击任务队列进行查看')
             return
           }
@@ -527,8 +561,8 @@ export default {
             qdNeedObj
           })
             .then(r => {
-              if (r.code === API_CODE.OK) this.$alert(r.data)
-              else if (r.code === API_CODE.CONFLICT) this.showAlert(r.message)
+              if (r.code === apiCode.ok) this.$alert(r.data)
+              else if (r.code === apiCode.conflict) this.showAlert(r.message)
               else this.showAlert(r.data)
             })
             .catch(() => this.showAlert('分类要点汇总生成失败'))
@@ -544,12 +578,12 @@ export default {
       const qdNeedObj = tree.length ? { words, tree } : { words }
       const extraParam = this.buildUnitParam(option, payload)
       const presetSubtopics = ReportBuilder.buildPresetSubtopics(TreeHelper.treeToInputs(tree))
-      const reportType = option === REPORT_OPTION.REPORT_DIGEST ? 'zhaibao' : 'minzheng'
+      const reportType = option === ReportOption.reportDigest ? 'zhaibao' : 'minzheng'
 
-      this.addHistory('生成分析报告', `按${REPORT_LABELS[option] || ''}模板生成分析报告`)
+      this.addHistory('生成分析报告', `按${reportLabels[option] || ''}模板生成分析报告`)
       taskQuery(this.userId)
         .then(res => {
-          if ((res.data || []).some(item => item.status === TASK_STATUS.RUNNING)) {
+          if ((res.data || []).some(item => item.status === taskStatus.running)) {
             this.showAlert('当前已存在正在执行的任务，请点击任务队列进行查看')
             return
           }
@@ -566,7 +600,7 @@ export default {
             qdNeedObj
           })
             .then(r => {
-              if (r.code === API_CODE.OK) this.$alert(r.data)
+              if (r.code === apiCode.ok) this.$alert(r.data)
               else this.showAlert(r.data)
             })
             .catch(() => this.showAlert('分析报告生成失败'))
@@ -580,11 +614,11 @@ export default {
         : { words: this.lastReportWords }
       const extraParam = this.buildUnitParam(option, payload)
       const presetSubtopics = ReportBuilder.buildPresetSubtopics(TreeHelper.treeToInputs(tree))
-      const reportType = option === REPORT_OPTION.REPORT_DIGEST ? 'zhaibao' : 'minzheng'
+      const reportType = option === ReportOption.reportDigest ? 'zhaibao' : 'minzheng'
 
       taskQuery(this.userId)
         .then(res => {
-          if ((res.data || []).some(item => item.status === TASK_STATUS.RUNNING)) {
+          if ((res.data || []).some(item => item.status === taskStatus.running)) {
             this.showAlert('当前已存在正在执行的任务，请点击任务队列进行查看')
             return
           }
@@ -601,7 +635,7 @@ export default {
             qdNeedObj
           })
             .then(r => {
-              if (r.code === API_CODE.OK) this.$alert(r.data)
+              if (r.code === apiCode.ok) this.$alert(r.data)
               else this.showAlert(r.data)
             })
             .catch(() => this.showAlert('分析报告生成失败'))
@@ -610,13 +644,12 @@ export default {
     },
     /**
      * 代表团/承办单位参数：接口只接受显示名。
-     * 弹窗写回 reportOption store 时已经是显示名，这里只做取值与互斥。
      */
     buildUnitParam(option, payload) {
       const extraParam = { delegation: '', cbdw: '' }
-      if (option === REPORT_OPTION.REPORT_DELEGATION && payload && payload.delegation) {
+      if (option === ReportOption.reportDelegation && payload && payload.delegation) {
         extraParam.delegation = String(payload.delegation)
-      } else if (option === REPORT_OPTION.REPORT_UNDERTAKER && payload && payload.cbdw) {
+      } else if (option === ReportOption.reportUndertaker && payload && payload.cbdw) {
         extraParam.cbdw = String(payload.cbdw)
       }
       return extraParam
@@ -661,7 +694,7 @@ export default {
       this.deletingTaskIds.push(taskId)
       try {
         const res = await deleteIds([id])
-        if (res.code === API_CODE.OK) {
+        if (res.code === apiCode.ok) {
           this.$message({ message: '删除成功', type: 'success', duration: 1500 })
           await this.rwdlQuery()
         } else {
@@ -679,26 +712,24 @@ export default {
       this.lastReportWords = ReportBuilder.normalizeWordArray(words)
       this.currentTaskId = String(id || '')
       if (String(type) === '2' || String(type) === '3') {
-        // 重新查看报告时退出编辑态，避免把上一个任务的编辑态带过来
         this.zsbgEditMode = false
       }
       taskIdQuery(id)
         .then(res => {
-          // 丢弃乱序返回的旧响应
           if (seq !== this.detailRequestSeq) return
-          if (res.code !== API_CODE.OK) {
+          if (res.code !== apiCode.ok) {
             this.$message && this.$message({ message: res.message || '查询任务结果失败', type: 'error' })
             return
           }
           this.jljgzsData = res.data?.data || []
           this.taskQueueVisible = false
           if (String(type) === '1') {
-            this.currentSummaryType = SUMMARY_TYPE.DIGEST
+            this.currentSummaryType = summaryType.digest
             this.handleZhaiyaoResult(res.data?.data)
           } else {
-            this.currentSummaryType = SUMMARY_TYPE.REPORT
+            this.currentSummaryType = summaryType.report
             this.renderZsbgTree(res.data?.data)
-            this.$store.commit('adviceCluster/SET_VIEW_MODE', VIEW_MODE.SUMMARY)
+            this.$store.commit('adviceCluster/SET_VIEW_MODE', VIEW_MODE.summary)
           }
         })
         .catch(() => {
@@ -716,9 +747,8 @@ export default {
       const list = SummaryFormatter.normalizeZhaiyaoList(apiData || [])
       this.zhaiyaoData = list
       this.summaryContent = SummaryFormatter.formatZhaiyaoText(list)
-      this.currentSummaryType = SUMMARY_TYPE.DIGEST
-      this.$store.commit('adviceCluster/SET_VIEW_MODE', VIEW_MODE.SUMMARY)
-      // 内容已切换，关闭左侧引文详情
+      this.currentSummaryType = summaryType.digest
+      this.$store.commit('adviceCluster/SET_VIEW_MODE', VIEW_MODE.summary)
       this.$store.commit('adviceCluster/CLEAR_CITATION')
       if (!list.length) this.showAlert('汇总要点无数据')
     },
@@ -731,15 +761,12 @@ export default {
       if (!skipApiLoad && this.currentTaskId) {
         try {
           const res = await getNewResult(this.currentTaskId)
-          if (res.code === API_CODE.OK && res.data) edits = typeof res.data === 'object' ? res.data : {}
-        } catch (_) {
-          // 已保存的编辑拉取失败时按「无编辑」渲染，不阻塞报告展示
-        }
+          if (res.code === apiCode.ok && res.data) edits = typeof res.data === 'object' ? res.data : {}
+        } catch (_) {}
       }
       this.zsbgLocalEdits = edits
       EditableReportStore.applyEditsToTree(this.zsbgEditableTree, this.zsbgLocalEdits)
       this.renderFlattenedTree()
-      // 报告树重新渲染，关闭左侧引文详情
       this.$store.commit('adviceCluster/CLEAR_CITATION')
     },
     renderFlattenedTree() {
@@ -780,7 +807,7 @@ export default {
           userId: this.userId,
           resultData: { ...this.zsbgLocalEdits }
         })
-        if (res.code === API_CODE.OK) {
+        if (res.code === apiCode.ok) {
           this.zsbgEditMode = false
           this.$message({ type: 'success', message: '已保存到服务器，编辑模式已关闭' })
         } else {
@@ -805,9 +832,7 @@ export default {
       if (this.currentTaskId) {
         try {
           await updateResult({ taskId: this.currentTaskId, userId: this.userId, resultData: {} })
-        } catch (_) {
-          // 服务端清空失败仍继续本地重置，避免残留编辑影响展示
-        }
+        } catch (_) {}
       }
       await this.renderZsbgTree(this.jljgzsData, true)
       this.$message({ type: 'success', message: '已清空编辑并恢复当前报告' })
@@ -880,7 +905,6 @@ export default {
         showAlert: this.showAlert
       })
     },
-    /** 给导出的图表补一圈边框与留白，避免白底图表在文档中边界不清 */
     enhanceChartImage(base64) {
       if (!base64) return Promise.resolve(null)
       return new Promise(resolve => {
@@ -916,13 +940,12 @@ export default {
     /* ==================== 标签树弹窗 ==================== */
     closeBqTreeModal() { this.bqTreeVisible = false },
 
-    /* ==================== 开发调试（父组件 window.zsbgLocal 调用） ==================== */
-    /** 用本地 zsbgNew.json 直接渲染分析报告视图，跳过编辑数据接口 */
+    /* ==================== 开发调试 ==================== */
     showLocalReport(data) {
       this.jljgzsData = Array.isArray(data) ? data : []
       this.currentTaskId = ''
-      this.currentSummaryType = SUMMARY_TYPE.REPORT
-      this.$store.commit('adviceCluster/SET_VIEW_MODE', VIEW_MODE.SUMMARY)
+      this.currentSummaryType = summaryType.report
+      this.$store.commit('adviceCluster/SET_VIEW_MODE', VIEW_MODE.summary)
       this.renderZsbgTree(this.jljgzsData, true)
     }
   }
@@ -930,6 +953,30 @@ export default {
 </script>
 
 <style scoped>
+.important-file-right-view {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  box-sizing: border-box;
+}
+.important-file-right-title {
+  flex-shrink: 0;
+  margin-bottom: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+.important-file-right-content {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 16px;
+  border: 1px solid #e8e8e8;
+  background: #fff;
+  font-size: 14px;
+  line-height: 1.8;
+}
 :deep(.detail-exact-word) { color: red; font-weight: 600; }
 :deep(.summary-rep-meta) { color: #c9190b; }
 :deep(.summary-rep-distinguish) { color: green; }
@@ -1018,7 +1065,6 @@ export default {
   height: calc(100% - 52px);
   background: #fff;
 }
-/* vue-office-docx 渲染出的表格需要补边框 */
 .preview-body >>> table,
 .preview-body >>> td,
 .preview-body >>> th {

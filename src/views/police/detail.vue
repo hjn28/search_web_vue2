@@ -47,9 +47,9 @@ export default {
 <style scoped lang="less">
 .wrap_content {
   background: #f5f5f5;
-  min-height: 100vh;
+  height: 100vh;
   padding: 30px 0;
-
+  overflow: auto;
   .detail {
     width: 860px;
     max-width: 94%;

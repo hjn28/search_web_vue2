@@ -27,17 +27,18 @@ import { searchZFSearch2 } from '../../api/login'
 /** 统一目录模板弹窗的模式，取值与 GenerateReportModal 的 mode prop 一致 */
 export const TEMPLATE_MODAL_MODE = {
   /** 目录模板编辑：只编辑目录结构，不展示「生成方式」选项 */
-  WORD_EDIT: 'word-edit',
+  wordEdit: 'word-edit',
   /** 生成报告：展示「生成方式 / 输出分析报告」选项与单位选择 */
-  REPORT: 'report'
+  report: 'report'
 }
 
 /** 右侧结果视图模式 */
 export const VIEW_MODE = {
-  TABLE: 'table',
-  SUMMARY: 'summary',
-  EXPAND: 'expand',
-  DETAIL: 'detail'
+  table: 'table',
+  summary: 'summary',
+  expand: 'expand',
+  detail: 'detail',
+  importantFile: 'important-file'
 }
 
 const DEFAULT_PAGE_SIZE = 15
@@ -103,8 +104,12 @@ export default {
     resultDataBase: 'jianyi',
 
     /* ---- 右侧视图模式与详情内容 ---- */
-    viewMode: VIEW_MODE.TABLE,
+    viewMode: VIEW_MODE.table,
     detail: { visible: false, html: '', matchType: '' },
+
+    /* ---- 重要文件在右侧展示 ---- */
+    importantFile: null,
+    importantFileHtml: '',
 
     /* ---- 左侧关键词（右侧生成报告时作为目录树兜底数据） ---- */
     leftKeywords: [],
@@ -120,7 +125,7 @@ export default {
     /* ---- 统一目录模板弹窗 ---- */
     templateModal: {
       visible: false,
-      mode: TEMPLATE_MODAL_MODE.REPORT,
+      mode: TEMPLATE_MODAL_MODE.report,
       initialTree: [],
       initialFileName: '',
       /** 是否展示「按分类汇总原文内容」区块（从任务队列继续生成时置 false） */
@@ -174,10 +179,17 @@ export default {
       state.resultDataBase = dataBase || 'jianyi'
     },
     SET_VIEW_MODE(state, mode) {
-      state.viewMode = mode || VIEW_MODE.TABLE
+      state.viewMode = mode || VIEW_MODE.table
     },
     SET_DETAIL(state, detail) {
       state.detail = { visible: false, html: '', matchType: '', ...(detail || {}) }
+    },
+    SET_IMPORTANT_FILE(state, file) {
+      state.importantFile = file || null
+      state.importantFileHtml = ''
+    },
+    SET_IMPORTANT_FILE_HTML(state, html) {
+      state.importantFileHtml = html || ''
     },
     /** 清空检索结果（含分页、勾选与详情），一次拓展结果保留以便"查看结果"复用 */
     RESET_RESULTS(state) {
@@ -274,7 +286,7 @@ export default {
     OPEN_TEMPLATE_MODAL(state, { mode, initialTree, initialFileName, showSummaryOptions }) {
       state.templateModal = {
         visible: true,
-        mode: mode || TEMPLATE_MODAL_MODE.REPORT,
+        mode: mode || TEMPLATE_MODAL_MODE.report,
         initialTree: Array.isArray(initialTree) ? initialTree : [],
         initialFileName: initialFileName || '',
         showSummaryOptions: showSummaryOptions !== false
@@ -283,7 +295,7 @@ export default {
     /**
      * 关闭弹窗：只改 visible，其余字段保持原样。
      * 弹窗没有 v-if，关闭走的是 CSS 透明度过渡（0.2s），DOM 还会在屏幕上停留一会儿；
-     * 若此刻把 mode 重置成 REPORT，处于 word-edit 模式的弹窗会在淡出过程中
+     * 若此刻把 mode 重置成 report，处于 word-edit 模式的弹窗会在淡出过程中
      * 瞬间变成「生成报告」标题并冒出「立即生成」按钮。重新打开时
      * OPEN_TEMPLATE_MODAL 会重设全部字段，这里无需兜底。
      */
@@ -329,7 +341,7 @@ export default {
      * @param {string} payload.historyText - 写入操作历史的描述文本
      */
     fetchClusterResults({ commit, dispatch }, { params, historyText }) {
-      commit('SET_VIEW_MODE', VIEW_MODE.TABLE)
+      commit('SET_VIEW_MODE', VIEW_MODE.table)
       commit('CLEAR_CITATION')
       commit('RESET_RESULTS')
       commit('SET_HAS_SEARCHED', true)
@@ -380,8 +392,8 @@ export default {
      */
     openTemplateModal({ commit, rootState }, payload = {}) {
       const options = typeof payload === 'string' ? { mode: payload } : payload || {}
-      const mode = options.mode || TEMPLATE_MODAL_MODE.REPORT
-      const isWordEdit = mode === TEMPLATE_MODAL_MODE.WORD_EDIT
+      const mode = options.mode || TEMPLATE_MODAL_MODE.report
+      const isWordEdit = mode === TEMPLATE_MODAL_MODE.wordEdit
       // 调用方未显式给树时兜底：目录模板编辑复用模糊词模板；生成报告复用共享模板
       const source = (isWordEdit ? rootState.wordTemplate : rootState.template) || {}
       commit('OPEN_TEMPLATE_MODAL', {
@@ -413,7 +425,7 @@ export default {
      * 生成报告 → template（汇总要点/分析报告共用）。
      */
     saveTemplateModal({ state, commit, dispatch }, payload) {
-      const isWordEdit = state.templateModal.mode === TEMPLATE_MODAL_MODE.WORD_EDIT
+      const isWordEdit = state.templateModal.mode === TEMPLATE_MODAL_MODE.wordEdit
       dispatch(isWordEdit ? 'wordTemplate/saveTemplate' : 'template/saveTemplate', payload, { root: true })
       commit('CLOSE_TEMPLATE_MODAL')
     },

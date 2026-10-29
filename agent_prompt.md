@@ -701,3 +701,60 @@
 - 接收时间：2026-10-13 16:26:13
 - 处理状态：已完成
 - 执行说明：已排查并修复。逐段核对引文链路：右侧入口没丢——OverviewReportView.vue 的【引文】徽标 @click.stop="onCitationClick(node)" → $emit('citation-click', { data: jljgzsData, keyId }) → AdviceClusterRight.vue 的 onCitationClick 提交 adviceCluster/SET_CITATION，store 里 citationData / activeKeyId 均已正确写入；漏的是左侧闸门：AdviceClusterLeft.vue 模板第 5 行 <CitationView v-if="citationVisible"> 里的 citationVisible 在 store 中是 getter（adviceCluster.js:141 由 citationData.length > 0 派生），却被写进了 ...mapState('adviceCluster', [...]) 列表，mapState 取的是 state.adviceCluster.citationVisible——该字段不存在，恒为 undefined，v-if 永远为假，引文视图一次都渲染不出来，左侧始终停在主面板（现象与"点击后没反应"完全吻合）。修复：把 citationVisible 从 mapState 移到 ...mapGetters('adviceCluster', ['citationVisible'])（同文件第 173 行补 mapGetters 导入），citationData / activeKeyId 属 state，仍留在 mapState。用 git log -S "citationVisible" 回溯，getter 与这条 mapState 用法是同一个提交 219cec3（流程图更改，代码优化）引入的，即自该提交起引文视图就没显示过，非本次未提交改动所致。另确认 CitationView 只渲染 isyinwen === true 的节点，纯属数据条件，无引文时为"无引文数据"空态，不是本次问题。ESLint 通过。
+
+## 2026-10-15
+### 17:24:36
+- 原始提示词：排查下当前文件的逻辑，有问题，右侧展示的显隐藏出现问题
+- 接收时间：2026-10-15 17:24:36
+- 处理状态：处理中
+
+## 2026-10-16
+### 09:41:25
+- 原始提示词：排查当前文件在修改之后为什么没有正确展示对应的界面；有许多错误
+- 接收时间：2026-10-16 09:41:25
+- 处理状态：已完成
+- 执行说明：已排查并修复。根因是一处枚举键名大小写不匹配：AdviceClusterRight.vue 模板已按新命名风格改为「小写键」判断——viewMode === viewModeEnum.table / .summary / .expand，但 viewModeEnum 计算属性返回的是 store 的 VIEW_MODE（src/store/modules/adviceCluster.js:36），其键是大写的 TABLE / SUMMARY / EXPAND / DETAIL，故 viewModeEnum.table 等取值全部为 undefined，而 viewMode 实际是 'table'，'table' === undefined 恒为 false。影响面：模板 :61 表格操作栏、:79 汇总操作栏的 v-if / v-else-if 全部不成立，双双落到 :99 的 v-else，操作栏只剩一个「返回列表」按钮（全选/生成报告/输出列表/任务队列/重置、导出/编辑等按钮全部消失）；内容区 :106 ClusterResultTable、:116 OverviewReportView / SummaryReportView、:127 ExpandResultsView 全部不渲染，恒落到 :134 的 DetailView，于是永远显示「请选择一条记录查看详情」——与用户描述的「没正确展示对应界面」完全吻合。旧版此处写的是 VIEW_MODE.TABLE（大写，与 store 一致），系本次重构把 VIEW_MODE 改名为 viewModeEnum 时顺手把键也写成小写所致。修复：在文件内新增 const viewModeType 小写别名映射（取值仍来自 store 的 VIEW_MODE），viewModeEnum 改为返回它；store 的 VIEW_MODE 当时未动，因为 AdviceClusterLeft.vue:462/475 与本文件脚本内的 VIEW_MODE.EXPAND / .DETAIL / .SUMMARY 仍按大写键引用（该问题已于 09:57:42 条目中按用户要求统一改为小写，此别名随之删除）。同时逐项排除其它可疑点：①已删除的 store/modules/reportOption.js 全仓无残留引用，仅 wordTemplate.js:16 留有一条过时注释；②AdviceClusterRight 从 GenerateReportModal.vue 具名导入 ReportOption / validReportOptions 等常量在本项目可行——vue-loader 15.11.1 的生成代码含 export * from ${scriptRequest} // support named exports；③常量值 1:1 迁移、未发生取值变化；④父组件 adviceCluster.vue 的 :visible/:mode/:initial-tree/:initial-file-name/:show-summary-options 与 @save/@generate/@close 接线正确；⑤ESLint 通过、生产构建 exit 0，故非编译期问题，纯运行时逻辑。另记录一处本次未改的既有问题：:deep(...) 在本项目 vue-loader 15 下不被支持（@vue/component-compiler-utils 的 scoped 插件只认 >>> / /deep/ / ::v-deep），全仓 6 个文件 26 处在用，这些规则编译后为非法选择器会被浏览器整条丢弃。
+
+### 09:48:15
+- 原始提示词：你在这跑了半天，在干啥呢
+- 接收时间：2026-10-16 09:48:15
+- 处理状态：已完成
+- 执行说明：已作为进度询问回复。当时已完成根因定位（即上一条的 VIEW_MODE 键名大小写不匹配），并已把 reportOption 模块残留、.vue 具名导出、父组件接线、ESLint 与构建等可疑项逐项排除，尚未改动代码。回复中给出了完整的失效路径表格（哪几处 v-if 恒假、最终落到哪个 v-else），并附上 6 行修复方案征询是否执行。
+
+### 09:49:12
+- 原始提示词：按照排查的原因直接修改就行，不用一直提示我点确认或者别的
+- 接收时间：2026-10-16 09:49:12
+- 处理状态：已完成
+- 执行说明：已按此要求直接实施修复、不再逐步征求确认。用户明确了一条协作偏好：排查出原因后直接改，不要反复请求确认。本次据此直接改完 viewModeEnum 的小写键问题（新增 viewModeType 别名），并已把该偏好写入长期记忆（memory/act-without-confirming.md），后续同类任务默认照此执行。
+
+### 09:57:42
+- 原始提示词：那就同步改为小写的，不就行了 保证使用的一致
+- 接收时间：2026-10-16 09:57:42
+- 处理状态：已完成
+- 执行说明：已按要求把两个枚举的键统一改为小写并全量同步引用，枚举取值保持不变。① src/store/modules/adviceCluster.js：VIEW_MODE 的 TABLE/SUMMARY/EXPAND/DETAIL → table/summary/expand/detail，TEMPLATE_MODAL_MODE 的 WORD_EDIT/REPORT → wordEdit/report；同文件内 8 处引用（VIEW_MODE.table ×3、TEMPLATE_MODAL_MODE.report ×3、TEMPLATE_MODAL_MODE.wordEdit ×2）与 1 条过时注释里的「重置成 REPORT」一并同步。② src/views/adviceSearch/components/AdviceClusterLeft.vue：3 处（VIEW_MODE.expand ×2、TEMPLATE_MODAL_MODE.wordEdit ×1）。③ src/views/adviceSearch/components/AdviceClusterRight.vue：删除上一轮临时新增的 viewModeType 别名（store 本身已是小写键，不再需要中转层），viewModeEnum() 恢复为直接返回 VIEW_MODE；文件内脚本 6 处引用（VIEW_MODE.detail / .table / .summary ×3、TEMPLATE_MODAL_MODE.report）改为小写，模板中 5 处 viewModeEnum.xxx 写法无需改动。校验：以大小写敏感方式扫描 (VIEW_MODE|TEMPLATE_MODAL_MODE)\.[A-Z] 在 src 下 0 命中（注意 Select-String 默认忽略大小写，首次扫描得到的两份结果完全相同才暴露该坑，加 -CaseSensitive 重扫方为准）；两个枚举的全部取值字节级不变，故任何按裸字符串比较的地方行为不受影响；ESLint 三文件通过，生产构建 exit 0。改动范围仅限这两个真枚举：TagSearchModal.vue 的 LEVEL2_MAP / LEVEL3_MAP 是按中文标签索引的数据表、DataExporter.js 与 zsbgChartRender.js 的 *_MAP 是配置映射，均非枚举，未改动。
+
+### 10:01:35
+- 原始提示词：<task-notification> <task-id>bswmj1vgc</task-id> <tool-use-id>call_00_QqGzsXZJqGW7redaA1w47730</tool-use-id> <output-file>C:\Users\HJN\AppData\Local\Temp\claude\D--CSC-RD-search-web\d582c3af-8a43-4ca7-8bbf-eaf37b7fa7ee\tasks\bswmj1vgc.output</output-file> <status>completed</status> <summary>Background command "Full production build" completed (exit code 0)</summary> </task-notification>
+- 接收时间：2026-10-16 10:01:35
+- 处理状态：已完成
+- 执行说明：该条是后台任务完成通知（生产构建 vue-cli-service build 退出码 0），并非用户输入，被 UserPromptSubmit hook 一并记入本文件。构建结果已在上一条（09:57:42）的执行说明中确认，无独立待办。
+
+## 2026-10-23
+### 10:24:35
+- 原始提示词：排查下我的src目录下的代码转移到另一台电脑上，在打包的时候npm run build
+- 接收时间：2026-10-23 10:24:35
+- 处理状态：处理中
+### 10:25:30
+- 原始提示词：排查下我的src目录下的代码转移到另一台电脑上，在打包的时候npm run build的时候，当前电脑是可以打包的；但是在另一台电脑上报错 报 from argment must be of type string;received undefined
+- 接收时间：2026-10-23 10:25:30
+- 处理状态：处理中
+
+## 2026-10-28
+### 14:07:03
+- 原始提示词：#sym:importantFileUpload 打开一个弹框，标头：左侧是重要文件标题，右侧是上传文件按钮，最右侧是关闭 X，content里面是一个表格，表格中的有序号、文件名称、提交时间、操作表头；操作列中展示的是打开，点击之后是在右侧新区域查看内容；新区域中包含返回按钮和内容；
+- 接收时间：2026-10-28 14:07:03
+- 处理状态：处理中
+### 14:16:35
+- 原始提示词：点击打开查看的内容界面是写在AdviceClusterRight.vue文件中的布局的右侧；而非弹框右侧；另外这个重要文件打开的新的窗口的大小需要固定一个模版的大小，与先前上传模版的弹框大小一致；
+- 接收时间：2026-10-28 14:16:35
+- 处理状态：处理中

@@ -20,7 +20,6 @@ import wordTemplate from './modules/wordTemplate.js'
 import dict from './modules/dict.js'
 import taskAiParams from './modules/taskAiParams.js'
 import adviceCluster from './modules/adviceCluster.js'
-import reportOption from './modules/reportOption.js'
 import actions from './actions.js'
 import getters from './getters'
 import createPersistedState from 'vuex-persistedstate'
@@ -35,7 +34,7 @@ export default new Vuex.Store({
       paths: ['app.userInfo']
     })
   ],
-  modules: { app, template, wordTemplate, dict, taskAiParams, adviceCluster, reportOption },
+  modules: { app, template, wordTemplate, dict, taskAiParams, adviceCluster },
   actions,
   getters
 })

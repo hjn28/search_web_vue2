@@ -713,9 +713,10 @@ export default {
 <style scoped lang="less">
 .police-page {
   font-size: 14px;
-  min-height: 100vh;
+  height: 100vh;
   background: #f5f7fa;
   font-family: 微软雅黑;
+  overflow: auto;
 }
 
 /* ==================== 头部（紧凑，无红色背景） ==================== */

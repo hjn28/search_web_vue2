@@ -36,6 +36,13 @@
               <button class="btn btn-outline btn-sm" @click="openWordTemplateModal">上传分类模板</button>
               <button class="btn btn-outline btn-sm" @click="assistExpanded = !assistExpanded">辅助分类构建</button>
               <button class="btn btn-outline btn-sm" @click="pickWarehouseFiles">上传分类学习资料</button>
+              <button class="btn btn-outline btn-sm marquee-btn" @click="importantFileUpload">
+                <div class="marquee-content">
+                  <span class="marquee-text">重要文件 | 2026年政府工作报告</span>
+                  <!-- 复制一份文本，用来实现无缝衔接 -->
+                  <span class="marquee-text">重要文件 | 2026年政府工作报告</span>
+                </div>
+              </button>
             </div>
           </div>
 
@@ -65,6 +72,7 @@
                   <div>2. 多层分类可点击“上传分类模板”上传。</div>
                   <div>3. 点击“辅助分类构建”可查询政策文件，将有关文件要点输入此框构建分类体系。</div>
                   <div>4. 点击“上传分类学习资料”，提供分类释义、政策文件及历史分析报告，支撑大模型深度学习理解分类逻辑。</div>
+                  <div>5. 点击“重要文件”可查询相关重要文件，将有关文件要点输入此框构建分类体系。</div>
                 </div>
                 <button class="textarea-expand-btn" title="放大" @click="openEditor('semi')">⤢</button>
               </template>
@@ -143,6 +151,37 @@
         show-word-limit
         @confirm="onEditorConfirm"
       />
+
+      <!-- 重要文件弹窗 -->
+      <div v-if="importantModalVisible" class="important-file-mask" @click="closeImportantFiles"></div>
+      <div v-if="importantModalVisible" class="important-file-modal" role="dialog" aria-modal="true" aria-label="重要文件">
+        <div class="important-file-header">
+          <div class="important-file-title">重要文件</div>
+          <button class="btn btn-outline btn-sm" @click="pickImportantFiles">上传文件</button>
+          <button class="important-file-close" title="关闭" @click="closeImportantFiles">×</button>
+        </div>
+        <div class="important-file-body">
+          <div class="important-file-list">
+            <el-table :data="importantFiles" border size="mini" empty-text="暂无重要文件">
+              <el-table-column type="index" label="序号" width="64" align="center"></el-table-column>
+              <el-table-column prop="name" label="文件名称" min-width="220" show-overflow-tooltip></el-table-column>
+              <el-table-column prop="submitTime" label="提交时间" min-width="150" align="center"></el-table-column>
+              <el-table-column label="操作" width="90" align="center">
+                <template slot-scope="{ row }">
+                  <button class="important-open-btn" @click="openImportantFile(row)">打开</button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+        </div>
+        <input
+          ref="importantFileInput"
+          class="hidden-file-input"
+          type="file"
+          multiple
+          @change="onImportantFileChange"
+        />
+      </div>
     </template>
   </div>
 </template>
@@ -237,7 +276,16 @@ export default {
       activeLibraryId: '',
 
       /* ---- 放大编辑弹窗：field 标识回写目标，避免用标题字符串做路由 ---- */
-      editor: { visible: false, field: '', value: '', title: '', placeholder: '' }
+      editor: { visible: false, field: '', value: '', title: '', placeholder: '' },
+
+      /* ---- 重要文件 ---- */
+      importantModalVisible: false,
+      importantFiles: [
+        { id: 'important_default', name: '2026年政府工作报告', submitTime: '2026-03-01 09:00:00', file: null }
+      ],
+      importantSelectedFile: null,
+      importantFileContent: '',
+      importantContentLoading: false
     }
   },
   computed: {
@@ -381,7 +429,7 @@ export default {
     },
     /** 打开统一目录模板弹窗（mode = word-edit，保存路由见 store） */
     openWordTemplateModal() {
-      this.$store.dispatch('adviceCluster/openTemplateModal', TEMPLATE_MODAL_MODE.WORD_EDIT)
+      this.$store.dispatch('adviceCluster/openTemplateModal', TEMPLATE_MODAL_MODE.wordEdit)
     },
     onFilterCategoryChange() {
       // 切换来源库后原有的分类体系不再适用，一并清空（taskAiParams 由 FilterConditions 自行提交）
@@ -459,7 +507,7 @@ export default {
         .then(res => {
           const list = Array.isArray(res && res.data) ? res.data : []
           this.$store.commit('adviceCluster/SET_EXPAND_RESULTS', list)
-          this.$store.commit('adviceCluster/SET_VIEW_MODE', VIEW_MODE.EXPAND)
+          this.$store.commit('adviceCluster/SET_VIEW_MODE', VIEW_MODE.expand)
           this.addHistory('一次拓展（接口）', `搜索关键词：${text}`)
           if (!list.length) this.showAlert('一次拓展接口无数据')
         })
@@ -472,7 +520,7 @@ export default {
     /** 把已缓存在 store 的一次拓展结果重新切到右侧展示 */
     showExpandResults() {
       if (!this.expandResults.length) return
-      this.$store.commit('adviceCluster/SET_VIEW_MODE', VIEW_MODE.EXPAND)
+      this.$store.commit('adviceCluster/SET_VIEW_MODE', VIEW_MODE.expand)
     },
 
     /* ==================== 分析材料入库区（文件库） ==================== */
@@ -517,6 +565,53 @@ export default {
       if (!input) return
       input.value = ''
       input.click()
+    },
+    importantFileUpload() {
+      this.importantModalVisible = true
+      this.closeImportantFileDetail()
+    },
+    closeImportantFiles() {
+      this.importantModalVisible = false
+      this.closeImportantFileDetail()
+    },
+    pickImportantFiles() {
+      const input = this.$refs.importantFileInput
+      if (!input) return
+      input.value = ''
+      input.click()
+    },
+    onImportantFileChange(event) {
+      const files = event && event.target && event.target.files
+      if (!files || !files.length) return
+      Array.prototype.forEach.call(files, file => {
+        const exists = this.importantFiles.some(item => item.name === file.name)
+        if (exists) {
+          this.showAlert(`已存在同名重要文件：${file.name}`)
+          return
+        }
+        this.importantFiles.unshift({
+          id: `important_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+          name: file.name,
+          submitTime: this.formatImportantSubmitTime(new Date()),
+          file
+        })
+      })
+      event.target.value = ''
+      this.$message && this.$message.success('重要文件上传成功')
+    },
+    formatImportantSubmitTime(date) {
+      const pad = value => String(value).padStart(2, '0')
+      return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`
+    },
+    openImportantFile(file) {
+      this.$store.commit('adviceCluster/SET_IMPORTANT_FILE', file)
+      this.$store.commit('adviceCluster/SET_VIEW_MODE', VIEW_MODE.importantFile)
+      this.closeImportantFiles()
+    },
+    closeImportantFileDetail() {
+      this.importantSelectedFile = null
+      this.importantFileContent = ''
+      this.importantContentLoading = false
     },
     onWarehouseFileChange(event) {
       const files = event && event.target && event.target.files
@@ -769,10 +864,168 @@ export default {
 .warehouse-file-remove:hover {
   color: var(--primary-red);
 }
-</style>
-
-<style>
 .optional-row .optional-item {
   margin-right: 14px;
+}
+
+/* 重要文件弹窗 */
+.important-file-mask {
+  position: fixed;
+  inset: 0;
+  z-index: 1998;
+  background: rgba(0, 0, 0, 0.35);
+}
+.important-file-modal {
+  position: fixed;
+  z-index: 1999;
+  left: 50%;
+  top: 18%;
+  width: min(970px, calc(100vw - 40px));
+  height: min(440px, calc(100vh - 80px));
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.22);
+}
+.important-file-header {
+  position: relative;
+  height: 52px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 52px 0 20px;
+  border-bottom: 1px solid #e8e8e8;
+}
+.important-file-title {
+  flex: 1;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+.important-file-close {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  font-size: 26px;
+  line-height: 26px;
+  color: #999;
+  cursor: pointer;
+}
+.important-file-close:hover {
+  color: var(--primary-red);
+}
+.important-file-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  padding: 16px;
+  overflow: hidden;
+}
+.important-file-list {
+  width: 100%;
+  min-width: 0;
+  overflow: auto;
+  transition: width 0.2s ease;
+}
+.important-file-list.with-detail {
+  width: 52%;
+  padding-right: 16px;
+}
+.important-file-detail {
+  width: 48%;
+  min-width: 0;
+  border-left: 1px solid #e8e8e8;
+  display: flex;
+  flex-direction: column;
+}
+.important-file-detail-toolbar {
+  height: 34px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-left: 16px;
+  color: #333;
+  font-size: 13px;
+}
+.important-file-detail-toolbar span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.important-file-content {
+  flex: 1;
+  margin: 8px 0 0 16px;
+  padding: 16px;
+  overflow: auto;
+  border: 1px solid #e8e8e8;
+  background: #fff;
+  font-size: 14px;
+  line-height: 1.8;
+}
+.important-open-btn {
+  border: none;
+  background: transparent;
+  color: var(--primary-red, #c40000);
+  cursor: pointer;
+}
+.important-open-btn:hover {
+  text-decoration: underline;
+}
+.important-empty-content {
+  color: #999;
+  text-align: center;
+  padding-top: 40px;
+}
+
+/* 1. 约束按钮宽度并隐藏溢出部分 */
+.marquee-btn {
+  width: 100px;          /* 固定宽度 */
+  overflow: hidden;      /* 隐藏超出宽度的文字 */
+  white-space: nowrap;   /* 强制文本不换行 */
+  padding-left: 5px;        /* 左右留一点间距，避免文字贴边 */
+  padding-right: 5px;        /* 左右留一点间距，避免文字贴边 */
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  position: relative;
+}
+
+/* 2. 内部滚动容器 */
+.marquee-content {
+  display: flex;
+  /* 动画：名称 时间 匀速 无限循环 */
+  animation: scroll-left 10s linear infinite;
+}
+
+/* 3. 单个文本样式 */
+.marquee-text {
+  display: inline-block;
+  padding-right: 20px; /* 两段文字之间的滚动间距（可根据需要调整） */
+}
+
+/* 4. 鼠标悬浮时暂停滚动（提升用户体验，可选） */
+.marquee-btn:hover .marquee-content {
+  animation-play-state: paused;
+}
+
+/* 5. 定义滚动动画：从 0 到向左移动 50% */
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+    /* 因为有左右两份完全一样的文本，向左移动50%刚好完成一整段内容的滚动 */
+  }
 }
 </style>
