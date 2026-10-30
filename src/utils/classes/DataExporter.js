@@ -15,6 +15,7 @@
 
 import { Document, Packer, Paragraph, TextRun, ImageRun, Table, TableRow, TableCell, AlignmentType, BorderStyle, WidthType, VerticalAlign, TableLayoutType } from 'docx'
 import { saveAs } from 'file-saver'
+import ExcelJS from 'exceljs'
 
 // 彩色文本 class → Word 颜色映射
 const STYLE_COLOR_MAP = {
@@ -276,6 +277,57 @@ class DataExporter {
     const csv = '\ufeff' + [headerLine].concat(bodyLines).join('\r\n')
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' })
     saveAs(blob, `${fileName || '导出'}_${new Date().getTime()}.csv`)
+  }
+
+  /**
+   * 导出 Excel 2003 XML，支持设置列宽、居中及文本格式
+   */
+  static async exportExcel(data, fileName, headers, rowMapper, options = {}) {
+    const rows = Array.isArray(data) ? data : []
+    const headerList = Array.isArray(headers) ? headers : []
+    const widths = Array.isArray(options.widths) ? options.widths : []
+    const alignments = Array.isArray(options.alignments) ? options.alignments : []
+    const mappedRows = rows.map(row => {
+      const values = typeof rowMapper === 'function' ? rowMapper(row) : []
+      return Array.isArray(values) ? values : []
+    })
+    const workbook = new ExcelJS.Workbook()
+    const worksheet = workbook.addWorksheet('输出列表')
+    worksheet.addRow(headerList)
+    mappedRows.forEach(values => {
+      worksheet.addRow(headerList.map((header, columnIndex) => String(values[columnIndex] == null ? '' : values[columnIndex])))
+    })
+    worksheet.getRow(1).height = 22
+    worksheet.getRow(1).eachCell(cell => {
+      cell.font = { bold: true }
+      cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true }
+    })
+    headerList.forEach((header, columnIndex) => {
+      worksheet.getColumn(columnIndex + 1).width = Math.max(10, Math.round((Number(widths[columnIndex]) || 90) / 8))
+    })
+    for (let rowIndex = 2; rowIndex <= mappedRows.length + 1; rowIndex += 1) {
+      const row = worksheet.getRow(rowIndex)
+      headerList.forEach((header, columnIndex) => {
+        const alignment = alignments[columnIndex] || 'center'
+        const horizontalAlignment = String(header) === '标题' || alignment === 'left'
+          ? 'left'
+          : 'center'
+        row.getCell(columnIndex + 1).alignment = {
+          horizontal: horizontalAlignment,
+          vertical: 'middle',
+          wrapText: String(header) === '承办单位信息' || String(header) === '承办信息' || String(header) === '标题'
+        }
+        if (String(header) === '承办单位信息' || String(header) === '承办信息') {
+          const text = String(row.getCell(columnIndex + 1).value == null ? '' : row.getCell(columnIndex + 1).value)
+          const columnWidth = Number(widths[columnIndex]) || 90
+          const estimatedLines = Math.max(1, Math.ceil(text.length / Math.max(4, columnWidth / 7)))
+          row.height = Math.max(row.height || 22, Math.min(90, estimatedLines * 15 + 4))
+        }
+      })
+    }
+    const buffer = await workbook.xlsx.writeBuffer()
+    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+    saveAs(blob, `${fileName || '导出'}_${new Date().getTime()}.xlsx`)
   }
 
   /**

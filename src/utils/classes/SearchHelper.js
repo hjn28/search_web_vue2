@@ -135,13 +135,11 @@ class SearchHelper {
   }
 
   /**
-   * 将接口届次格式转换为中文展示格式（14-4 → 14届4次）
+   * 在 CSV 中强制 Excel 将届次按文本显示，避免 "14-4" 被识别为日期。
    */
-  static formatSessionDisplay(val) {
+  static formatSessionForCsv(val) {
     const session = String(val == null ? '' : val).trim()
-    if (!session) return ''
-    const match = session.match(/^(\d+)-(\d+)$/)
-    return match ? `${match[1]}届${match[2]}次` : session
+    return /^\d+-\d+$/.test(session) ? `="${session}"` : session
   }
 
   /**

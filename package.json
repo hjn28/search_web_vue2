@@ -17,6 +17,7 @@
     "docx": "^9.7.1",
     "echarts": "^6.1.0",
     "element-ui": "^2.15.10",
+    "exceljs": "^4.4.0",
     "fetch": "^1.1.0",
     "file-saver": "^2.0.5",
     "font-awesome": "^4.7.0",
@@ -31,7 +32,8 @@
     "vue-loading-overlay": "^6.0.6",
     "vue-router": "^3.2.0",
     "vuex": "^3.6.2",
-    "vuex-persistedstate": "^4.1.0"
+    "vuex-persistedstate": "^4.1.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.28.5",

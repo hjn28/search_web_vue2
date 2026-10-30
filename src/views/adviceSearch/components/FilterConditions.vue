@@ -630,12 +630,13 @@ export default {
       })
 
       // ===== 合并新增的十五五规划纲要字段 =====
+      const outlineId = this.selectedJu || this.selectedJie || this.selectedZhang || this.selectedPian || ''
       const params = {
         ...baseParams,
-        selectedPian: this.selectedPian,
-        selectedZhang: this.selectedZhang,
-        selectedJie: this.selectedJie,
-        selectedJu: this.selectedJu
+        fileku: {
+          ku: outlineId ? 'kb__gov_15th_fyp__matches' : '',
+          id: outlineId
+        }
       }
 
       const sels = SearchHelper.collectSearchKeywords({

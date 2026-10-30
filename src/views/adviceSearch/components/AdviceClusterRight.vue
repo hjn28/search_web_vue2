@@ -182,7 +182,6 @@ import * as echarts from 'echarts'
 import ReportBuilder from '../../../utils/classes/ReportBuilder'
 import TreeHelper from '../../../utils/classes/TreeHelper'
 import EditableReportStore from '../utils/EditableReportStore'
-import SearchHelper from '../../../utils/classes/SearchHelper'
 import { mapState, mapGetters } from 'vuex'
 import { TEMPLATE_MODAL_MODE, VIEW_MODE } from '../../../store/modules/adviceCluster'
 import {
@@ -660,16 +659,17 @@ export default {
     outputRepresentatives() {
       const selected = this.selectedRows
       if (!selected.length) {
-        this.showAlert('请先勾选要输出的代表记录')
+        this.showAlert('请先勾选要输出的列表记录')
         return
       }
-      DataExporter.exportCsv(
+      DataExporter.exportExcel(
         selected,
-        '代表信息',
-        ['建议编号', '标题', '届次', '代表', '代表团'],
-        r => [r.id, r.title, SearchHelper.formatSessionDisplay(r.session), r.representative, r.delegation]
+        '列表信息',
+        ['建议编号', '标题', '届次', '代表', '代表团', '承办单位信息'],
+        r => [r.id, r.title, r.session, r.representative, r.delegation, r.cbxx],
+        { widths: [90, 320, 90, 90, 90, 360], alignments: ['center', 'left', 'center', 'center', 'center', 'left'] }
       )
-      this.addHistory('输出列表', `导出代表记录${selected.length}条`)
+      this.addHistory('输出列表', `导出列表记录${selected.length}条`)
     },
 
     /* ==================== 任务队列 ==================== */
