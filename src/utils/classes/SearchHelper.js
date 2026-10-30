@@ -135,6 +135,16 @@ class SearchHelper {
   }
 
   /**
+   * 将接口届次格式转换为中文展示格式（14-4 → 14届4次）
+   */
+  static formatSessionDisplay(val) {
+    const session = String(val == null ? '' : val).trim()
+    if (!session) return ''
+    const match = session.match(/^(\d+)-(\d+)$/)
+    return match ? `${match[1]}届${match[2]}次` : session
+  }
+
+  /**
    * 中文数字映射
    * @type {Object<string, number>}
    */

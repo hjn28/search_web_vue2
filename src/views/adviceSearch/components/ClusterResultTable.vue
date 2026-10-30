@@ -25,7 +25,7 @@
             <td>{{ item.id }}</td>
             <td>{{ item.representative }}</td>
             <td :title="item.title">{{ shortTitle(item.title) }}</td>
-            <td>{{ item.session }}</td>
+            <td>{{ formatSessionDisplay(item.session) }}</td>
             <td>{{ item.delegation }}</td>
             <td v-if="showCbxx" class="cbxx-col" :title="item.cbxx">{{ (item.cbxx && item.cbxx.length > 12) ? item.cbxx.slice(0, 12) + '...' : item.cbxx }}</td>
             <td class="action-col">
@@ -53,6 +53,7 @@
 
 <script>
 import EmptyState from './empty.vue'
+import SearchHelper from '../../../utils/classes/SearchHelper'
 export default {
   name: 'ClusterResultTable',
   components: { EmptyState },
@@ -82,6 +83,9 @@ export default {
     }
   },
   methods: {
+    formatSessionDisplay(session) {
+      return SearchHelper.formatSessionDisplay(session)
+    },
     toggleRow(id, e) {
       // 当 id 为 undefined/null 时，selectedIds.includes(item.id) 会匹配所有行
       if (id == null) {

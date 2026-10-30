@@ -182,6 +182,7 @@ import * as echarts from 'echarts'
 import ReportBuilder from '../../../utils/classes/ReportBuilder'
 import TreeHelper from '../../../utils/classes/TreeHelper'
 import EditableReportStore from '../utils/EditableReportStore'
+import SearchHelper from '../../../utils/classes/SearchHelper'
 import { mapState, mapGetters } from 'vuex'
 import { TEMPLATE_MODAL_MODE, VIEW_MODE } from '../../../store/modules/adviceCluster'
 import {
@@ -666,7 +667,7 @@ export default {
         selected,
         '代表信息',
         ['建议编号', '标题', '届次', '代表', '代表团'],
-        r => [r.id, r.title, r.session, r.representative, r.delegation]
+        r => [r.id, r.title, SearchHelper.formatSessionDisplay(r.session), r.representative, r.delegation]
       )
       this.addHistory('输出列表', `导出代表记录${selected.length}条`)
     },
