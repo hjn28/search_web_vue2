@@ -1,21 +1,21 @@
 <template>
   <div>
-    <div class="task-queue-mask" :class="{ show: visible }" @click="$emit('close')"></div>
+    <div class="task-queue-mask" :class="{ show: visible }" @click="handleClose"></div>
     <div class="task-queue-modal" :class="{ show: visible }">
       <div class="task-queue-header">
         <div class="task-queue-header-left">
           <div class="task-queue-title">任务队列&nbsp;&nbsp;
-            <button class="btn btn-outline btn-sm" :disabled="refreshing" @click="$emit('refresh')">
+            <button class="btn btn-outline btn-sm" :disabled="refreshing || !!exportingTaskId" @click="$emit('refresh')">
               {{ refreshing ? '刷新中...' : '刷新' }}
             </button>
           </div>
         </div>
-        <span class="task-queue-close" @click="$emit('close')">×</span>
+        <span class="task-queue-close" @click="handleClose">×</span>
       </div>
       <div
         class="task-queue-body"
-        v-loading="detailLoading"
-        element-loading-text="正在加载任务详情..."
+        v-loading="detailLoading || !!exportingTaskId"
+        :element-loading-text="exportingTaskId ? '正在导出，请稍候...' : '正在加载任务详情...'"
         element-loading-background="rgba(255, 255, 255, 0.82)"
       >
         <table class="task-queue-table">
@@ -53,7 +53,10 @@
                 <button class="btn btn-outline btn-sm action-btn" @click="handleDelete(item.id)" :disabled="item.status === '0' || isDeleting(item.id)">
                   {{ isDeleting(item.id) ? '删除' : '删除' }}
                 </button>
-                <button class="btn btn-outline btn-sm action-btn" @click="handleView(item)" :disabled="detailLoading || item.status === '0' || item.status === '2'">查看</button>
+                <button class="btn btn-outline btn-sm action-btn" @click="handleView(item)" :disabled="detailLoading || !!exportingTaskId || item.status === '0' || item.status === '2'">查看</button>
+                <button class="btn btn-outline btn-sm action-btn" @click="handleExport(item)" :disabled="detailLoading || !!exportingTaskId || item.status === '0' || item.status === '2'">
+                  {{ isExporting(item.id) ? '导出中...' : '导出' }}
+                </button>
               </td>
             </tr>
           </tbody>
@@ -71,9 +74,10 @@ export default {
     items: { type: Array, default: () => [] },
     refreshing: { type: Boolean, default: false },
     deletingTaskIds: { type: Array, default: () => [] },
-    detailLoading: { type: Boolean, default: false }
+    detailLoading: { type: Boolean, default: false },
+    exportingTaskId: { type: String, default: '' }
   },
-  emits: ['close', 'refresh', 'delete-task', 'view-detail'],
+  emits: ['close', 'refresh', 'delete-task', 'view-detail', 'export-task'],
   methods: {
     taskWordText(item) {
       if (!item) return ''
@@ -94,13 +98,24 @@ export default {
     isDeleting(id) {
       return this.deletingTaskIds.includes(String(id))
     },
+    isExporting(id) {
+      return String(id) === String(this.exportingTaskId)
+    },
     handleDelete(id) {
       if (this.isDeleting(id)) return
       this.$emit('delete-task', id)
     },
+    handleClose() {
+      if (this.exportingTaskId) return
+      this.$emit('close')
+    },
     handleView(item) {
       if (this.detailLoading) return
       this.$emit('view-detail', { id: item.id, type: item.type, words: item.qdNeedObj && item.qdNeedObj.words, tree: item.qdNeedObj && item.qdNeedObj.tree })
+    },
+    handleExport(item) {
+      if (this.detailLoading || this.exportingTaskId || item.status === '0' || item.status === '2') return
+      this.$emit('export-task', { id: item.id, type: item.type, words: item.qdNeedObj && item.qdNeedObj.words, tree: item.qdNeedObj && item.qdNeedObj.tree })
     }
   }
 }

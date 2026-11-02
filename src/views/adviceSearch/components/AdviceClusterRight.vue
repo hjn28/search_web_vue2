@@ -7,10 +7,12 @@
       :refreshing="refreshing"
       :deleting-task-ids="deletingTaskIds"
       :detail-loading="detailLoading"
+      :exporting-task-id="exportingTaskId"
       @close="closeTaskQueue"
       @refresh="rwdlQuery"
       @delete-task="zyDel"
       @view-detail="onTaskViewDetail"
+      @export-task="onTaskExport"
     />
 
     <!-- ---- 流程图 / 使用手册预览 ---- -->
@@ -105,7 +107,7 @@
       </div>
 
       <!-- ---- 可滚动内容区域 ---- -->
-      <div class="result-content" ref="resultContent">
+      <div class="result-content" :class="{ 'task-export-rendering': !!exportingTaskId }" ref="resultContent">
         <ClusterResultTable v-if="viewMode === viewModeEnum.table"
           :table-data="tableData"
           :pagination="pagination"
@@ -235,6 +237,7 @@ export default {
       /** 任务详情的请求序号，用于丢弃乱序返回的旧响应 */
       detailRequestSeq: 0,
       detailLoading: false,
+      exportingTaskId: '',
       jljgzsData: [],
 
       /* ---- 任务队列 ---- */
@@ -689,6 +692,21 @@ export default {
         : []
       this.zyDetail(payload.id, payload.type, payload.words)
     },
+    async onTaskExport(payload) {
+      if (!payload || this.detailLoading) return
+      const previousViewMode = this.viewMode
+      const previousSummaryType = this.currentSummaryType
+      const taskType = String(payload.type)
+      this.exportingTaskId = String(payload.id || '')
+      try {
+        await this.zyDetail(payload.id, taskType, payload.words, payload.tree, true)
+      } finally {
+        await this.$nextTick()
+        this.exportingTaskId = ''
+        this.currentSummaryType = previousSummaryType
+        this.$store.commit('adviceCluster/SET_VIEW_MODE', previousViewMode)
+      }
+    },
     async zyDel(id) {
       const taskId = String(id)
       if (this.deletingTaskIds.includes(taskId)) return
@@ -707,7 +725,7 @@ export default {
         this.deletingTaskIds = this.deletingTaskIds.filter(item => item !== taskId)
       }
     },
-    zyDetail(id, type, words) {
+    async zyDetail(id, type, words, tree, exportAfterRender = false) {
       const seq = ++this.detailRequestSeq
       this.detailLoading = true
       this.lastReportWords = ReportBuilder.normalizeWordArray(words)
@@ -715,32 +733,35 @@ export default {
       if (String(type) === '2' || String(type) === '3') {
         this.zsbgEditMode = false
       }
-      taskIdQuery(id)
-        .then(res => {
-          if (seq !== this.detailRequestSeq) return
-          if (res.code !== apiCode.ok) {
-            this.$message && this.$message({ message: res.message || '查询任务结果失败', type: 'error' })
-            return
-          }
-          this.jljgzsData = res.data?.data || []
-          this.taskQueueVisible = false
-          if (String(type) === '1') {
-            this.currentSummaryType = summaryType.digest
-            this.handleZhaiyaoResult(res.data?.data)
-          } else {
-            this.currentSummaryType = summaryType.report
-            this.renderZsbgTree(res.data?.data)
-            this.$store.commit('adviceCluster/SET_VIEW_MODE', VIEW_MODE.summary)
-          }
-        })
-        .catch(() => {
-          if (seq === this.detailRequestSeq) {
-            this.$message && this.$message({ message: '查询任务结果失败', type: 'error' })
-          }
-        })
-        .finally(() => {
-          if (seq === this.detailRequestSeq) this.detailLoading = false
-        })
+      try {
+        const res = await taskIdQuery(id)
+        if (seq !== this.detailRequestSeq) return
+        if (res.code !== apiCode.ok) {
+          this.$message && this.$message({ message: res.message || '查询任务结果失败', type: 'error' })
+          return
+        }
+        this.jljgzsData = res.data?.data || []
+        if (!exportAfterRender) this.taskQueueVisible = false
+        if (String(type) === '1') {
+          this.currentSummaryType = summaryType.digest
+          this.handleZhaiyaoResult(res.data?.data)
+        } else {
+          this.currentSummaryType = summaryType.report
+          await this.renderZsbgTree(res.data?.data)
+          this.$store.commit('adviceCluster/SET_VIEW_MODE', VIEW_MODE.summary)
+        }
+        if (exportAfterRender) {
+          await this.$nextTick()
+          if (String(type) === '1') this.exportSummary()
+          else await this.exportOverview()
+        }
+      } catch (_) {
+        if (seq === this.detailRequestSeq) {
+          this.$message && this.$message({ message: '查询任务结果失败', type: 'error' })
+        }
+      } finally {
+        if (seq === this.detailRequestSeq) this.detailLoading = false
+      }
     },
 
     /* ==================== 处理汇总要点结果 ==================== */
