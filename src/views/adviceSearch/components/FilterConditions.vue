@@ -77,6 +77,7 @@
                     v-model="selectedPian"
                     class="optional-el-select"
                     placeholder="请选择"
+                    clearable
                     popper-append-to-body
                     popper-class="outline-tree-select-dropdown"
                     @change="onPianChange"
@@ -95,6 +96,7 @@
                     v-model="selectedZhang"
                     class="optional-el-select"
                     placeholder="请选择"
+                    clearable
                     popper-append-to-body
                     popper-class="outline-tree-select-dropdown"
                     @change="onZhangChange"
@@ -119,6 +121,7 @@
                     v-model="selectedJie"
                     class="optional-el-select"
                     placeholder="请选择"
+                    clearable
                     popper-append-to-body
                     popper-class="outline-tree-select-dropdown"
                     @change="onJieChange"
@@ -145,6 +148,7 @@
                     v-model="selectedJu"
                     class="optional-el-select"
                     placeholder="请选择"
+                    clearable
                     popper-append-to-body
                     popper-class="outline-tree-select-dropdown"
                   >
@@ -809,6 +813,19 @@ export default {
 .outline-summary-fields .optional-row + .optional-row {
   margin-top: 8px;
 }
+
+/* 清除图标与下拉箭头共用 Element UI 的右侧区域，为文本预留空间。 */
+/* .outline-summary-fields .optional-el-select .el-input__inner {
+  padding-right: 8px;
+}
+
+.outline-summary-fields .optional-el-select .el-input__suffix {
+  right: 2px;
+}
+
+.outline-summary-fields .optional-el-select .el-input__clear {
+  margin-right: 2px;
+} */
 
 @media (max-width: 700px) {
   .outline-summary-title {

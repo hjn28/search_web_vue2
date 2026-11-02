@@ -12,22 +12,25 @@ export default {
     hasData: false, // 是否有模板数据
     tree: [], // 目录树结构 [{ id, name, children }]
     words: [], // 所有节点名称列表（叶子节点文本）
-    wordFileName: '' // 模板文件名称
+    wordFileName: '', // 模板文件名称
+    source: '' // template：上传模板；manual：检索时根据分类体系输入框同步
     // 说明：生成报告弹窗的「生成方式」与模板无关，已独立到 reportOption 模块，
     //       避免模板编辑与生成报告两个场景共用同一字段而互相污染。
   },
   mutations: {
-    SET_TEMPLATE(state, { tree, words, wordFileName }) {
+    SET_TEMPLATE(state, { tree, words, wordFileName, source }) {
       state.hasData = true
       state.tree = tree || []
       state.words = words || []
       state.wordFileName = wordFileName || ''
+      state.source = source || 'template'
     },
     CLEAR_TEMPLATE(state) {
       state.hasData = false
       state.tree = []
       state.words = []
       state.wordFileName = ''
+      state.source = ''
     }
   },
   actions: {
@@ -36,7 +39,8 @@ export default {
       commit('SET_TEMPLATE', {
         tree: payload.tree || [],
         words: (payload.words || []).filter(Boolean),
-        wordFileName: payload.wordFileName || ''
+        wordFileName: payload.wordFileName || '',
+        source: payload.source || 'template'
       })
     },
     /** 清除模糊词模板数据 */

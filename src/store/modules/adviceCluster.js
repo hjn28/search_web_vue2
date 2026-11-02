@@ -426,7 +426,11 @@ export default {
      */
     saveTemplateModal({ state, commit, dispatch }, payload) {
       const isWordEdit = state.templateModal.mode === TEMPLATE_MODAL_MODE.wordEdit
-      dispatch(isWordEdit ? 'wordTemplate/saveTemplate' : 'template/saveTemplate', payload, { root: true })
+      dispatch(
+        isWordEdit ? 'wordTemplate/saveTemplate' : 'template/saveTemplate',
+        isWordEdit ? { ...payload, source: 'template' } : payload,
+        { root: true }
+      )
       commit('CLOSE_TEMPLATE_MODAL')
     },
     closeTemplateModal({ commit }) {

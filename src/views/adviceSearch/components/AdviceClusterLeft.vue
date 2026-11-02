@@ -50,7 +50,7 @@
           <div class="category-build-wrap">
             <div class="category-template-card">
               <!-- 模板已上传：只读树展示 -->
-              <div v-if="flatWordTree.length" class="word-tree-items category-template-tree">
+              <div v-if="templateModeActive && flatWordTree.length" class="word-tree-items category-template-tree">
                 <div
                   v-for="node in flatWordTree"
                   :key="node.id"
@@ -294,7 +294,8 @@ export default {
     // 其回显展示仅由「上传分类模板」触发
     ...mapState('wordTemplate', {
       templateHasData: 'hasData',
-      templateTree: 'tree'
+      templateTree: 'tree',
+      templateSource: 'source'
     }),
     ...mapState('adviceCluster', ['citationData', 'activeKeyId', 'expandResults', 'expandSelection']),
     // citationVisible 在 store 中是 getter（由 citationData 派生），必须用 mapGetters 取；
@@ -311,7 +312,10 @@ export default {
 
     /** 分类模板的叶节点名称：模板已上传时作为模糊词参与检索 */
     templateLeafWords() {
-      return TreeHelper.collectLeafNames(this.templateTree)
+      return this.templateModeActive ? TreeHelper.collectLeafNames(this.templateTree) : []
+    },
+    templateModeActive() {
+      return this.templateHasData && this.templateSource !== 'manual'
     },
     /** 分类模板拍平后用于只读树展示 */
     flatWordTree() {
@@ -390,6 +394,12 @@ export default {
       handler() {
         this.syncFuzzyWordFromTemplate()
       }
+    },
+    templateSource: {
+      immediate: true,
+      handler() {
+        this.syncFuzzyWordFromTemplate()
+      }
     }
   },
   mounted() {
@@ -424,6 +434,7 @@ export default {
     /* ==================== 分类模板与模糊词 ==================== */
     /** 模板有值时用叶节点回填模糊词输入框，否则清空 */
     syncFuzzyWordFromTemplate() {
+      if (this.templateSource === 'manual') return
       this.filterSemiFuzzyWord =
         this.templateHasData && this.templateLeafWords.length ? this.templateLeafWords.join('\n') : ''
     },
@@ -486,8 +497,24 @@ export default {
     },
     /** 底部固定按钮：开始检索 */
     searchWithFilters() {
-      const filters = this.$refs.filterConditions
-      if (filters) filters.onSearch()
+      this.syncManualCategoryDirectory()
+      this.$nextTick(() => {
+        const filters = this.$refs.filterConditions
+        if (filters) filters.onSearch()
+      })
+    },
+    /** 手工分类体系每次检索都同步为目录结构，不影响上传模板模式 */
+    syncManualCategoryDirectory() {
+      if (this.templateModeActive) return
+
+      const words = splitKeywords(this.filterSemiFuzzyWord)
+      const tree = TreeHelper.buildTreeFromWords(words)
+      this.$store.dispatch('wordTemplate/saveTemplate', {
+        tree,
+        words: TreeHelper.collectNodeNames(tree),
+        wordFileName: '',
+        source: 'manual'
+      })
     },
 
     /* ==================== 引文 ==================== */
