@@ -22,7 +22,7 @@
           <thead>
             <tr>
               <th>序号</th>
-              <th>名称</th>
+              <th>分类体系</th>
               <th>类型</th>
               <th>创建时间</th>
               <th>结束时间</th>
@@ -86,8 +86,7 @@ export default {
       return String(words || '')
     },
     taskWordDisplay(item) {
-      const t = this.taskWordText(item)
-      return t.length > 7 ? t.slice(0, 7) + '...' : t
+      return this.taskWordText(item)
     },
     taskTypeText(item) {
       return String(item && item.type) === '1' ? '汇总要点' : '分析报告'
@@ -129,8 +128,8 @@ export default {
 .task-queue-header-left > *:last-child {
   margin-right: 0;
 }
-.task-name-cell { max-width: 140px; }
-.task-name-text { display: inline-block; max-width: 140px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; vertical-align: middle; }
+.task-name-cell { width: 260px; max-width: 260px; }
+.task-name-text { display: inline-block; width: 260px; max-width: 260px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; vertical-align: middle; }
 .task-type-cell { white-space: nowrap; }
 .task-queue-body { position: relative; }
 

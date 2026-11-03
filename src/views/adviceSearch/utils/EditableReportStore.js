@@ -59,7 +59,7 @@ class EditableReportStore {
   }
 
   static stripCountSuffix(name) {
-    return String(name || '').replace(/【\s*\d+\s*条建议\s*】\s*$/, '').trim()
+    return String(name || '').replace(/【\s*\d+\s*件建议\s*】\s*$/, '').trim()
   }
 
   static normalizeEditorText(text) {

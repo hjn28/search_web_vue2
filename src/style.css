@@ -1023,6 +1023,15 @@ body {
 }
 
 /* ---- 任务队列弹窗 ---- */
+/* Element UI 弹框需要显示在任务队列弹窗之上 */
+.v-modal {
+  z-index: 10000 !important;
+}
+
+.el-message-box__wrapper {
+  z-index: 10001 !important;
+}
+
 .task-queue-mask {
   position: fixed;
   inset: 0;
@@ -1039,7 +1048,7 @@ body {
   position: fixed;
   top: 50%;
   left: 50%;
-  width: 820px;
+  width: 1100px;
   max-width: calc(100vw - 4px);
   height: 70vh;
   background: #fff;

@@ -119,6 +119,7 @@
           @view-detail="onViewDetail"
         />
         <template v-else-if="viewMode === viewModeEnum.summary">
+          <!-- 分析报告 -->
           <OverviewReportView v-if="currentSummaryType === summaryType.report"
             :zsbg-render-nodes="zsbgRenderNodes"
             :active-key-id="activeKeyId"
@@ -127,12 +128,14 @@
             @citation-click="onCitationClick"
             @field-blur="handleZsbgFieldBlur"
           />
+          <!-- 汇总要点 -->
           <SummaryReportView v-else :zhaiyao-data="zhaiyaoData" />
         </template>
+        <!-- 一次拓展结果 -->
         <ExpandResultsView v-else-if="viewMode === viewModeEnum.expand"
           :expand-results="expandResults"
           :expand-selection="expandSelection"
-          @expand-item-check="onExpandItemCheck"
+          @expand-title-click="onExpandTitleClick"
           @expand-keyword-click="onExpandKeywordClick"
           @expand-segment-change="onExpandSegmentChange"
         />
@@ -250,6 +253,8 @@ export default {
       taskQueueReportTree: [],
       /** 任务返回的词数组（无 tree 时作为生成报告的目录兜底） */
       lastReportWords: [],
+      expandDetailOrigin: false,
+      expandScrollTop: 0,
 
       /* ---- 当前页面内预览 ---- */
       previewVisible: false,
@@ -305,6 +310,10 @@ export default {
     }
   },
   watch: {
+    viewMode() {
+      if (this.viewMode === VIEW_MODE.expand) this.restoreExpandScroll()
+      else this.resetResultScroll()
+    },
     /** 共享弹窗的「立即生成」载荷（由父组件经 store 转交） */
     templateGenerate(payload) {
       if (payload) this.handleTemplateGenerate(payload)
@@ -334,6 +343,28 @@ export default {
   methods: {
     showAlert(msg) { this.$alert(msg, '提示', { confirmButtonText: '确定' }) },
     addHistory(action, content) { this.$store.dispatch('adviceCluster/addHistory', { action, content }) },
+    resetResultScroll() {
+      this.$nextTick(() => {
+        window.requestAnimationFrame(() => {
+          const el = this.$refs.resultContent
+          if (el) {
+            el.scrollTop = 0
+            el.scrollTo && el.scrollTo(0, 0)
+          }
+        })
+      })
+    },
+    restoreExpandScroll() {
+      this.$nextTick(() => {
+        window.requestAnimationFrame(() => {
+          const el = this.$refs.resultContent
+          if (el) {
+            el.scrollTop = this.expandScrollTop
+            el.scrollTo && el.scrollTo(0, this.expandScrollTop)
+          }
+        })
+      })
+    },
     loadImportantFile(file) {
       this.importantContentLoading = false
       if (!file || !file.file) {
@@ -468,12 +499,27 @@ export default {
         matchType: proposal.matchType || '正文'
       })
       this.$store.commit('adviceCluster/SET_VIEW_MODE', VIEW_MODE.detail)
+      this.expandDetailOrigin = false
       this.addHistory('查看详情', proposal.id ? `查看了议案【${proposal.id}】的内容` : '查看了一条议案内容')
+    },
+    onExpandTitleClick(item) {
+      if (!item) return
+      const resultContent = this.$refs.resultContent
+      this.expandScrollTop = resultContent ? resultContent.scrollTop : 0
+      this.$store.commit('adviceCluster/SET_DETAIL', {
+        visible: true,
+        html: item.content_html ? String(item.content_html) : '暂无正文内容',
+        matchType: '正文'
+      })
+      this.expandDetailOrigin = true
+      this.$store.commit('adviceCluster/SET_VIEW_MODE', VIEW_MODE.detail)
     },
     backToTable() {
       this.generateReportFromTaskQueue = false
       this.taskQueueReportTree = []
-      this.$store.commit('adviceCluster/SET_VIEW_MODE', VIEW_MODE.table)
+      const nextMode = this.expandDetailOrigin ? VIEW_MODE.expand : VIEW_MODE.table
+      this.expandDetailOrigin = false
+      this.$store.commit('adviceCluster/SET_VIEW_MODE', nextMode)
       this.$store.commit('adviceCluster/SET_DETAIL', { visible: false })
       this.$store.commit('adviceCluster/SET_IMPORTANT_FILE', null)
     },

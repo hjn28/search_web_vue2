@@ -66,7 +66,7 @@ export default {
           var hasChildren = children.length > 0
           var count = node.count && typeof node.count === 'object' ? node.count : null
           var suffix = (count && count.total !== undefined && count.total !== null && String(count.total).trim() !== '')
-            ? '【' + count.total + '条建议】' : ''
+            ? '【' + count.total + '件建议】' : ''
           var displayName = suffix ? name + suffix : name
 
           if (hasChildren) {

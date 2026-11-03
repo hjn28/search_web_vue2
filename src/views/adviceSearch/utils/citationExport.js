@@ -41,7 +41,7 @@ function flattenCitationTree(nodes, level) {
     // 统计后缀（与分析报告渲染一致）
     var count = node.count && typeof node.count === 'object' ? node.count : null
     var suffix = (count && count.total !== undefined && count.total !== null && String(count.total).trim() !== '')
-      ? '【' + count.total + '条建议】' : ''
+      ? '【' + count.total + '件建议】' : ''
     var displayName = suffix ? name + suffix : name
 
     result.push({
