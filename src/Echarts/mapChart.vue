@@ -241,6 +241,7 @@ export default {
           aspectScale: 0.85,
           zoom: 1.4,
           center: [104, 35],
+          // 只保留隐藏南海诸岛和空名称的配置，去掉其他无效的 offset 配置
           regions: [
             {
               name: '南海诸岛',
@@ -266,6 +267,19 @@ export default {
             fontSize: 11,
             color: '#2c3e50',
             fontWeight: 500
+          },
+          // 👇 新增：强制物理偏移，解决京津冀、粤港澳重叠问题 👇
+          labelLayout: function (params) {
+            var name = params.text
+            // 京津冀区域
+            if (name === '北京') return { dx: 0, dy: -5 }
+            if (name === '天津') return { dx: 16, dy: 0 }
+            if (name === '河北') return { dx: -5, dy: 15 }
+            // 粤港澳区域
+            if (name === '广东') return { dx: -5, dy: 5 }
+            if (name === '香港') return { dx: 15, dy: 10 }
+            if (name === '澳门') return { dx: -25, dy: 15 }
+            return { dx: 0, dy: 0 }
           },
           itemStyle: {
             borderColor: '#ffffff',
