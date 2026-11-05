@@ -1,6 +1,6 @@
 <template>
   <div class="line-chart-with-table">
-    <div ref="chartRef" class="chart-canvas" :style="{ height: chartHeight + 'px' }"></div>
+    <div ref="chartRef" class="chart-canvas" :style="{ height: resolvedChartHeight + 'px' }"></div>
   </div>
 </template>
 
@@ -55,6 +55,13 @@ export default {
     }
   },
   computed: {
+    resolvedChartHeight() {
+      const count = this.years.length
+      if (count <= 3) return 300
+      if (count <= 10) return 400
+      if (count <= 20) return 450
+      return 500
+    },
     normalizedSeries() {
       return this.seriesData.map(function(item, index) {
         return {
@@ -63,9 +70,33 @@ export default {
           data: Array.isArray(item.data) ? item.data : []
         }
       })
+    },
+    yAxisScale() {
+      const values = this.normalizedSeries.reduce((result, item) => {
+        const data = Array.isArray(item.data) ? item.data : []
+        data.forEach(value => {
+          const numeric = Number(value)
+          if (Number.isFinite(numeric)) result.push(numeric)
+        })
+        return result
+      }, [])
+      const dataMax = values.length ? Math.max(0, ...values) : 0
+      const rawInterval = dataMax / 4
+      const magnitude = Math.pow(10, Math.floor(Math.log10(Math.max(rawInterval, 0.1))))
+      const normalized = rawInterval / magnitude
+      let stepUnit = 1
+      if (normalized > 5) stepUnit = 10
+      else if (normalized > 2) stepUnit = 5
+      else if (normalized > 1) stepUnit = 2
+      const interval = Math.max(1, Math.round(stepUnit * magnitude))
+      const max = Math.max(interval, Math.ceil(dataMax / interval) * interval)
+      return { interval, max }
     }
   },
   watch: {
+    resolvedChartHeight() {
+      this.$nextTick(this.handleResize)
+    },
     years() {
       this.renderChart()
     },
@@ -136,13 +167,21 @@ export default {
         yAxis: {
           type: 'value',
           min: 0,
+          max: this.yAxisScale.max,
+          interval: this.yAxisScale.interval,
           splitLine: {
             lineStyle: {
               color: '#DFDFDF'
             }
           },
           axisLabel: {
-            color: '#666'
+            color: '#666',
+            formatter: value => {
+              const numeric = Number(value)
+              if (!Number.isFinite(numeric)) return ''
+              if (Math.abs(numeric - Math.round(numeric)) > 0.0001) return ''
+              return String(Math.round(numeric))
+            }
           }
         },
         series: this.normalizedSeries.map(item => {

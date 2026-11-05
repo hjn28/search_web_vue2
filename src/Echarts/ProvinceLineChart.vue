@@ -1,6 +1,6 @@
 <template>
   <div class="province-line-chart" :style="rootStyleVars">
-    <div ref="chartRef" class="chart-canvas" :style="{ height: chartHeight + 'px' }"></div>
+    <div ref="chartRef" class="chart-canvas" :style="{ height: resolvedChartHeight + 'px' }"></div>
 
     <div class="data-table-wrap">
       <table class="data-table">
@@ -85,6 +85,13 @@ export default {
     }
   },
   computed: {
+    resolvedChartHeight() {
+      const count = this.provinces.length
+      if (count <= 3) return 300
+      if (count <= 10) return 400
+      if (count <= 20) return 450
+      return 500
+    },
     rootStyleVars() {
       return {
         '--series-col-width': this.seriesColWidth + 'px'
@@ -102,6 +109,9 @@ export default {
     }
   },
   watch: {
+    resolvedChartHeight() {
+      this.$nextTick(this.handleResize)
+    },
     provinces() {
       this.renderChart()
     },
@@ -189,8 +199,7 @@ export default {
         yAxis: {
           type: 'value',
           min: -5,
-          max: 70,
-          interval: 15,
+          max: 'dataMax',
           axisLine: {
             show: false
           },

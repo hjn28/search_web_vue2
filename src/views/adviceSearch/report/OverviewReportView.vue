@@ -150,4 +150,16 @@ export default {
 .zsbg-editable-inline {
   white-space: pre-wrap;
 }
+
+.zsbg-chart-block {
+  width: 100%;
+  max-width: 100%;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.zsbg-chart-block ::v-deep .chart-canvas {
+  width: 100% !important;
+  max-width: 100%;
+}
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="line-percent-chart">
-    <div ref="chartRef" class="chart-canvas" :style="{ height: chartHeight + 'px' }"></div>
+    <div ref="chartRef" class="chart-canvas" :style="{ height: resolvedChartHeight + 'px' }"></div>
     <div class="meaning-wrap" v-if="showMeaning">
       <div class="meaning-item" v-for="item in normalizedSeries" :key="item.name + '-meaning'">
         <span class="series-line" :style="{ backgroundColor: item.color }"></span>
@@ -67,6 +67,13 @@ export default {
     }
   },
   computed: {
+    resolvedChartHeight() {
+      const count = this.years.length
+      if (count <= 3) return 300
+      if (count <= 10) return 400
+      if (count <= 20) return 450
+      return 500
+    },
     normalizedSeries() {
       return this.seriesData.map(function(item, index) {
         return {
@@ -78,6 +85,9 @@ export default {
     }
   },
   watch: {
+    resolvedChartHeight() {
+      this.$nextTick(this.handleResize)
+    },
     years() {
       this.renderChart()
     },
@@ -200,7 +210,7 @@ export default {
           type: 'value',
           min: this.yAxisMin,
           max: this.yAxisMax,
-          interval: 1,
+          splitNumber: 6,
           axisLine: {
             show: false
           },

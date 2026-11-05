@@ -349,7 +349,7 @@ class ReportBuilder {
   static appendCountSuffix(name, count) {
     if (!count || typeof count !== 'object') return name
     const hasTotal = count.total !== undefined && count.total !== null && String(count.total).trim() !== ''
-    return hasTotal ? `${name}【${count.total}条建议】` : name
+    return hasTotal ? `${name}【${count.total}件建议】` : name
   }
 
   /**

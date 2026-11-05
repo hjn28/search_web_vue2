@@ -1,6 +1,6 @@
 <template>
   <div class="annual-handle-type-bar-chart">
-    <div ref="chartRef" class="chart-canvas" :style="{ height: chartHeight + 'px' }"></div>
+    <div ref="chartRef" class="chart-canvas" :style="{ height: resolvedChartHeight + 'px' }"></div>
   </div>
 </template>
 
@@ -45,6 +45,13 @@ export default {
     }
   },
   computed: {
+    resolvedChartHeight() {
+      const count = this.years.length
+      if (count <= 3) return 300
+      if (count <= 10) return 400
+      if (count <= 20) return 450
+      return 500
+    },
     normalizedSeries() {
       const fallbackColors = ['#4F81BD', '#C0504D', '#9BBB59']
       console.log('this.seriesData:', this.seriesData)
@@ -58,6 +65,9 @@ export default {
     }
   },
   watch: {
+    resolvedChartHeight() {
+      this.$nextTick(this.handleResize)
+    },
     years() {
       // this.renderChart()
       this.years
@@ -136,8 +146,7 @@ export default {
         yAxis: {
           type: 'value',
           min: 0,
-          max: 450,
-          interval: 50,
+          max: 'dataMax',
           axisLine: {
             show: false
           },
@@ -159,6 +168,7 @@ export default {
             name: item.name,
             type: 'bar',
             barWidth: 38,
+            barMaxWidth: 40,
             barGap: '22%',
             label: {
               show: true,

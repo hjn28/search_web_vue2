@@ -1,6 +1,6 @@
 <template>
   <div class="grouped-bar-percent-chart">
-    <div ref="chartRef" class="chart-canvas" :style="{ height: chartHeight + 'px' }"></div>
+    <div ref="chartRef" class="chart-canvas" :style="{ height: resolvedChartHeight + 'px' }"></div>
   </div>
 </template>
 
@@ -50,6 +50,13 @@ export default {
     }
   },
   computed: {
+    resolvedChartHeight() {
+      const count = this.years.length
+      if (count <= 3) return 300
+      if (count <= 10) return 400
+      if (count <= 20) return 450
+      return 500
+    },
     normalizedSeries() {
       const fallbackColors = ['#5B9BD5', '#ED7D31', '#A5A5A5', '#FFC000', '#4472C4', '#70AD47', '#255E91', '#9E480E']
       return this.seriesData.map(function(item, index) {
@@ -62,6 +69,9 @@ export default {
     }
   },
   watch: {
+    resolvedChartHeight() {
+      this.$nextTick(this.handleResize)
+    },
     years() {
       this.renderChart()
     },
@@ -176,6 +186,7 @@ export default {
             name: item.name,
             type: 'bar',
             barWidth: 20,
+            barMaxWidth: 40,
             itemStyle: {
               color: item.color
             },

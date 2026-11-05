@@ -346,7 +346,10 @@ class DataExporter {
     }
 
     const chartCount = renderNodes.filter(n => n && n.type === 'chart').length
-    const maxContentWidthPx = 620
+    // A4 页面左右边距合计 2880 twips，内容宽约 9026 twips（6.27in）。
+    // Word 的图片尺寸按约 96 DPI 换算；560px 约为 5.83in，预留足够页边距且不会溢出。
+    const maxContentWidthPx = 560
+    const maxContentHeightPx = 400
 
     // ── 第一步：并行捕获所有图表截图（不再逐个 await，避免页面反复跳动） ──
     const chartResults = new Map()
@@ -383,15 +386,22 @@ class DataExporter {
           const imagePayload = chartData ? this.normalizeChartImagePayload(chartData) : null
           const imageBuffer = imagePayload && imagePayload.buffer
           if (imageBuffer && imageBuffer.length > 100) {
-            const sourceWidth = Number(chartData.width) || maxContentWidthPx
-            const sourceHeight = Number(chartData.height) || 320
-            const ratio = sourceWidth > 0 ? (sourceHeight / sourceWidth) : (320 / maxContentWidthPx)
-            const width = Math.max(260, Math.min(maxContentWidthPx, Math.round(sourceWidth)))
-            const height = Math.max(160, Math.round(width * ratio))
+            const sourceWidth = Math.max(1, Number(chartData.width) || maxContentWidthPx)
+            const sourceHeight = Math.max(1, Number(chartData.height) || 320)
+            const scale = Math.min(
+              maxContentWidthPx / sourceWidth,
+              maxContentHeightPx / sourceHeight,
+              1
+            )
+            const width = Math.max(260, Math.round(sourceWidth * scale))
+            const height = Math.max(160, Math.round(sourceHeight * scale))
 
             children.push(new Paragraph({
               alignment: AlignmentType.CENTER,
               spacing: { after: 240 },
+              keepLines: true,
+              keepNext: false,
+              cantSplit: true,
               children: [
                 new ImageRun({
                   data: imageBuffer,

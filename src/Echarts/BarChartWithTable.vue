@@ -1,6 +1,6 @@
 <template>
   <div class="grouped-bar-percent-chart">
-    <div ref="chartRef" class="chart-canvas" :style="{ height: chartHeight + 'px' }"></div>
+    <div ref="chartRef" class="chart-canvas" :style="{ height: resolvedChartHeight + 'px' }"></div>
   </div>
 </template>
 
@@ -66,6 +66,13 @@ export default {
     }
   },
   computed: {
+    resolvedChartHeight() {
+      const count = this.years.length
+      if (count <= 3) return 300
+      if (count <= 10) return 400
+      if (count <= 20) return 450
+      return 500
+    },
     normalizedSeries() {
       const fallbackColors = ['#5B9BD5', '#ED7D31', '#A5A5A5', '#FFC000', '#4472C4', '#70AD47', '#255E91', '#9E480E']
       return this.seriesData.map(function(item, index) {
@@ -75,6 +82,27 @@ export default {
           data: Array.isArray(item.data) ? item.data : []
         }
       })
+    },
+    yAxisScale() {
+      const values = this.normalizedSeries.reduce((result, item) => {
+        const data = Array.isArray(item.data) ? item.data : []
+        data.forEach(value => {
+          const numeric = Number(value)
+          if (Number.isFinite(numeric)) result.push(numeric)
+        })
+        return result
+      }, [])
+      const dataMax = values.length ? Math.max(0, ...values) : 0
+      const rawInterval = dataMax / 4
+      const magnitude = Math.pow(10, Math.floor(Math.log10(Math.max(rawInterval, 0.1))))
+      const normalized = rawInterval / magnitude
+      let stepUnit = 1
+      if (normalized > 5) stepUnit = 10
+      else if (normalized > 2) stepUnit = 5
+      else if (normalized > 1) stepUnit = 2
+      const interval = Math.max(1, Math.round(stepUnit * magnitude))
+      const max = Math.max(interval, Math.ceil(dataMax / interval) * interval)
+      return { interval, max }
     },
     flattenedNumericValues() {
       return this.normalizedSeries.reduce(function(result, item) {
@@ -107,48 +135,11 @@ export default {
     },
 
     // 优化后的 y 轴最大值（增加顶部留白）
-    resolvedYAxisMax() {
-      if (typeof this.yAxisMax === 'number' && !Number.isNaN(this.yAxisMax)) {
-        return this.yAxisMax
-      }
-      const numericMax = this.flattenedNumericValues.length ? Math.max.apply(null, this.flattenedNumericValues) : 0
-      if (numericMax <= 0) return 10
-      // 增加 10% 的留白，使最高柱不顶天
-      const maxWithPadding = numericMax * 1.1
-      const roughStep = maxWithPadding / 5
-      const magnitude = Math.pow(10, Math.max(0, Math.floor(Math.log10(roughStep))))
-      const normalizedStep = roughStep / magnitude
-      let stepBase = 1
-      if (normalizedStep > 5) stepBase = 10
-      else if (normalizedStep > 2) stepBase = 5
-      else if (normalizedStep > 1) stepBase = 2
-      const step = stepBase * magnitude
-      return Math.ceil(maxWithPadding / step) * step
-    },
-
-    // 优化后的 y 轴间隔（美观取整，最小为 1 避免刻度重复）
-    resolvedYAxisInterval() {
-      if (typeof this.yAxisInterval === 'number' && this.yAxisInterval > 0) {
-        return this.yAxisInterval
-      }
-      const span = this.resolvedYAxisMax - this.yAxisMin
-      if (span <= 0) return 1
-      // 期望 5 个刻度区间
-      let interval = span / 5
-      // 取整到 1, 2, 5, 10 的倍数
-      const power = Math.pow(10, Math.floor(Math.log10(interval)))
-      const residual = interval / power
-      let nice
-      if (residual < 1.5) nice = power
-      else if (residual < 3.5) nice = 2 * power
-      else if (residual < 7.5) nice = 5 * power
-      else nice = 10 * power
-      // 纵坐标显示整数，间隔至少为 1
-      if (nice < 1) nice = 1
-      return nice
-    }
   },
   watch: {
+    resolvedChartHeight() {
+      this.$nextTick(this.handleResize)
+    },
     years() {
       this.renderChart()
     },
@@ -261,16 +252,17 @@ export default {
         yAxis: {
           type: 'value',
           min: this.yAxisMin,
-          max: this.resolvedYAxisMax,
-          interval: this.resolvedYAxisInterval,
+          max: this.yAxisScale.max,
+          interval: this.yAxisScale.interval,
           axisLine: { show: false },
           axisTick: { show: false },
           splitLine: { lineStyle: { color: '#cfcfcf', width: 1 } },
           axisLabel: {
             color: '#666',
             formatter: value => {
-              const numeric = Math.round(Number(value))
-              return Number.isNaN(numeric) ? '' : numeric + this.valueSuffix
+              const numeric = Number(value)
+              if (!Number.isFinite(numeric) || Math.abs(numeric - Math.round(numeric)) > 0.0001) return ''
+              return Math.round(numeric) + this.valueSuffix
             }
           }
         },
@@ -278,6 +270,7 @@ export default {
           name: item.name,
           type: 'bar',
           barWidth: this.dynamicBarWidth, // 动态柱宽
+          barMaxWidth: 40,
           barGap: this.dynamicBarGap, // 系列间间距
           itemStyle: { color: item.color },
           label: {
