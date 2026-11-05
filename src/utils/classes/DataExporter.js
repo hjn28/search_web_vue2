@@ -13,7 +13,11 @@
  *   DataExporter.exportCsv(data, '代表信息', ['标题', '届次'])
  */
 
-import { Document, Packer, Paragraph, TextRun, ImageRun, Table, TableRow, TableCell, AlignmentType, BorderStyle, WidthType, VerticalAlign, TableLayoutType } from 'docx'
+import { 
+  Document, Packer, Paragraph, TextRun, ImageRun, Table, TableRow, TableCell, 
+  AlignmentType, BorderStyle, WidthType, VerticalAlign, TableLayoutType,
+  TableOfContents, Bookmark, HeadingLevel, PageBreak //  新增 PageBreak
+} from 'docx'
 import { saveAs } from 'file-saver'
 import ExcelJS from 'exceljs'
 
@@ -56,11 +60,6 @@ const COUNT_TABLE_KEY_WIDTH_MAP = {
 class DataExporter {
   /**
    * 从页面指定元素读取计算样式，按 CSS 文本拼接返回
-   * @param {Element|null} rootEl - 根节点
-   * @param {string} selector - CSS 选择器
-   * @param {string[]} keys - 需要提取的样式属性名
-   * @param {string} fallback - 兜底样式文本
-   * @returns {string} CSS 样式片段
    */
   static getStyleText(rootEl, selector, keys, fallback = '') {
     const target = rootEl && rootEl.querySelector(selector)
@@ -75,8 +74,6 @@ class DataExporter {
 
   /**
    * 构建汇总要点卡片 HTML（优先复用已渲染 DOM，避免导出与页面显示不一致）
-   * @param {Object} options - 配置项
-   * @returns {string} HTML 字符串
    */
   static buildSummaryCardsHtml({
     rootEl, hasSummaryList, zhaiyaoData, summaryContent,
@@ -133,8 +130,6 @@ class DataExporter {
 
   /**
    * 组装导出用的完整 HTML 页面模板
-   * @param {Object} options - 配置项
-   * @returns {string} 完整的 HTML 文档字符串
    */
   static buildExportHtml({
     exportTime, title, summaryCardsHtml, bodyStyle, cardStyle, headerStyle,
@@ -173,9 +168,7 @@ class DataExporter {
   }
 
   /**
-   * 导出汇总要点为 DOC 文件（完整流程：校验 → 构建 HTML → 提取样式 → 下载）
-   * @param {Object} options - 配置项
-   * @returns {boolean} 是否成功触发导出
+   * 导出汇总要点为 DOC 文件
    */
   static exportSummaryDoc({
     rootEl, zhaiyaoData, summaryContent, title,
@@ -198,6 +191,7 @@ class DataExporter {
       formatSummaryCountText,
       formatSummaryParagraph
     })
+    
     // 提取页面样式
     const bodyStyle = this.getStyleText(rootEl, '.summary-list',
       ['font-family', 'font-size', 'font-weight', 'color', 'line-height'],
@@ -256,17 +250,12 @@ class DataExporter {
   }
 
   /**
-   * 导出数据为 CSV 文件（带 UTF-8 BOM，Excel 可直接打开不乱码）
-   * @param {Array} data - 数据行数组
-   * @param {string} fileName - 导出文件名（不含扩展名）
-   * @param {string[]} headers - 表头列名
-   * @param {Function} rowMapper - (row) => string[] 行映射函数
+   * 导出数据为 CSV 文件
    */
   static exportCsv(data, fileName, headers, rowMapper) {
     const rows = Array.isArray(data) ? data : []
     const esc = v => {
       const text = String(v == null ? '' : v)
-      // 含逗号/引号/换行时用双引号包裹，内部引号翻倍转义
       return /[",\r\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text
     }
     const headerLine = (Array.isArray(headers) ? headers : []).map(esc).join(',')
@@ -280,7 +269,7 @@ class DataExporter {
   }
 
   /**
-   * 导出 Excel 2003 XML，支持设置列宽、居中及文本格式
+   * 导出 Excel
    */
   static async exportExcel(data, fileName, headers, rowMapper, options = {}) {
     const rows = Array.isArray(data) ? data : []
@@ -332,12 +321,6 @@ class DataExporter {
 
   /**
    * 导出分析报告为 .docx
-   * @param {Object} options
-   * @param {Array} options.renderNodes - 分析报告渲染节点数组
-   * @param {Function} options.captureChartImage - async (idx) => { imageDataUrl, width, height } 捕获图表
-   * @param {Function} options.addHistory - 历史记录回调
-   * @param {Function} options.showAlert - 提示回调
-   * @returns {Promise<void>}
    */
   static async exportOverviewReport({ renderNodes, captureChartImage, addHistory, showAlert }) {
     if (!Array.isArray(renderNodes) || !renderNodes.length) {
@@ -346,12 +329,10 @@ class DataExporter {
     }
 
     const chartCount = renderNodes.filter(n => n && n.type === 'chart').length
-    // A4 页面左右边距合计 2880 twips，内容宽约 9026 twips（6.27in）。
-    // Word 的图片尺寸按约 96 DPI 换算；560px 约为 5.83in，预留足够页边距且不会溢出。
     const maxContentWidthPx = 560
     const maxContentHeightPx = 400
 
-    // ── 第一步：并行捕获所有图表截图（不再逐个 await，避免页面反复跳动） ──
+    // ── 第一步：并行捕获所有图表截图 ──
     const chartResults = new Map()
     if (typeof captureChartImage === 'function' && chartCount > 0) {
       const tasks = renderNodes
@@ -361,8 +342,21 @@ class DataExporter {
       tasks.forEach((t, i) => { chartResults.set(t.idx, results[i]) })
     }
 
-    // ── 第二步：构建 docx 文档（同步构建，无需再 await） ──
+    // ── 第二步：构建 docx 文档 ──
     const children = []
+    
+    // 👈 1. 插入目录
+    children.push(
+      new TableOfContents("目录", {
+        hyperlink: true,
+        headingStyleRange: "1-3",
+      }),
+      // 👈 2. 插入分页符（确保目录独占一页）
+      new Paragraph({
+        children: [new PageBreak()]
+      })
+    )
+
     for (let idx = 0; idx < renderNodes.length; idx++) {
       const node = renderNodes[idx]
       if (!node) continue
@@ -370,7 +364,8 @@ class DataExporter {
       switch (node.type) {
         case 'heading':
         case 'text': {
-          children.push(this.buildHeadingParagraph(node.name, node.level))
+          const bookmarkId = `heading_${idx}`
+          children.push(this.buildHeadingParagraph(node.name, node.level, bookmarkId))
           break
         }
         case 'content': {
@@ -422,6 +417,38 @@ class DataExporter {
     }
 
     const doc = new Document({
+      // 👈 3. 覆盖目录的默认样式（不加粗、仿宋、黑色）
+      styles: {
+        paragraphStyles: [
+          {
+            id: "TOC1",
+            name: "toc 1",
+            basedOn: "Normal",
+            next: "Normal",
+            quickFormat: true,
+            run: { font: "仿宋", size: 24, bold: false, color: "000000" },
+            paragraph: { spacing: { after: 120 } }
+          },
+          {
+            id: "TOC2",
+            name: "toc 2",
+            basedOn: "Normal",
+            next: "Normal",
+            quickFormat: true,
+            run: { font: "仿宋", size: 22, bold: false, color: "000000" },
+            paragraph: { spacing: { after: 120 }, indent: { left: 480 } }
+          },
+          {
+            id: "TOC3",
+            name: "toc 3",
+            basedOn: "Normal",
+            next: "Normal",
+            quickFormat: true,
+            run: { font: "仿宋", size: 22, bold: false, color: "000000" },
+            paragraph: { spacing: { after: 120 }, indent: { left: 960 } }
+          }
+        ]
+      },
       sections: [{
         properties: {
           page: {
@@ -437,7 +464,12 @@ class DataExporter {
       const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' })
       saveAs(blob, `分析报告_${Date.now()}.docx`)
       if (typeof addHistory === 'function') addHistory('导出分析报告', `导出节点${renderNodes.length}条，图表${chartCount}个`)
-      if (typeof showAlert === 'function') showAlert('分析报告已导出')
+      
+      if (typeof showAlert === 'function') {
+        setTimeout(() => {
+          showAlert('导出成功！请在 Word 中右键点击目录并选择“更新域”，即可生成页码并支持点击跳转。')
+        }, 500)
+      }
     } catch (e) {
       if (typeof showAlert === 'function') showAlert('导出失败：' + e.message)
     }
@@ -445,8 +477,6 @@ class DataExporter {
 
   /**
    * 将图表捕获结果统一转换为 Uint8Array
-   * @param {Object} chartData
-   * @returns {Uint8Array|null}
    */
   static normalizeChartImagePayload(chartData) {
     if (!chartData || typeof chartData !== 'object') return null
@@ -474,22 +504,12 @@ class DataExporter {
     return null
   }
 
-  /**
-   * 从 dataUrl 提取 MIME
-   * @param {string} dataUrl
-   * @returns {string}
-   */
   static getImageMimeFromDataUrl(dataUrl) {
     const src = String(dataUrl || '')
     const match = src.match(/^data:([^;,]+)[;,]/i)
     return match && match[1] ? match[1].toLowerCase() : ''
   }
 
-  /**
-   * 将 MIME 归一为 docx ImageRun 可识别类型
-   * @param {string} mime
-   * @returns {'png'|'jpg'|'gif'|'bmp'}
-   */
   static normalizeDocxImageType(mime) {
     const value = String(mime || '').toLowerCase()
     if (value.indexOf('jpeg') > -1 || value.indexOf('jpg') > -1) return 'jpg'
@@ -498,11 +518,6 @@ class DataExporter {
     return 'png'
   }
 
-  /**
-   * dataURL 转 Uint8Array
-   * @param {string} dataUrl
-   * @returns {Uint8Array|null}
-   */
   static dataUrlToUint8Array(dataUrl) {
     try {
       const parts = String(dataUrl || '').split(',')
@@ -514,20 +529,10 @@ class DataExporter {
     }
   }
 
-  /**
-   * HTML 转义工具方法
-   * @param {string} str
-   * @returns {string}
-   */
   static _escapeHtml(str) {
     return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
   }
 
-  /**
-   * 过滤 XML 不允许的控制字符，避免生成损坏的 docx
-   * @param {string} text
-   * @returns {string}
-   */
   static sanitizeDocxText(text) {
     const source = String(text == null ? '' : text)
     let output = ''
@@ -542,13 +547,6 @@ class DataExporter {
     return output
   }
 
-  /**
-   * 按权重分配列宽，确保总和严格等于 totalWidth
-   * @param {number[]} weights
-   * @param {number} totalWidth
-   * @param {number} minWidth
-   * @returns {number[]}
-   */
   static allocateColumnWidths(weights, totalWidth, minWidth) {
     const list = Array.isArray(weights) ? weights : []
     if (!list.length) return []
@@ -591,13 +589,6 @@ class DataExporter {
     return widths
   }
 
-  /**
-   * 按给定权重做固定比例列宽分配（不应用最小列宽二次改写）。
-   * 适用于页面已确定列宽、导出需保持一致的场景。
-   * @param {number[]} weights
-   * @param {number} totalWidth
-   * @returns {number[]}
-   */
   static allocateFixedRatioWidths(weights, totalWidth) {
     const list = Array.isArray(weights) ? weights : []
     if (!list.length) return []
@@ -615,11 +606,6 @@ class DataExporter {
     return widths
   }
 
-  /**
-   * 表格构建失败时的兜底导出（纯文本段落）
-   * @param {Object} node
-   * @returns {Paragraph}
-   */
   static buildCountTableFallbackParagraph(node) {
     const columns = Array.isArray(node && node.columns) ? node.columns : []
     const rows = Array.isArray(node && node.rows) ? node.rows : []
@@ -641,45 +627,45 @@ class DataExporter {
   }
 
   /**
-   * 构建标题段落（docx）
-   * @param {string} text - 标题文字
-   * @param {number} level - 1/2/3
-   * @returns {Paragraph}
+   * 构建标题段落（带书签跳转和层级，并强制覆盖字体颜色）
    */
-  static buildHeadingParagraph(text, level) {
+  static buildHeadingParagraph(text, level, id) {
     const levelStyle = level === 1
       ? { size: 32, before: 400 }
       : level >= 3
         ? { size: 22, before: 200 }
         : { size: 26, before: 240 }
+        
+    let headingLevel = HeadingLevel.HEADING_2
+    if (level === 1) headingLevel = HeadingLevel.HEADING_1
+    if (level >= 3) headingLevel = HeadingLevel.HEADING_3
+
     return new Paragraph({
+      heading: headingLevel, // 保留 heading 属性，以便生成目录
       spacing: { before: levelStyle.before, after: 160 },
       children: [
-        new TextRun({
-          text: this.sanitizeDocxText(text || ''),
-          bold: true,
-          size: levelStyle.size,
-          font: '仿宋'
+        new Bookmark({
+          id: id || `heading_${Math.random().toString(36).substr(2, 9)}`,
+          children: [
+            new TextRun({
+              text: this.sanitizeDocxText(text || ''),
+              bold: true, // 标题原本就是加粗
+              color: '000000', // 强制黑色，防止被 Heading 默认样式变蓝
+              size: levelStyle.size,
+              font: '仿宋' // 强制仿宋
+            })
+          ]
         })
       ]
     })
   }
 
-  /**
-   * 解析含样式 span 的 HTML，返回 TextRun 数组
-   * @param {string} html - 原始 HTML
-   * @param {number} size - 字号（half-point）
-   * @param {string} font - 字体名
-   * @returns {Array<TextRun>}
-   */
   static parseHtmlToTextRuns(html, size = 22, font = '仿宋') {
     const source = String(html || '')
     const runs = []
-    // 顺序：<strong>text</strong> → <span class="...">text</span> → <br> → 纯文本
     const regex = /<strong>([\s\S]*?)<\/strong>|<span\s+class=["']([^"']+)["']>([\s\S]*?)<\/span>|<br\s*\/?>|([^<]+)/g
     let match
     while ((match = regex.exec(source)) !== null) {
-      // 1) <strong>…</strong>  → 加粗 TextRun
       if (typeof match[1] !== 'undefined') {
         let text = match[1]
           .replace(/<br\s*\/?>/gi, '\n')
@@ -691,16 +677,13 @@ class DataExporter {
           if (li > 0) runs.push(new TextRun({ break: 1 }))
           if (line) runs.push(new TextRun({ text: this.sanitizeDocxText(line), size, font, bold: true }))
         })
-      // 2) <span class="…">…</span>  → 带颜色 TextRun（支持内部嵌套 <strong>）
       } else if (match[2] && match[3]) {
         const cls = match[2].trim()
         const innerHtml = match[3]
         const color = STYLE_COLOR_MAP[cls] || undefined
-        // 内部分段：<strong>…</strong> / <br> / 纯文本
         const innerRegex = /<strong>([\s\S]*?)<\/strong>|<br\s*\/?>|([^<]+)/g
         let innerMatch
         while ((innerMatch = innerRegex.exec(innerHtml)) !== null) {
-          // <strong>…</strong>
           if (typeof innerMatch[1] !== 'undefined') {
             let text = innerMatch[1]
               .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
@@ -711,10 +694,8 @@ class DataExporter {
               if (li > 0) runs.push(new TextRun({ break: 1 }))
               if (line) runs.push(new TextRun({ text: this.sanitizeDocxText(line), size, font, color, bold: true }))
             })
-          // <br>
           } else if (innerMatch[0] === '<br>' || innerMatch[0] === '<br/>' || innerMatch[0] === '<br />') {
             runs.push(new TextRun({ break: 1 }))
-          // 纯文本（非加粗）
           } else if (innerMatch[2]) {
             let text = innerMatch[2]
               .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
@@ -727,10 +708,8 @@ class DataExporter {
             })
           }
         }
-      // 3) <br>
       } else if (match[0] === '<br>' || match[0] === '<br/>' || match[0] === '<br />') {
         runs.push(new TextRun({ break: 1 }))
-      // 4) 纯文本
       } else if (match[4]) {
         let text = match[4]
           .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
@@ -749,11 +728,6 @@ class DataExporter {
     return runs
   }
 
-  /**
-   * 构建正文段落（docx），保留 <span> 样式的颜色
-   * @param {string} html - 可能含 HTML 标签的文本
-   * @returns {Paragraph}
-   */
   static buildBodyParagraph(html) {
     const runs = this.parseHtmlToTextRuns(html)
     return new Paragraph({
@@ -763,28 +737,16 @@ class DataExporter {
     })
   }
 
-  /**
-   * 依据列 key/label 获取固定列宽
-   * @param {Object} col
-   * @returns {number}
-   */
   static getCountTableFixedWidth(col) {
     const key = String(col && col.key ? col.key : '').trim()
     const label = String(col && col.label ? col.label : '').trim()
     return COUNT_TABLE_KEY_WIDTH_MAP[key] || COUNT_TABLE_LABEL_WIDTH_MAP[label] || 100
   }
 
-  /**
-   * 解析统计表格列宽权重：优先用节点给定权重；若明显为默认值(60 + 全100)，按 key/label 兜底重算。
-   * @param {Object} node
-   * @param {Array} columns
-   * @returns {number[]}
-   */
   static resolveCountTableWeights(node, columns) {
     const cols = Array.isArray(columns) ? columns : []
     if (!cols.length) return []
 
-    // 与页面渲染保持一致的目标权重
     const mappedWeights = [COUNT_TABLE_LABEL_WIDTH_MAP['序号'] || 80].concat(
       cols.map(col => this.getCountTableFixedWidth(col))
     )
@@ -797,11 +759,6 @@ class DataExporter {
     return mappedWeights
   }
 
-  /**
-   * 构建统计表格（docx Table），带表头背景色
-   * @param {Object} node - 表格节点 { columns, rows }
-   * @returns {Table}
-   */
   static buildDocxTable(node) {
     const columns = Array.isArray(node.columns) ? node.columns : []
     const rows = Array.isArray(node.rows) ? node.rows : []
@@ -810,8 +767,7 @@ class DataExporter {
     const borderOpts = { style: BorderStyle.SINGLE, size: 4, color: 'BFBFBF' }
     const cellMargins = { top: 40, bottom: 40, left: 60, right: 60 }
 
-    // 计算列宽：若节点提供了 colWidthWeights，则按固定比例分配，保证与页面一致。
-    const totalWidth = 9026 // A4 页面宽度(11906 twips) 减去左右边距(2*1440)
+    const totalWidth = 9026 
     const colWeights = this.resolveCountTableWeights(node, columns)
     const hasFixedWeights = Array.isArray(colWeights) && colWeights.length === columns.length + 1
     const fallbackWeights = [1].concat(columns.map(() => 2))
@@ -843,14 +799,12 @@ class DataExporter {
       })
     }
 
-    // 表头行（带灰色背景）
     const headerCells = []
     const allLabels = ['序号'].concat(columns.map(col => col && col.label ? col.label : ''))
     allLabels.forEach((label, ci) => {
       headerCells.push(makeCell(label, { bold: true, width: colWidths[ci], shading: 'F0F0F0', fontSize: 21 }))
     })
 
-    // 数据行
     const dataRows = rows.map((row, ri) => {
       const cells = [makeCell(String(ri + 1), { width: colWidths[0] })]
       columns.forEach((col, colIndex) => {
@@ -869,7 +823,6 @@ class DataExporter {
         new TableRow({ tableHeader: true, children: headerCells }),
         ...dataRows
       ],
-      // 使用固定 DXA 宽度 + 显式列网格，避免 Word 自动均分列宽。
       width: { size: totalWidth, type: WidthType.DXA },
       columnWidths: colWidths,
       layout: TableLayoutType.FIXED,
@@ -884,12 +837,6 @@ class DataExporter {
     })
   }
 
-  /**
-   * 构建分析报告统计表格 HTML（保留老版本兼容，不再被新导出流程使用）
-   * @param {Object} node - 表格节点 { columns, rows }
-   * @param {Function} escapeHtml - HTML 转义函数
-   * @returns {string} HTML 表格字符串
-   */
   static buildCountTableHtml(node, escapeHtml) {
     if (!node || node.type !== 'count-table') return ''
     const esc = typeof escapeHtml === 'function' ? escapeHtml : v => String(v || '')
