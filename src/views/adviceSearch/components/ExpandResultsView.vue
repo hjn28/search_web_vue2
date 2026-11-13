@@ -1,6 +1,6 @@
 <template>
   <div v-if="expandResults.length" class="one-search-results">
-    <div class="one-search-title">一次拓展结果</div>
+    <div class="one-search-title">辅助分类查询结果</div>
     <div class="expand-results-list">
       <div v-for="(item, index) in expandResults" :key="'p-'+index" class="primary-card">
         <label class="primary-card-header">
@@ -20,14 +20,14 @@
         <div v-if="item.segments && item.segments.length" class="primary-card-segments">
           <div v-for="(seg, sidx) in item.segments" :key="'p-'+index+'-s-'+sidx" class="primary-card-seg">
             <label class="primary-card-seg-row">
-              <span class="primary-card-seg-text" v-html="handleGl(seg.content)"></span>
+              <span class="primary-card-seg-text" v-html="handleGl(seg.content_html)"></span>
             </label>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div v-else class="result-empty">暂无一次拓展结果</div>
+  <div v-else class="result-empty">暂无辅助分类结果</div>
 </template>
 
 <script>

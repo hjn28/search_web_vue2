@@ -90,15 +90,15 @@ export function buildSummaryCardsHtml({
 
     // 按汇总要点数据逐条拼装卡片 HTML
     return (zhaiyaoData || []).map((item, idx) => {
-      const bigTitle = item && item.bigtitle ? String(item.bigtitle).trim() : ''
+      const pian = item && item.pian ? String(item.pian).trim() : ''
       const yuyi = item && item.yuyi ? String(item.yuyi) : ''
       const yuyiTrimmed = yuyi.trim()
       const isOtherYuyi = yuyiTrimmed === '其他'
-      const themeTitle = bigTitle
-        ? `${!isDuplicateBigtitle(zhaiyaoData, idx) ? `<div class="summary-card-header">${escapeHtml(bigTitle)}</div>` : ''}<div class="summary-card-header">${escapeHtml(yuyi)}</div>`
-        : (isOtherYuyi
-          ? '<div class="summary-card-header">其他</div>'
-          : `<div class="summary-card-header">（${convertToChineseNumeral(idx + 1)}）${escapeHtml(yuyi)}</div>`)
+      let showPian = !!pian
+      for (let previousIndex = 0; previousIndex < idx && showPian; previousIndex++) {
+        if (String((zhaiyaoData[previousIndex] && zhaiyaoData[previousIndex].pian) || '').trim() === pian) showPian = false
+      }
+      const themeTitle = `${showPian ? `<div class="summary-card-header">${escapeHtml(pian)}</div>` : ''}<div class="summary-card-header">${escapeHtml(isOtherYuyi ? '其他' : yuyi)}</div>`
       const summaryCountText = typeof formatSummaryCountText === 'function'
         ? formatSummaryCountText(item && item.arr ? item.arr : [])
         : ''
@@ -132,7 +132,7 @@ export function buildSummaryCardsHtml({
  * 组装最终导出 HTML 模板（用于 .doc 打开）。
  *
  * 样式由外部传入，便于复用和统一维护。
- * 使用固定字号（22px）确保不同端打开一致。
+ * 字体、字号和其他排版样式优先复用页面计算样式。
  *
  * @param {Object} options 入参配置
  * @param {string} [options.title] 导出主标题
@@ -154,7 +154,6 @@ export function buildSummaryExportHtml({
   repDistinguishStyle,
   fontSize = 22
 }) {
-  const normalizedFontSize = '22px'
   const exportTitle = String(title || '').trim() || '议案建议聚类与汇总要点综合结果'
   return `
 <!DOCTYPE html>
@@ -163,18 +162,18 @@ export function buildSummaryExportHtml({
   <meta charset="UTF-8" />
   <title>归纳</title>
   <style>
-    body { margin: 20px; ${bodyStyle} font-family:"FangSong","FangSong_GB2312","仿宋",serif !important; }
-    .export-title { font-size: 28px; font-weight: 700; margin-bottom: 6px; }
-    .export-time { color: black; font-size: ${normalizedFontSize}; margin-bottom: 16px; }
-    .summary-card { ${cardStyle} font-size: ${normalizedFontSize} !important; }
-    .summary-card-header { ${headerStyle} font-size: ${normalizedFontSize} !important; }
-    .summary-card-stat { ${summaryStatStyle} font-size: ${normalizedFontSize} !important; }
-    .summary-card-body { ${bodyInnerStyle} font-size: ${normalizedFontSize} !important; }
-    .summary-paragraph { ${paragraphStyle} font-size: ${normalizedFontSize} !important; font-family:"FangSong","FangSong_GB2312","仿宋",serif !important; }
+    body { margin: 20px; ${bodyStyle} }
+    .export-title { margin-bottom: 6px; }
+    .export-time { color: black; margin-bottom: 16px; }
+    .summary-card { ${cardStyle} }
+    .summary-card-header { ${headerStyle} }
+    .summary-card-stat { ${summaryStatStyle} }
+    .summary-card-body { ${bodyInnerStyle} }
+    .summary-paragraph { ${paragraphStyle} }
     .summary-exact-word { ${summaryExactWordStyle} }
-    .summary-yuanwen-word { color: blue; font-style: normal; font-size: 20px; scale: 0.8; }
-    .summary-rep-meta { ${repMetaStyle} font-family:"KaiTi","KaiTi_GB2312","楷体",serif !important; }
-    .summary-rep-distinguish { ${repDistinguishStyle} font-family:"KaiTi","KaiTi_GB2312","楷体",serif !important; }
+    .summary-yuanwen-word { ${yuanwenWordStyle} }
+    .summary-rep-meta { ${repMetaStyle} }
+    .summary-rep-distinguish { ${repDistinguishStyle} }
   </style>
 </head>
 <body>

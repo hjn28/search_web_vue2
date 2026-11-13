@@ -13,8 +13,8 @@
  *   DataExporter.exportCsv(data, '代表信息', ['标题', '届次'])
  */
 
-import { 
-  Document, Packer, Paragraph, TextRun, ImageRun, Table, TableRow, TableCell, 
+import {
+  Document, Packer, Paragraph, TextRun, ImageRun, Table, TableRow, TableCell,
   AlignmentType, BorderStyle, WidthType, VerticalAlign, TableLayoutType,
   TableOfContents, Bookmark, HeadingLevel, PageBreak //  新增 PageBreak
 } from 'docx'
@@ -59,6 +59,44 @@ const COUNT_TABLE_KEY_WIDTH_MAP = {
 
 class DataExporter {
   /**
+   * 复制页面汇总列表，并把页面计算样式带到导出的 HTML 节点上。
+   */
+  static cloneRenderedSummaryList(rootEl) {
+    if (!rootEl || !window.getComputedStyle) return ''
+    const sourceList = rootEl.querySelector('.summary-list')
+    if (!sourceList || !sourceList.innerHTML.trim()) return ''
+
+    const clone = sourceList.cloneNode(true)
+    const sourceElements = Array.from(sourceList.querySelectorAll('*'))
+    const clonedElements = Array.from(clone.querySelectorAll('*'))
+    const styleKeys = [
+      'font-family', 'font-size', 'font-weight', 'font-style', 'color',
+      'background-color', 'line-height', 'letter-spacing', 'text-align',
+      'text-indent', 'white-space', 'margin-top', 'margin-right',
+      'margin-bottom', 'margin-left', 'padding-top', 'padding-right',
+      'padding-bottom', 'padding-left', 'border-top', 'border-right',
+      'border-bottom', 'border-left', 'border-radius'
+    ]
+
+    clonedElements.forEach((element, index) => {
+      const computed = window.getComputedStyle(sourceElements[index])
+      const styles = styleKeys.map(key => {
+        const value = computed.getPropertyValue(key)
+        return value && value !== 'normal' ? `${key}:${value}` : ''
+      }).filter(Boolean)
+      if (styles.length) element.style.cssText = `${element.style.cssText}${styles.join(';')};`
+    })
+
+    return clone.outerHTML
+      .replace(/&amp;(?:nbsp|ensp|emsp);/gi, '&$1;')
+      .replace(/&(?:emsp);/gi, '\u3000\u3000')
+      .replace(/&(?:ensp);/gi, '\u2002')
+      .replace(/&(?:nbsp);|\u00a0/gi, ' ')
+      .replace(/&amp;nbsp;/gi, ' ')
+      .replace(/<br\s*\/?>[ \t]*(?:\u3000\u3000|&(?:nbsp|ensp|emsp);)*[ \t]*/gi, '<br/>')
+  }
+
+  /**
    * 从页面指定元素读取计算样式，按 CSS 文本拼接返回
    */
   static getStyleText(rootEl, selector, keys, fallback = '') {
@@ -79,9 +117,9 @@ class DataExporter {
     rootEl, hasSummaryList, zhaiyaoData, summaryContent,
     isDuplicateBigtitle, convertToChineseNumeral, formatSummaryCountText, formatSummaryParagraph
   }) {
-    const renderedSummaryList = rootEl && rootEl.querySelector('.summary-list')
-    if (renderedSummaryList && renderedSummaryList.innerHTML && renderedSummaryList.innerHTML.trim()) {
-      return renderedSummaryList.innerHTML
+    const renderedSummaryList = this.cloneRenderedSummaryList(rootEl)
+    if (renderedSummaryList) {
+      return renderedSummaryList
     }
     if (hasSummaryList) {
       const hasUngrouped = arr => {
@@ -98,14 +136,16 @@ class DataExporter {
         })
       }
       return (zhaiyaoData || []).map((item, idx) => {
-        const bigTitle = item && item.bigtitle ? String(item.bigtitle).trim() : ''
+        const pian = item && item.pian ? String(item.pian).trim() : ''
         const yuyi = item && item.yuyi ? String(item.yuyi) : ''
         const yuyiTrimmed = yuyi.trim()
         const isOtherYuyi = yuyiTrimmed === '其他'
         const esc = v => String(v || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;')
-        const themeTitle = bigTitle
-          ? `${!isDuplicateBigtitle(zhaiyaoData, idx) ? `<div class="summary-card-header">${esc(bigTitle)}</div>` : ''}<div class="summary-card-header">${esc(yuyi)}</div>`
-          : (isOtherYuyi ? '<div class="summary-card-header">其他</div>' : `<div class="summary-card-header">（${convertToChineseNumeral(idx + 1)}）${esc(yuyi)}</div>`)
+        let showPian = !!pian
+        for (let previousIndex = 0; previousIndex < idx && showPian; previousIndex++) {
+          if (String((zhaiyaoData[previousIndex] && zhaiyaoData[previousIndex].pian) || '').trim() === pian) showPian = false
+        }
+        const themeTitle = `${showPian ? `<div class="summary-card-header">${esc(pian)}</div>` : ''}<div class="summary-card-header">${esc(isOtherYuyi ? '其他' : yuyi)}</div>`
         const summaryCountText = typeof formatSummaryCountText === 'function' ? formatSummaryCountText(item && item.arr ? item.arr : []) : ''
         const countHtml = summaryCountText ? `<div class="summary-card-stat">${esc(summaryCountText)}</div>` : ''
         const arr = item && item.arr ? item.arr : []
@@ -136,33 +176,39 @@ class DataExporter {
     summaryStatStyle, bodyInnerStyle, paragraphStyle, summaryExactWordStyle,
     yuanwenWordStyle, repMetaStyle, repDistinguishStyle
   }) {
-    const fontSize = '22px'
     const esc = v => String(v || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;')
-    const exportTitle = String(title || '').trim() || '议案建议聚类与汇总要点综合结果'
+    const exportTitle = String(title || '').trim()
+    const titleHtml = exportTitle ? `<div class="export-title">${esc(exportTitle)}</div>` : ''
+    const normalizedCardsHtml = String(summaryCardsHtml || '')
+      .replace(/&amp;(emsp|ensp|nbsp);/gi, '&$1;')
+      .replace(/&amp;#(39|x27);/gi, '&#$1;')
+      .replace(/&(?:emsp);/gi, '\u3000\u3000')
+      .replace(/&(?:ensp);/gi, '\u2002')
+      .replace(/&(?:nbsp);/gi, ' ')
+      .replace(/<br\s*\/?>\s*(?:\u3000\u3000|&(?:emsp|ensp|nbsp);)*/gi, '<br/>')
     return `<!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8" />
   <title>归纳</title>
   <style>
-    body { margin: 20px; ${bodyStyle} font-family:"FangSong","FangSong_GB2312","仿宋",serif !important; }
-    .export-title { font-size: 28px; font-weight: 700; margin-bottom: 6px; }
-    .export-time { color: black; font-size: ${fontSize}; margin-bottom: 16px; }
-    .summary-card { ${cardStyle} font-size: ${fontSize} !important; }
-    .summary-card-header { ${headerStyle} font-size: ${fontSize} !important; }
-    .summary-card-stat { ${summaryStatStyle} font-size: ${fontSize} !important; }
-    .summary-card-body { ${bodyInnerStyle} font-size: ${fontSize} !important; }
-    .summary-paragraph { ${paragraphStyle} font-size: ${fontSize} !important; font-family:"FangSong","FangSong_GB2312","仿宋",serif !important; }
+    body { margin: 20px; ${bodyStyle} }
+    .summary-list { border: 0 !important; padding: 0 !important; margin: 0 !important; overflow: visible !important; }
+    .export-title { margin-bottom: 6px; }
+    .summary-card { ${cardStyle} }
+    .summary-card-header { ${headerStyle} }
+    .summary-card-stat { ${summaryStatStyle} }
+    .summary-card-body { ${bodyInnerStyle} }
+    .summary-paragraph { ${paragraphStyle} }
     .summary-exact-word { ${summaryExactWordStyle} }
-    .summary-yuanwen-word { color: blue; font-style: normal; font-size: 20px; scale: 0.8; }
-    .summary-rep-meta { ${repMetaStyle} font-family:"KaiTi","KaiTi_GB2312","楷体",serif !important; }
-    .summary-rep-distinguish { ${repDistinguishStyle} font-family:"KaiTi","KaiTi_GB2312","楷体",serif !important; }
+    .summary-yuanwen-word { ${yuanwenWordStyle} }
+    .summary-rep-meta { ${repMetaStyle} }
+    .summary-rep-distinguish { ${repDistinguishStyle} }
   </style>
 </head>
 <body>
-  <div class="export-title">${esc(exportTitle)}</div>
-  <div class="export-time">导出时间：${esc(exportTime)}</div>
-  ${summaryCardsHtml}
+  ${titleHtml}
+  ${normalizedCardsHtml}
 </body>
 </html>`
   }
@@ -191,7 +237,6 @@ class DataExporter {
       formatSummaryCountText,
       formatSummaryParagraph
     })
-    
     // 提取页面样式
     const bodyStyle = this.getStyleText(rootEl, '.summary-list',
       ['font-family', 'font-size', 'font-weight', 'color', 'line-height'],
@@ -212,13 +257,13 @@ class DataExporter {
       ['font-family', 'font-size', 'font-weight', 'color', 'line-height', 'white-space'],
       'font-size:12px;color:#555;line-height:1.8;white-space:normal;')
     const summaryExactWordStyle = this.getStyleText(rootEl, '.summary-exact-word',
-      ['background-color', 'color', 'font-weight', 'padding-top', 'padding-right', 'padding-bottom', 'padding-left', 'border-radius'],
+      ['background-color', 'color', 'font-weight', 'font-size', 'font-family', 'padding-top', 'padding-right', 'padding-bottom', 'padding-left', 'border-radius'],
       'color:red;font-weight:500;')
     const yuanwenWordStyle = this.getStyleText(rootEl, '.summary-yuanwen-word',
       ['color', 'font-style', 'font-weight', 'font-size'],
       'color:blue;font-style:normal;font-size:16px;')
-    const repMetaStyle = this.getStyleText(rootEl, '.summary-rep-meta', ['color', 'font-weight'], 'color:#c9190b;')
-    const repDistinguishStyle = this.getStyleText(rootEl, '.summary-rep-distinguish', ['color', 'font-weight'], 'color:green;')
+    const repMetaStyle = this.getStyleText(rootEl, '.summary-rep-meta', ['color', 'font-weight', 'font-size', 'font-family'], 'color:#c9190b;')
+    const repDistinguishStyle = this.getStyleText(rootEl, '.summary-rep-distinguish', ['color', 'font-weight', 'font-size', 'font-family'], 'color:green;')
 
     const exportContent = this.buildExportHtml({
       exportTime: new Date().toLocaleString(),
@@ -344,14 +389,13 @@ class DataExporter {
 
     // ── 第二步：构建 docx 文档 ──
     const children = []
-    
-    // 👈 1. 插入目录
+    //  1. 插入目录
     children.push(
-      new TableOfContents("目录", {
+      new TableOfContents('目录', {
         hyperlink: true,
-        headingStyleRange: "1-3",
+        headingStyleRange: '1-3'
       }),
-      // 👈 2. 插入分页符（确保目录独占一页）
+      // 2. 插入分页符（确保目录独占一页）
       new Paragraph({
         children: [new PageBreak()]
       })
@@ -417,34 +461,34 @@ class DataExporter {
     }
 
     const doc = new Document({
-      // 👈 3. 覆盖目录的默认样式（不加粗、仿宋、黑色）
+      //  3. 覆盖目录的默认样式（不加粗、仿宋、黑色）
       styles: {
         paragraphStyles: [
           {
-            id: "TOC1",
-            name: "toc 1",
-            basedOn: "Normal",
-            next: "Normal",
+            id: 'TOC1',
+            name: 'toc 1',
+            basedOn: 'Normal',
+            next: 'Normal',
             quickFormat: true,
-            run: { font: "仿宋", size: 24, bold: false, color: "000000" },
+            run: { font: '仿宋', size: 24, bold: false, color: '000000' },
             paragraph: { spacing: { after: 120 } }
           },
           {
-            id: "TOC2",
-            name: "toc 2",
-            basedOn: "Normal",
-            next: "Normal",
+            id: 'TOC2',
+            name: 'toc 2',
+            basedOn: 'Normal',
+            next: 'Normal',
             quickFormat: true,
-            run: { font: "仿宋", size: 22, bold: false, color: "000000" },
+            run: { font: '仿宋', size: 22, bold: false, color: '000000' },
             paragraph: { spacing: { after: 120 }, indent: { left: 480 } }
           },
           {
-            id: "TOC3",
-            name: "toc 3",
-            basedOn: "Normal",
-            next: "Normal",
+            id: 'TOC3',
+            name: 'toc 3',
+            basedOn: 'Normal',
+            next: 'Normal',
             quickFormat: true,
-            run: { font: "仿宋", size: 22, bold: false, color: "000000" },
+            run: { font: '仿宋', size: 22, bold: false, color: '000000' },
             paragraph: { spacing: { after: 120 }, indent: { left: 960 } }
           }
         ]
@@ -464,7 +508,6 @@ class DataExporter {
       const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' })
       saveAs(blob, `分析报告_${Date.now()}.docx`)
       if (typeof addHistory === 'function') addHistory('导出分析报告', `导出节点${renderNodes.length}条，图表${chartCount}个`)
-      
       if (typeof showAlert === 'function') {
         setTimeout(() => {
           showAlert('导出成功！请在 Word 中右键点击目录并选择“更新域”，即可生成页码并支持点击跳转。')
@@ -635,7 +678,6 @@ class DataExporter {
       : level >= 3
         ? { size: 22, before: 200 }
         : { size: 26, before: 240 }
-        
     let headingLevel = HeadingLevel.HEADING_2
     if (level === 1) headingLevel = HeadingLevel.HEADING_1
     if (level >= 3) headingLevel = HeadingLevel.HEADING_3
@@ -767,7 +809,7 @@ class DataExporter {
     const borderOpts = { style: BorderStyle.SINGLE, size: 4, color: 'BFBFBF' }
     const cellMargins = { top: 40, bottom: 40, left: 60, right: 60 }
 
-    const totalWidth = 9026 
+    const totalWidth = 9026
     const colWeights = this.resolveCountTableWeights(node, columns)
     const hasFixedWeights = Array.isArray(colWeights) && colWeights.length === columns.length + 1
     const fallbackWeights = [1].concat(columns.map(() => 2))

@@ -68,17 +68,37 @@
               <label class="option-item">
                 <input v-model="selectedOption" type="radio" name="gen-report-mode" :value="optionValues.reportDelegation" />代表团模板
               </label>
-              <select v-model="selectedDelegationForReport" :disabled="selectedOption !== optionValues.reportDelegation" class="template-select">
-                <option value="">请选择代表团</option>
-                <option v-for="d in delegationList" :key="d.value" :value="d.value">{{ d.label }}</option>
-              </select>
+
+              <!-- 👈 修改：将原生的 select 替换为 el-select，与承办单位保持统一 -->
+              <el-select
+                v-model="selectedDelegationForReport"
+                :disabled="selectedOption !== optionValues.reportDelegation"
+                filterable
+                clearable
+                popper-append-to-body
+                popper-class="optional-el-select-dropdown"
+                class="searchable-template-select"
+                placeholder="请选择代表团"
+              >
+                <el-option v-for="d in delegationList" :key="d.value" :label="d.label" :value="d.value" />
+              </el-select>
+
               <label class="option-item">
                 <input v-model="selectedOption" type="radio" name="gen-report-mode" :value="optionValues.reportUndertaker" />承办单位模板
               </label>
-              <select v-model="selectedCbdwForReport" :disabled="selectedOption !== optionValues.reportUndertaker" class="template-select">
-                <option value="">请选择承办单位</option>
-                <option v-for="d in cbdwList" :key="d.sysDeptId" :value="d.deptName">{{ d.deptName }}</option>
-              </select>
+              <el-select
+                v-model="selectedCbdwForReport"
+                :disabled="selectedOption !== optionValues.reportUndertaker"
+                filterable
+                clearable
+                popper-append-to-body
+                popper-class="optional-el-select-dropdown"
+                @filter-change="onCbdwFilter"
+                class="searchable-template-select"
+                placeholder="请选择承办单位"
+              >
+                <el-option v-for="d in cbdwList" :key="d.sysDeptId" :label="d.deptName" :value="d.deptName" />
+              </el-select>
             </div>
           </div>
         </div>
@@ -97,25 +117,6 @@
 <script>
 /**
  * GenerateReportModal - 统一目录模板弹窗
- *
- * 两种模式共用同一套「文件上传 + 目录编辑 + 目录结构 + 生成方式」界面，
- * 右侧生成方式栏始终展示，模式只决定标题与底部按钮：
- *   - mode = 'report'    ：标题「生成报告」，底部可「立即生成」
- *   - mode = 'word-edit' ：标题「上传模板」，仅编辑并保存目录结构
- *
- * 数据边界：
- *   - 目录树、当前选中节点、上传文件名、生成方式与单位模板参数，
- *     全部使用本地 data。
- *   - 弹窗在项目里只有一个实例（挂在 adviceCluster.vue），
- *     左右两个入口打开的都是同一实例，本地 data 天然跨入口共享。
- *
- * 事件约定（由使用方决定后续动作，组件自身不主动关闭弹窗）：
- *   - save     ：保存目录结构 → { tree, words, wordFileName, delegation, cbdw }
- *   - generate ：立即生成     → { tree, selectedOption, delegation, cbdw }
- *   - close    ：用户关闭
- *
- * 本文件同时作为生成方式枚举的「单一来源」：
- *   AdviceClusterRight.vue 从这里 import ReportOption 等常量。
  */
 import axios from 'axios'
 import { mapState } from 'vuex'
@@ -224,16 +225,34 @@ export default {
       /* ---- 生成方式（弹窗会话状态） ---- */
       selectedOption: defaultReportOption,
       selectedDelegationForReport: '',
-      selectedCbdwForReport: ''
+      selectedCbdwForReport: '',
+      userInfo: {}
     }
   },
   computed: {
     ...mapState('dict', {
       delegationList: 'allDelegations',
-      cbdwList: 'allCbdw',
+      dictCbdw: 'allCbdw',
       filterDelegation: 'delegationValue',
       filterCbdw: 'cbdwValue'
     }),
+    delegationOptions() {
+      const manageDepts = this.userInfo && this.userInfo.manageDepts
+      if (manageDepts && manageDepts.length && manageDepts[0] && manageDepts[0].managePubDbtId !== undefined) {
+        return this.delegationList.filter(
+          item => String(manageDepts[0].managePubDbtId) === String(item.id)
+        )
+      }
+      return this.delegationList
+    },
+    cbdwList() {
+      const all = this.dictCbdw
+      if (this.delegationOptions.length === 1) return all
+      const userDeptInfo = this.userInfo && this.userInfo.sysDeptLevelCode
+      if (!Array.isArray(userDeptInfo)) return all
+      const filtered = all.filter(dept => userDeptInfo.includes(dept.sysDeptId))
+      return filtered.length ? filtered : all
+    },
     isReportMode() {
       return this.mode === ModalMode.report
     },
@@ -290,17 +309,30 @@ export default {
     },
     /**
      * 只在弹窗「打开」这一刻初始化。
-     * 不监听 initialTree：弹窗打开着时父级重新传入树（例如保存后回写）会打断用户
-     * 正在进行的节点选择与编辑。
      */
     visible(val) {
       if (val) this.initOnOpen()
     }
   },
   created() {
+    this.userInfo = this.getLocalStorageJSON('userInfo') || {}
     this.ensureUnitTargets()
   },
   methods: {
+    getLocalStorageJSON(key) {
+      try {
+        const value = localStorage.getItem(key)
+        return value ? JSON.parse(value) : null
+      } catch (error) {
+        console.error(`解析 localStorage[${key}] 失败`, error)
+        return null
+      }
+    },
+    onCbdwFilter(query) {
+      if (query === '' && this.selectedCbdwForReport) {
+        this.selectedCbdwForReport = ''
+      }
+    },
     /* ==================== 打开初始化 ==================== */
     initOnOpen() {
       this.fileName = this.initialFileName || ''
@@ -584,12 +616,6 @@ export default {
 }
 </script>
 
-<!--
-  样式说明：原实现经历了「大尺寸 → 中尺寸 → 紧凑尺寸」三轮叠加，
-  同一批选择器被重复声明 2~3 次、后写覆盖先写，还残留了模板里已不存在的
-  内容编辑区（.content-* / .clear-button / .template-group 等）样式。
-  这里按最终生效值合并为一份，选择器不再重复。
--->
 <style scoped>
   /* ===== 遮罩与弹框 ===== */
   .gen-report-mask {
@@ -956,16 +982,24 @@ export default {
   .report-options-grid .option-item:first-child {
     margin-right: 14px;
   }
-  .template-select {
+
+  /* 统一两个 el-select 的样式 */
+  .searchable-template-select {
     display: block;
     width: calc(100% - 18px);
-    height: 25px;
     margin: -5px 0 9px 18px;
-    padding: 0 6px;
+    font-size: 11px;
+  }
+  :deep(.searchable-template-select .el-input__inner) {
+    height: 25px;
     border: 1px solid #d8dce2;
     background: #fff;
     color: #555;
     font-size: 11px;
+    line-height: 25px;
+  }
+  :deep(.searchable-template-select .el-select__caret) {
+    display: none;
   }
 
   /* ===== 底部 ===== */

@@ -13,7 +13,7 @@
  *   - 左侧产生、右侧消费：tableData / pagination / selectedIds / hasSearched /
  *                          viewMode / leftKeywords / expandResults
  *   - 右侧产生、左侧消费：citationData + activeKeyId（引文整屏展示）
- *   - 双向：expandSelection（一次拓展的勾选结果，右侧操作、左侧做检索条件）
+ *   - 双向：expandSelection（辅助分类的勾选结果，右侧操作、左侧做检索条件）
  *   - 页面级：templateModal（统一目录模板弹窗）、historyRecords（操作历史）
  *
  * 只被单一组件使用的状态（详情的 html、摘要数据、任务队列列表等）
@@ -114,7 +114,7 @@ export default {
     /* ---- 左侧关键词（右侧生成报告时作为目录树兜底数据） ---- */
     leftKeywords: [],
 
-    /* ---- 一次拓展：左侧发起请求，右侧展示，勾选结果回流为检索条件 ---- */
+    /* ---- 辅助分类：左侧发起请求，右侧展示，勾选结果回流为检索条件 ---- */
     expandResults: [],
     expandSelection: createExpandSelection(),
 
@@ -191,7 +191,7 @@ export default {
     SET_IMPORTANT_FILE_HTML(state, html) {
       state.importantFileHtml = html || ''
     },
-    /** 清空检索结果（含分页、勾选与详情），一次拓展结果保留以便"查看结果"复用 */
+    /** 清空检索结果（含分页、勾选与详情），辅助分类查询结果保留以便"查看结果"复用 */
     RESET_RESULTS(state) {
       state.tableData = []
       state.pagination = createPagination()
@@ -204,7 +204,7 @@ export default {
       state.leftKeywords = Array.isArray(keywords) ? keywords : []
     },
 
-    /* ==================== 一次拓展 ==================== */
+    /* ==================== 辅助分类 ==================== */
     SET_EXPAND_RESULTS(state, list) {
       state.expandResults = Array.isArray(list) ? list : []
       state.expandSelection = createExpandSelection()

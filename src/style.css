@@ -1245,19 +1245,18 @@ body {
  * ========================================================================== */
 
 .kw-tag-native {
-  margin: 2px 4px;
+  margin: 2px 8px;
   padding: 3px 8px;
   border: 1px solid var(--border-color);
   border-radius: 12px;
-  cursor: pointer;
   transition: all 0.15s ease;
 }
 
-.kw-tag-native:hover {
+/* .kw-tag-native:hover {
   border-color: var(--primary-red);
   color: var(--primary-red);
   box-shadow: var(--shadow-sm);
-}
+} */
 
 .kw-selected-native {
   background: #39a854;

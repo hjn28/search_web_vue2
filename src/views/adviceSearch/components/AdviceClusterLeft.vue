@@ -191,7 +191,7 @@
  * AdviceClusterLeft - 左侧面板（检索条件的输入与组织）
  *
  * 职责：
- *   1. 检索输入（词/句）与一次拓展检索（searchZF）
+ *   1. 检索输入（词/句）与辅助分类检索（searchZF）
  *   2. 条件筛选（来源库、届次、代表团等，委托 FilterConditions）
  *   3. 分析分类体系的构建（分类模板上传 / 文本输入 / 辅助构建）
  *   4. 二次聚类检索（委托 FilterConditions 组装参数）→ 结果写入 store 由右侧展示
@@ -199,7 +199,7 @@
  *
  * 与右侧面板的数据交互一律通过 adviceCluster store：
  *   - 本组件写入：leftKeywords、expandResults、视图模式、聚类检索结果
- *   - 本组件读取：citationData/activeKeyId（引文）、expandResults/expandSelection（一次拓展勾选）
+ *   - 本组件读取：citationData/activeKeyId（引文）、expandResults/expandSelection（辅助分类勾选）
  * 本组件不再向父组件 emit 任何事件，也不再被父组件通过 $refs 反向调用内部方法。
  */
 // import { getSourceList } from '../../../api/login'
@@ -302,7 +302,7 @@ export default {
     // 之前混在 mapState 里取的是 state.citationVisible（不存在），恒为 undefined，引文视图因此永不渲染
     ...mapGetters('adviceCluster', ['citationVisible']),
 
-    /** 一次拓展的勾选结果，作为二次检索的附加条件 */
+    /** 辅助分类的勾选结果，作为二次检索的附加条件 */
     selectedKeywords() {
       return this.expandSelection.selectedKeywords
     },
@@ -478,7 +478,7 @@ export default {
     runClusterSearch({ params, historyText }) {
       this.$store.dispatch('adviceCluster/fetchClusterResults', { params, historyText })
     },
-    /** FilterConditions 自身重置后的联动：清空一次拓展勾选与分类体系 */
+    /** FilterConditions 自身重置后的联动：清空辅助分类勾选与分类体系 */
     resetLeftFilters() {
       this.$store.commit('adviceCluster/CLEAR_EXPAND_SELECTION')
       this.filterSemiFuzzyWord = ''
@@ -522,11 +522,11 @@ export default {
       this.$store.commit('adviceCluster/CLEAR_CITATION')
     },
 
-    /* ==================== 一次拓展 ==================== */
+    /* ==================== 辅助分类 ==================== */
     runExpandSearch() {
       const text = this.keywordInput.trim()
       if (!text) {
-        this.showAlert('请输入搜索内容后再进行一次拓展')
+        this.showAlert('请输入搜索内容后再进行辅助分类')
         return
       }
 
@@ -535,16 +535,16 @@ export default {
           const list = Array.isArray(res && res.data) ? res.data : []
           this.$store.commit('adviceCluster/SET_EXPAND_RESULTS', list)
           this.$store.commit('adviceCluster/SET_VIEW_MODE', VIEW_MODE.expand)
-          this.addHistory('一次拓展（接口）', `搜索关键词：${text}`)
-          if (!list.length) this.showAlert('一次拓展接口无数据')
+          this.addHistory('辅助分类（接口）', `搜索关键词：${text}`)
+          if (!list.length) this.showAlert('辅助分类接口无数据')
         })
         .catch(() => {
           this.$store.commit('adviceCluster/SET_EXPAND_RESULTS', [])
-          this.addHistory('一次拓展（接口异常）', `关键词：${text}`)
-          this.showAlert('一次拓展接口异常')
+          this.addHistory('辅助分类（接口异常）', `关键词：${text}`)
+          this.showAlert('辅助分类接口异常')
         })
     },
-    /** 把已缓存在 store 的一次拓展结果重新切到右侧展示 */
+    /** 把已缓存在 store 的辅助分类查询结果重新切到右侧展示 */
     showExpandResults() {
       if (!this.expandResults.length) return
       this.$store.commit('adviceCluster/SET_VIEW_MODE', VIEW_MODE.expand)

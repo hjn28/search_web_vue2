@@ -29,7 +29,7 @@ export const zcSearch = (data) =>
   httpPost({ url: API.search.base, data })
 
 /**
- * 一次拓展检索：根据词/句/段进行语义拓展
+ * 辅助分类检索：根据词/句/段进行语义拓展
  */
 export const searchZF = (data) =>
   httpPost({ url: API.search.zf, data, loading: true })

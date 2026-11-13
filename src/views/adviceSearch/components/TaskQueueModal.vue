@@ -55,7 +55,7 @@
                 </button>
                 <button class="btn btn-outline btn-sm action-btn" @click="handleView(item)" :disabled="detailLoading || !!exportingTaskId || item.status === '0' || item.status === '2'">查看</button>
                 <button class="btn btn-outline btn-sm action-btn" @click="handleExport(item)" :disabled="detailLoading || !!exportingTaskId || item.status === '0' || item.status === '2'">
-                  {{ isExporting(item.id) ? '导出中...' : '导出' }}
+                  {{ isExporting(item.id) ? '导出' : '导出' }}
                 </button>
               </td>
             </tr>

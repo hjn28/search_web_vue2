@@ -60,7 +60,7 @@
 
       <!-- ---- 操作栏 ---- -->
       <div class="action-bar">
-        <div v-if="viewMode === viewModeEnum.table" class="action-row">
+        <div v-if="actionBarViewMode === viewModeEnum.table" class="action-row">
           <button class="btn btn-outline btn-sm" :disabled="!tableData.length" @click="toggleSelectAll">
             {{ isAllChecked ? '取消全选' : '全选' }}
           </button>
@@ -78,10 +78,10 @@
           <button class="btn btn-outline btn-sm" @click="resetTableSelection">重置</button>
         </div>
 
-        <div v-else-if="viewMode === viewModeEnum.summary" class="detail-header-actions">
+        <div v-else-if="actionBarViewMode === viewModeEnum.summary" class="detail-header-actions">
           <button class="btn btn-outline btn-sm" @click="backToTable">返回列表</button>
           <button class="btn btn-outline btn-sm" @click="rwdlQuery">任务队列</button>
-          <template v-if="currentSummaryType === summaryType.digest">
+          <template v-if="actionBarSummaryType === summaryType.digest">
             <button class="btn btn-outline btn-sm" @click="exportSummary">导出汇总要点</button>
             <button
               class="btn btn-outline btn-sm"
@@ -98,7 +98,7 @@
           </template>
         </div>
 
-        <div v-else-if="viewMode === viewModeEnum.importantFile" class="detail-header-actions">
+        <div v-else-if="actionBarViewMode === viewModeEnum.importantFile" class="detail-header-actions">
           <button class="btn btn-outline btn-sm" @click="backToTable">返回</button>
         </div>
         <div v-else class="detail-header-actions">
@@ -131,7 +131,7 @@
           <!-- 汇总要点 -->
           <SummaryReportView v-else :zhaiyao-data="zhaiyaoData" />
         </template>
-        <!-- 一次拓展结果 -->
+        <!-- 辅助分类查询结果 -->
         <ExpandResultsView v-else-if="viewMode === viewModeEnum.expand"
           :expand-results="expandResults"
           :expand-selection="expandSelection"
@@ -159,7 +159,7 @@
  *
  * 数据边界：
  *   - 与左侧面板共享的状态（结果列表、分页、勾选、视图模式、详情、引文、
- *     一次拓展结果与勾选）全部读写 adviceCluster store，组件自身不做中转；
+ *     辅助分类查询结果与勾选）全部读写 adviceCluster store，组件自身不做中转；
  *   - 仅本组件使用的状态（汇总要点/分析报告数据、任务队列列表、预览弹窗等）
  *     留在 data 中；
  *   - 「生成报告」弹窗全页只有一个，挂在父组件上由 adviceCluster.templateModal
@@ -241,6 +241,8 @@ export default {
       detailRequestSeq: 0,
       detailLoading: false,
       exportingTaskId: '',
+      exportPreviousViewMode: null,
+      exportPreviousSummaryType: null,
       jljgzsData: [],
 
       /* ---- 任务队列 ---- */
@@ -300,6 +302,12 @@ export default {
     viewModeEnum() { return VIEW_MODE },
     summaryType() { return summaryType },
     SummaryFormatter() { return SummaryFormatter },
+    actionBarViewMode() {
+      return this.exportingTaskId ? this.exportPreviousViewMode : this.viewMode
+    },
+    actionBarSummaryType() {
+      return this.exportingTaskId ? this.exportPreviousSummaryType : this.currentSummaryType
+    },
 
     /**
      * 承办信息仅建议库（来源库 jianyi）有数据，其他来源库不展示该列。
@@ -743,6 +751,8 @@ export default {
       const previousViewMode = this.viewMode
       const previousSummaryType = this.currentSummaryType
       const taskType = String(payload.type)
+      this.exportPreviousViewMode = previousViewMode
+      this.exportPreviousSummaryType = previousSummaryType
       this.exportingTaskId = String(payload.id || '')
       try {
         await this.zyDetail(payload.id, taskType, payload.words, payload.tree, true)
@@ -751,6 +761,8 @@ export default {
         this.exportingTaskId = ''
         this.currentSummaryType = previousSummaryType
         this.$store.commit('adviceCluster/SET_VIEW_MODE', previousViewMode)
+        this.exportPreviousViewMode = null
+        this.exportPreviousSummaryType = null
       }
     },
     async zyDel(id) {
