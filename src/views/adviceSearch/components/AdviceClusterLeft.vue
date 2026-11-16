@@ -36,11 +36,15 @@
               <button class="btn btn-outline btn-sm" @click="openWordTemplateModal">上传分类模板</button>
               <button class="btn btn-outline btn-sm" @click="assistExpanded = !assistExpanded">辅助分类构建</button>
               <button class="btn btn-outline btn-sm" @click="pickWarehouseFiles">上传分类学习资料</button>
+              <!-- 修改：拆分固定文本与滚动文本 -->
               <button class="btn btn-outline btn-sm marquee-btn" @click="importantFileUpload">
-                <div class="marquee-content">
-                  <span class="marquee-text">重要文件 | 2026年政府工作报告</span>
-                  <!-- 复制一份文本，用来实现无缝衔接 -->
-                  <span class="marquee-text">重要文件 | 2026年政府工作报告</span>
+                <span class="marquee-fixed">重要文件 | </span>
+                <div class="marquee-wrap">
+                  <div class="marquee-content">
+                    <span class="marquee-text">2026年政府工作报告</span>
+                    <!-- 复制一份文本，用来实现无缝衔接 -->
+                    <span class="marquee-text">2026年政府工作报告</span>
+                  </div>
                 </div>
               </button>
             </div>
@@ -189,18 +193,6 @@
 <script>
 /**
  * AdviceClusterLeft - 左侧面板（检索条件的输入与组织）
- *
- * 职责：
- *   1. 检索输入（词/句）与辅助分类检索（searchZF）
- *   2. 条件筛选（来源库、届次、代表团等，委托 FilterConditions）
- *   3. 分析分类体系的构建（分类模板上传 / 文本输入 / 辅助构建）
- *   4. 二次聚类检索（委托 FilterConditions 组装参数）→ 结果写入 store 由右侧展示
- *   5. 分析材料入库区：按「文件库」组织上传的分类学习资料
- *
- * 与右侧面板的数据交互一律通过 adviceCluster store：
- *   - 本组件写入：leftKeywords、expandResults、视图模式、聚类检索结果
- *   - 本组件读取：citationData/activeKeyId（引文）、expandResults/expandSelection（辅助分类勾选）
- * 本组件不再向父组件 emit 任何事件，也不再被父组件通过 $refs 反向调用内部方法。
  */
 // import { getSourceList } from '../../../api/login'
 import { searchZF, uploadTaskFile } from '../../../api/login'
@@ -236,10 +228,6 @@ function splitKeywords(text, existed) {
 
 /**
  * 将树结构拍平为带缩进层级的一维数组（只读展示用）
- * @param {Array} nodes - 树节点
- * @param {number} depth - 当前层级
- * @param {Array} [result] - 结果收集数组
- * @returns {Array} [{ id, name, depth }]
  */
 function flattenTree(nodes, depth = 0, result = []) {
   if (!Array.isArray(nodes)) return result
@@ -1014,45 +1002,68 @@ export default {
   padding-top: 40px;
 }
 
-/* 1. 约束按钮宽度并隐藏溢出部分 */
+/* ======== 重要文件跑马灯 ======== */
+
+/* 1. 约束按钮宽度并布局 */
 .marquee-btn {
-  width: 100px;          /* 固定宽度 */
-  overflow: hidden;      /* 隐藏超出宽度的文字 */
-  white-space: nowrap;   /* 强制文本不换行 */
-  padding-left: 5px;        /* 左右留一点间距，避免文字贴边 */
-  padding-right: 5px;        /* 左右留一点间距，避免文字贴边 */
+  width: 130px !important;       /* 固定宽度 */
+  height: 26px !important;       /* 固定高度，防止被撑开 */
+  overflow: hidden !important;
+  padding: 0 8px !important;     /* 强制覆盖全局 padding */
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  position: relative;
+  box-sizing: border-box;
+}
+
+/* 2. 固定部分 */
+.marquee-fixed {
+  flex-shrink: 0 !important;        /* 绝对不允许收缩 */
+  white-space: nowrap !important;   /* 强制不换行 */
+  color: #d90000;
+  margin-right: 4px;
+}
+
+/* 3. 滚动外层容器 */
+.marquee-wrap {
+  flex: 1;
+  min-width: 0;          /* 允许被挤压 */
+  overflow: hidden;      /* 隐藏超出部分 */
+  position: relative;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  position: relative;
+  white-space: nowrap !important; /* 关键修复：外层也不许换行 */
 }
 
-/* 2. 内部滚动容器 */
+/* 4. 内部滚动内容 */
 .marquee-content {
   display: flex;
+  white-space: nowrap !important;
   /* 动画：名称 时间 匀速 无限循环 */
-  animation: scroll-left 10s linear infinite;
+  animation: scroll-left 8s linear infinite;
 }
 
-/* 3. 单个文本样式 */
+/* 5. 单个文本样式 */
 .marquee-text {
   display: inline-block;
-  padding-right: 20px; /* 两段文字之间的滚动间距（可根据需要调整） */
+  white-space: nowrap !important; /* 文本本身绝对不换行 */
+  padding-right: 30px; /* 两段文字之间的滚动间距 */
 }
 
-/* 4. 鼠标悬浮时暂停滚动（提升用户体验，可选） */
+/* 6. 鼠标悬浮时暂停滚动（提升用户体验） */
 .marquee-btn:hover .marquee-content {
   animation-play-state: paused;
 }
 
-/* 5. 定义滚动动画：从 0 到向左移动 50% */
+/* 7. 定义滚动动画 */
 @keyframes scroll-left {
   0% {
     transform: translateX(0);
   }
   100% {
     transform: translateX(-50%);
-    /* 因为有左右两份完全一样的文本，向左移动50%刚好完成一整段内容的滚动 */
   }
 }
 </style>
