@@ -691,6 +691,42 @@ export default {
 <style scoped>
 /* 引文相关样式已移至 CitationView.vue */
 
+.hidden-file-input {
+  display: none;
+}
+
+/* 左侧面板布局 */
+.left-container {
+  width: 45%;
+  height: 100%;
+  overflow: hidden;
+  border-right: 1px solid #e5e9ea;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  min-height: 0;
+}
+
+.left-scroll-area {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+  padding-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.text-input {
+  width: 100%;
+  height: 100px;
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  resize: vertical;
+  font-size: 11px;
+}
+
 /* 构建分析分类体系：模板输入区 */
 .category-template-card {
   position: relative;

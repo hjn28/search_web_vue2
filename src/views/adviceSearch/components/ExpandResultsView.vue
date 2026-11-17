@@ -59,6 +59,110 @@ export default {
 </script>
 
 <style scoped>
+.one-search-results {
+  margin-top: 10px;
+}
+
+.one-search-title {
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--text-color);
+}
+
+.one-search-empty {
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+.primary-card {
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  background: #fff;
+  margin-bottom: 8px;
+  box-shadow: var(--shadow-sm);
+}
+
+.primary-card:hover {
+  background: var(--light-red);
+}
+
+.primary-card-header {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 4px;
+}
+
+.primary-card-header input {
+  margin-right: 8px;
+}
+
+.primary-card-title {
+  font-weight: 600;
+  color: var(--text-color);
+  font-size: 12px;
+}
+
+.primary-card-meta {
+  color: #777;
+  font-size: 11px;
+  text-indent: 1.8rem;
+}
+
+.primary-card-kw {
+  padding-left: 16px;
+  margin-top: 6px;
+}
+
+.primary-card-kw-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.primary-card-kw-list {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 4px;
+  font-size: 12px;
+}
+
+.primary-card-segments {
+  margin-top: 6px;
+  padding-left: 10px;
+  border-left: 2px solid var(--border-color);
+}
+
+.primary-card-seg {
+  margin-bottom: 6px;
+}
+
+.primary-card-seg-row {
+  display: flex;
+  align-items: flex-start;
+}
+
+.primary-card-seg-text {
+  color: #606266;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 12px;
+}
+
+.kw-tag-native {
+  margin: 2px 8px;
+  padding: 3px 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  transition: all 0.15s ease;
+}
+
+.kw-selected-native {
+  background: #39a854;
+  color: #fff;
+  border-color: #2f8d47;
+}
+
 .expand-results-list {
   padding: 8px 0;
 }

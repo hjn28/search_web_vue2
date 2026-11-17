@@ -148,6 +148,78 @@ export default {
 </script>
 
 <style scoped>
+/* 结果表格 */
+.result-table-container {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  margin-top: 10px;
+}
+
+.result-table {
+  min-width: 1100px;
+  border-collapse: collapse;
+  font-size: 11px;
+  table-layout: fixed;
+}
+
+.result-table th,
+.result-table td {
+  padding: 6.6px 8px;
+  text-align: center;
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background: #fff;
+}
+
+.result-table th {
+  background: var(--table-header);
+  font-weight: bold;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.result-table tr:hover {
+  background: var(--light-red);
+}
+
+.result-table .row-disabled {
+  opacity: 0.6;
+}
+
+.result-table .row-disabled td {
+  color: var(--text-muted);
+}
+
+.result-table th.action-col,
+.result-table td.action-col {
+  position: sticky;
+  right: 0;
+  background: #fff;
+}
+
+.result-table th.action-col {
+  z-index: 12;
+  box-shadow: -4px 0 8px rgba(0, 0, 0, 0.06);
+}
+
+.result-table td.action-col {
+  z-index: 11;
+  box-shadow: -4px 0 8px rgba(0, 0, 0, 0.06);
+}
+
+.result-table td:nth-child(1) { width: 60px; }
+.result-table td:nth-child(2) { width: 60px; }
+.result-table td:nth-child(3) { width: 70px; }
+.result-table td:nth-child(4) { width: 70px; }
+.result-table td:nth-child(5) { text-align: left; width: 150px; }
+.result-table td:nth-child(6) { width: 70px; }
+.result-table td:nth-child(7) { width: 70px; }
+.result-table td.cbxx-col { text-align: left; width: 100px; }
+
 /* 组件根节点：占满 result-content 的剩余高度，纵向 flex 布局 */
 .cluster-result-table {
   flex: 1 1 0;
@@ -176,6 +248,8 @@ export default {
 
 /* 分页：固定在底部，始终可见，不被压缩 */
 .cluster-result-table>.pagination {
+  display: flex;
+  align-items: center;
   flex-shrink: 0;
   padding: 8px 0;
 }

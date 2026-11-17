@@ -1033,6 +1033,100 @@ export default {
 </script>
 
 <style scoped>
+.right-container {
+  width: 55%;
+  height: 100%;
+  padding: 0 19px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  min-height: 0;
+}
+
+.right-container .result-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 0;
+}
+
+.action-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.action-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.action-row .btn {
+  margin-right: 8px;
+}
+
+.result-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+  font-size: 12px;
+  color: var(--text-color);
+}
+
+.result-header .btn {
+  margin-left: 8px;
+  margin-top: 6px;
+}
+
+.detail-header-actions {
+  display: flex;
+  align-items: center;
+}
+
+.detail-header-actions .btn {
+  margin-right: 8px;
+}
+
+.right-container .result-content {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.task-export-rendering {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.back-top-btn {
+  position: absolute;
+  bottom: 16px;
+  right: 20px;
+  padding: 10px 14px;
+  border-radius: 20px;
+  background: rgba(201, 25, 11, 0.15);
+  color: var(--primary-red);
+  border: 1px solid rgba(201, 25, 11, 0.25);
+  cursor: pointer;
+  font-size: 12px;
+  z-index: 20;
+  transition: all 0.2s ease;
+}
+
+.back-top-btn:hover {
+  background: var(--primary-red);
+  color: #fff;
+  border-color: var(--primary-red);
+}
+
 .important-file-right-view {
   height: 100%;
   display: flex;
@@ -1061,7 +1155,13 @@ export default {
 :deep(.summary-rep-meta) { color: #c9190b; }
 :deep(.summary-rep-distinguish) { color: green; }
 :deep(.summary-exact-word) { color: red; font-weight: 500; }
-:deep(.summary-yuanwen-word) { color: blue; font-weight: 400; font-size: 16px; scale: 0.8; }
+:deep(.summary-yuanwen-word) {
+  color: blue;
+  font-weight: 400;
+  font-size: 16px;
+  transform: scale(0.8);
+  display: inline-block;
+}
 
 .preview-mask {
   position: fixed;

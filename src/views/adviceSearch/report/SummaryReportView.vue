@@ -50,3 +50,91 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.summary-list {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  border: 1px solid var(--border-color);
+  padding: 10px;
+  border-radius: var(--radius-lg);
+  background: #fff;
+  overflow: auto;
+}
+
+.summary-card {
+  border-radius: var(--radius-lg);
+  background: #fff;
+  overflow: hidden;
+}
+
+.summary-card-header {
+  padding: 10px 12px;
+  font-weight: 700;
+  color: var(--primary-red);
+}
+
+.summary-card-body {
+  padding: 10px 12px;
+  text-indent: 2rem;
+}
+
+.summary-card-stat {
+  padding: 6px 12px 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.summary-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--border-color);
+}
+
+.summary-row:last-child {
+  border-bottom: none;
+}
+
+.summary-col.title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #333;
+}
+
+.summary-col.content {
+  font-size: 12px;
+  color: #555;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.summary-bullet {
+  line-height: 1.6;
+}
+
+:deep(.summary-exact-word) {
+  color: red;
+  font-weight: 500;
+}
+
+:deep(.summary-rep-meta) {
+  color: var(--primary-red);
+}
+
+:deep(.summary-rep-distinguish) {
+  color: green;
+}
+
+:deep(.summary-yuanwen-word) {
+  color: blue;
+  font-weight: 400;
+  font-size: 16px;
+  transform: scale(0.8);
+  display: inline-block;
+}
+</style>

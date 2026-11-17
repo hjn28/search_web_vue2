@@ -121,6 +121,30 @@ export default {
 </script>
 
 <style scoped>
+.task-queue-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.task-queue-table th,
+.task-queue-table td {
+  border: 1px solid var(--border-color);
+  padding: 6px 8px;
+  text-align: center;
+}
+
+.task-queue-table th {
+  background: #f6f6f6;
+  font-weight: 600;
+}
+
+.task-queue-empty {
+  text-align: center;
+  color: #888;
+  padding: 16px 0;
+}
+
 .task-queue-header-left { display: flex; align-items: center; }
 .task-queue-header-left > * {
   margin-right: 20px;
@@ -131,7 +155,13 @@ export default {
 .task-name-cell { width: 260px; max-width: 260px; }
 .task-name-text { display: inline-block; width: 260px; max-width: 260px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; vertical-align: middle; }
 .task-type-cell { white-space: nowrap; }
-.task-queue-body { position: relative; }
+.task-queue-body {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  padding: 12px 16px 16px;
+  overflow: auto;
+}
 
 :deep(.task-tag) {
   border-radius: 12px;

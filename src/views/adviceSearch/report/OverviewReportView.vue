@@ -130,6 +130,96 @@ export default {
 </script>
 
 <style scoped>
+.zsbg-heading {
+  color: #222;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.zsbg-heading-l1 {
+  font-size: 20px;
+  margin: 16px 0 10px;
+}
+
+.zsbg-heading-l2 {
+  font-size: 17px;
+  margin: 12px 0 8px;
+  padding-left: 10px;
+  border-left: 3px solid var(--primary-red);
+}
+
+.zsbg-heading-l3 {
+  font-size: 15px;
+  margin: 10px 0 6px;
+  padding-left: 14px;
+  color: #555;
+}
+
+.zsbg-text {
+  color: #444;
+  font-size: 15px;
+  line-height: 1.9;
+  margin: 6px 0;
+  padding-left: 14px;
+  text-indent: 2em;
+}
+
+.zsbg-text-selected {
+  background: #fff3e0;
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  border-left: 4px solid var(--primary-red);
+  box-shadow: 0 2px 8px rgba(201, 25, 11, 0.12);
+}
+
+.zsbg-count-table-wrap {
+  margin: 8px 0 14px;
+  padding-left: 14px;
+}
+
+.zsbg-count-table {
+  min-width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+}
+
+.zsbg-count-table th,
+.zsbg-count-table td {
+  border: 1px solid #e6e8ef;
+  padding: 4px 6px;
+  font-size: 13px;
+  color: #3d4a5d;
+  text-align: center;
+  word-break: break-word;
+}
+
+.zsbg-count-table thead th {
+  background: #f6f8fb;
+  color: #2b4a6b;
+  font-weight: 600;
+}
+
+:deep(.summary-rep-meta) {
+  color: var(--primary-red);
+}
+
+:deep(.summary-rep-distinguish) {
+  color: green;
+}
+
+:deep(.summary-exact-word) {
+  color: red;
+  font-weight: 500;
+}
+
+:deep(.summary-yuanwen-word) {
+  color: blue;
+  font-weight: 400;
+  font-size: 16px;
+  transform: scale(0.8);
+  display: inline-block;
+}
+
 .citation-badge {
   color: #1890ff;
   cursor: pointer;
@@ -152,6 +242,7 @@ export default {
 }
 
 .zsbg-chart-block {
+  margin: 14px 0 18px;
   width: 100%;
   max-width: 100%;
   break-inside: avoid;

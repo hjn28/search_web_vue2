@@ -48,7 +48,7 @@
             </div>
             <div class="optional-item">
               <label class="optional-label">承办类型：</label>
-              <el-select v-model="selectedCblx" multiple collapse-tags popper-append-to-body popper-class="optional-el-select-dropdown" class="optional-el-select" placeholder="全部">
+              <el-select v-model="selectedCblx" multiple collapse-tags popper-append-to-body popper-class="optional-el-select-dropdown" class="optional-el-select" placeholder="请选择">
                 <el-option v-for="d in filterCblx" :key="d.value" :label="d.label" :value="d.value"></el-option>
               </el-select>
             </div>
@@ -56,7 +56,7 @@
           <div class="optional-row" v-if="selectedCategory === 'jianyi'">
             <div class="optional-item">
               <label class="optional-label">重点建议：</label>
-              <el-select v-model="selectedKeyProposal" multiple collapse-tags popper-append-to-body popper-class="optional-el-select-dropdown" class="optional-el-select" placeholder="全部" @visible-change="onKeyProposalVisibleChange">
+              <el-select v-model="selectedKeyProposal" multiple collapse-tags popper-append-to-body popper-class="optional-el-select-dropdown" class="optional-el-select" placeholder="请选择" @visible-change="onKeyProposalVisibleChange">
                 <el-option v-for="d in keyProposalList" :key="d.label" :label="d.label" :value="d.value"></el-option>
               </el-select>
             </div>
@@ -766,7 +766,28 @@ export default {
 </script>
 
 <style scoped>
-/* 样式已在父组件的全局样式中定义，此组件继承即可 */
+.optional-conditions {
+  position: relative;
+  flex: 1;
+  z-index: 3;
+  background: var(--bg-color);
+  overflow: visible;
+}
+
+.optional-controls {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-left: 30px;
+}
+
+.dual-textarea-wrapper {
+  position: relative;
+  flex: 1;
+  display: flex;
+}
+
 .outline-summary-filter {
   display: flex;
   align-items: stretch;
@@ -920,5 +941,86 @@ export default {
 /* 最后一个子级：竖线只画到中点，避免"尾巴过长" */
 .outline-tree-select-dropdown .el-select-group .el-select-dropdown__item:last-child::before {
   bottom: 50%;
+}
+
+/* ---- el-select 样式统一 ---- */
+.optional-item .optional-el-select {
+  width: 100%;
+}
+
+.optional-item .optional-el-select .el-input__inner {
+  height: 32px;
+  line-height: 32px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.optional-item .optional-el-select .el-input {
+  overflow: hidden;
+}
+
+.optional-item .optional-el-select:not(.el-select--multiple) .el-input__suffix {
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.optional-item .optional-el-select:not(.el-select--multiple) .el-input__suffix .el-input__icon {
+  line-height: 1;
+}
+
+.optional-item .optional-el-select.el-select--multiple .el-input__icon {
+  display: none;
+}
+
+.optional-item .optional-el-select.is-focus .el-input__inner {
+  border-color: var(--border-color);
+}
+
+.optional-item .optional-el-select:hover .el-input__inner {
+  border-color: var(--primary-red);
+}
+
+.optional-item .optional-el-select .el-select__tags {
+  top: 50%;
+  transform: translateY(-50%);
+  padding-left: 4px;
+  max-width: calc(100% - 12px);
+  max-height: 24px;
+  overflow: hidden;
+}
+
+.optional-item .optional-el-select .el-tag--small {
+  font-size: 10px;
+  height: 20px;
+  line-height: 20px;
+  border-radius: 3px;
+  margin: 2px;
+  max-width: 80px;
+}
+
+.optional-item .optional-el-select .el-tag--small .el-tag__close {
+  font-size: 10px;
+}
+
+.optional-item .optional-el-select .el-select__input {
+  font-size: 11px;
+  height: 28px;
+  margin-left: 4px;
+}
+
+.optional-item .optional-el-select .el-input--suffix .el-input__inner {
+  height: 32px;
+}
+
+.optional-el-select-dropdown .el-select-dropdown__item {
+  font-size: 11px;
+  padding: 0 12px;
+  height: 30px;
+  line-height: 30px;
 }
 </style>
