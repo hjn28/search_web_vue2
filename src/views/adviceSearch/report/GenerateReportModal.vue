@@ -8,7 +8,7 @@
       </div>
 
       <div class="gen-report-body">
-        <div class="layout-left">
+        <div class="layout-left" :class="{ 'is-disabled': leftAreasDisabled }" :aria-disabled="leftAreasDisabled" :inert="leftAreasDisabled">
           <div class="upload-card">
             <input v-model="fileName" class="upload-file-name" type="text" readonly aria-label="已选文件" />
             <button type="button" class="upload-trigger" @click="handleUploadClick">文件上传</button>
@@ -28,7 +28,7 @@
           </div>
         </div>
 
-        <div class="layout-mid">
+        <div class="layout-mid" :class="{ 'is-disabled': leftAreasDisabled }" :aria-disabled="leftAreasDisabled">
           <div class="tree-card">
             <h3 class="card-title">目录结构</h3>
             <ul class="tree-list">
@@ -52,7 +52,7 @@
 
         <div class="layout-right">
           <div class="action-card">
-            <div class="summary-options">
+            <div v-if="summaryOptionItems.length" class="summary-options">
               <h3 class="card-title">按分类汇总原文内容</h3>
               <label v-for="item in summaryOptionItems" :key="item.value" class="option-item">
                 <input v-model="selectedOption" :disabled="!showSummaryOptions" type="radio" name="gen-report-mode" :value="item.value" />{{ item.label }}
@@ -65,6 +65,10 @@
                   <input v-model="selectedOption" type="radio" name="gen-report-mode" :value="item.value" />{{ item.label }}
                 </label>
               </div>
+              <label class="option-item">
+                <input v-model="selectedOption" type="radio" name="gen-report-mode" :value="optionValues.reportBureauDigest" />建议局摘报
+              </label>
+
               <label class="option-item">
                 <input v-model="selectedOption" type="radio" name="gen-report-mode" :value="optionValues.reportDelegation" />代表团模板
               </label>
@@ -139,9 +143,16 @@ export const ReportOption = {
   /* 输出分析报告 */
   reportDefault: 'report-default',
   reportDigest: 'report-digest',
+  reportBureauDigest: 'report-bureau-digest',
   reportDelegation: 'report-delegation',
   reportUndertaker: 'report-undertaker'
 }
+
+/**
+ * 「建议局摘报」提交接口时 aiObj.zhaiyao_type 的取值。
+ * 后端如调整枚举，只需改这一处。
+ */
+export const BUREAU_DIGEST_ZHAIYAO_TYPE = 'jyjzb'
 
 /** 全部合法生成方式 */
 export const validReportOptions = new Set(Object.values(ReportOption))
@@ -153,17 +164,21 @@ export const summaryOptions = new Set([
   ReportOption.summaryRepresentative
 ])
 
-/** 汇总方式 → 提交接口时使用的 module 参数 */
-export const summaryModuleMap = {
-  [ReportOption.summaryCurrent]: '',
-  [ReportOption.summaryPlan]: 'shiwuwu',
-  [ReportOption.summaryRepresentative]: 'representative'
+/**
+ * 汇总方式 → 提交接口时使用的 zhaiyao_type 参数。
+ * 三个汇总选项依次对应：建议库 jianyi / 十五五 sww / 预算库 yusuan。
+ */
+export const summaryZhaiyaoTypeMap = {
+  [ReportOption.summaryCurrent]: 'jianyi',
+  [ReportOption.summaryPlan]: 'yfp',
+  [ReportOption.summaryRepresentative]: 'yusuan'
 }
 
 /** 生成方式 → 操作历史中展示的名称 */
 export const reportLabels = {
   [ReportOption.reportDefault]: '默认',
   [ReportOption.reportDigest]: '摘报',
+  [ReportOption.reportBureauDigest]: '建议局摘报',
   [ReportOption.reportDelegation]: '代表团',
   [ReportOption.reportUndertaker]: '承办单位'
 }
@@ -185,12 +200,13 @@ const {
 
 /* ==================== 选项列表（用短名） ==================== */
 
-/** 「按分类汇总原文内容」选项 */
-const summaryOptionItems = [
-  { value: summaryCurrent, label: '按当前分类体系输出' },
-  { value: summaryPlan, label: '按照“十五五规划纲要”篇章节句归类输出内容' },
-  { value: summaryRepresentative, label: '代表审议意见模板（预工委、代工委）' }
-]
+/** 「按分类汇总原文内容」各项（实际展示哪些由来源库与权限决定） */
+const summaryOptionCurrent = { value: summaryCurrent, label: '按当前分类体系输出' }
+const summaryOptionPlan = { value: summaryPlan, label: '按照“十五五规划纲要”篇章节句归类输出内容' }
+const summaryOptionRepresentative = { value: summaryRepresentative, label: '代表审议意见模板（预工委、代工委）' }
+
+/** 预工委/代工委部门名称匹配（代表审议意见模板权限判断依据） */
+const REPRESENTATIVE_DEPT_PATTERN = /预工委|代工委|预算工作委员会|代表工作委员会/
 
 /** 「输出分析报告」中并排两列的选项 */
 const reportGridItems = [
@@ -236,6 +252,12 @@ export default {
       filterDelegation: 'delegationValue',
       filterCbdw: 'cbdwValue'
     }),
+    /**
+     * 左侧筛选的来源库（selectedCategory）。
+     * FilterConditions 每次切换都会把对应的 data_base 写入 taskAiParams，
+     * 弹窗与左侧是兄弟组件，直接从 store 读取，无需层层 props 传递。
+     */
+    ...mapState('taskAiParams', ['data_base']),
     delegationOptions() {
       const manageDepts = this.userInfo && this.userInfo.manageDepts
       if (manageDepts && manageDepts.length && manageDepts[0] && manageDepts[0].managePubDbtId !== undefined) {
@@ -253,6 +275,25 @@ export default {
       const filtered = all.filter(dept => userDeptInfo.includes(dept.sysDeptId))
       return filtered.length ? filtered : all
     },
+    /**
+     * 代表审议意见模板权限：预工委、代工委账号可见。
+     * 优先用 userInfo 上的部门名称判断，部门名称缺失时用 sysDeptLevelCode
+     * 到承办单位字典里反查名称；完全拿不到部门信息时放行，由后端做最终校验。
+     * 若后端后续改为菜单权限（authURI），只需替换本计算属性。
+     */
+    hasRepresentativePermission() {
+      const info = this.userInfo || {}
+      const names = [info.deptName, info.shortName, info.deptShortName, info.sysDeptName]
+        .filter(Boolean)
+        .map(String)
+      const deptIds = Array.isArray(info.sysDeptLevelCode) ? info.sysDeptLevelCode : []
+      deptIds.forEach(id => {
+        const dept = this.dictCbdw.find(item => String(item.sysDeptId) === String(id))
+        if (dept && dept.deptName) names.push(String(dept.deptName))
+      })
+      if (!names.length) return true
+      return names.some(name => REPRESENTATIVE_DEPT_PATTERN.test(name))
+    },
     isReportMode() {
       return this.mode === ModalMode.report
     },
@@ -266,8 +307,23 @@ export default {
     optionValues() {
       return ReportOption
     },
+    /**
+     * 「按分类汇总原文内容」可选项随来源库变化：
+     *   预算库 → 只保留「代表审议意见模板（预工委、代工委）」，且需有权限；
+     *   其他库 → 按当前分类体系输出 / 按十五五规划纲要归类。
+     */
     summaryOptionItems() {
-      return summaryOptionItems
+      if (this.data_base === 'yusuan') {
+        return this.hasRepresentativePermission ? [summaryOptionRepresentative] : []
+      }
+      return [summaryOptionCurrent, summaryOptionPlan]
+    },
+    /**
+     * 选中「按照十五五规划纲要归类」时，目录由规划纲要树决定，
+     * 左侧的文件上传与目录编辑/目录结构两块区域禁用。
+     */
+    leftAreasDisabled() {
+      return this.isReportMode && this.showSummaryOptions && this.selectedOption === summaryPlan
     },
     reportGridItems() {
       return reportGridItems
@@ -300,6 +356,10 @@ export default {
       } else if (val === reportUndertaker) {
         this.selectedDelegationForReport = ''
       }
+    },
+    /** 来源库（data_base）或权限变化后，保证当前选中项仍可用 */
+    summaryOptionItems() {
+      if (this.visible) this.ensureSelectedOption()
     },
     delegationList() {
       this.ensureUnitTargets()
@@ -335,6 +395,9 @@ export default {
     },
     /* ==================== 打开初始化 ==================== */
     initOnOpen() {
+      // 每次打开都重新读取一次登录信息：开发环境下 bz 登录可能晚于组件挂载，
+      // 权限判断（预工委/代工委）依赖最新的 userInfo。
+      this.userInfo = this.getLocalStorageJSON('userInfo') || {}
       this.fileName = this.initialFileName || ''
       this.treeData = this.normalizeTree(this.initialTree)
       const first = this.visibleNodesList[0]
@@ -346,7 +409,27 @@ export default {
         this.form.name = ''
       }
       this.ensureUnitTargets()
+      // 打开时默认选中第一个可用项（正常场景即「按当前分类体系输出」）
+      this.resetDefaultOption()
       this.$store.dispatch('dict/fetchAll')
+    },
+
+    /** 恢复默认选中：汇总方式取第一个可用项，无可用汇总项时回退到默认模板输出 */
+    resetDefaultOption() {
+      const summaryValues = this.summaryOptionItems.map(item => item.value)
+      this.selectedOption = this.showSummaryOptions && summaryValues.length ? summaryValues[0] : reportDefault
+    },
+
+    /**
+     * 保证当前选中的生成方式在可用列表内：
+     * 来源库切换（如从建议库切到预算库）后，旧的汇总方式可能已不可用，回退到第一个可用项。
+     */
+    ensureSelectedOption() {
+      const summaryValues = this.summaryOptionItems.map(item => item.value)
+      const reportValues = Object.values(ReportOption).filter(value => !summaryOptions.has(value))
+      const available = this.showSummaryOptions ? summaryValues.concat(reportValues) : reportValues
+      if (available.indexOf(this.selectedOption) !== -1) return
+      this.selectedOption = this.showSummaryOptions && summaryValues.length ? summaryValues[0] : reportDefault
     },
 
     /**
@@ -686,6 +769,13 @@ export default {
   }
 
   /* ===== 三栏主体 ===== */
+  /* 选中「十五五规划纲要」归类时，左侧两栏（上传/目录编辑、目录结构）不可操作 */
+  .layout-left.is-disabled,
+  .layout-mid.is-disabled {
+    pointer-events: none;
+    user-select: none;
+    opacity: 0.5;
+  }
   .gen-report-body {
     flex: 1;
     display: grid;

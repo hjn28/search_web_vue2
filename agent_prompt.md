@@ -987,4 +987,30 @@
 ### 15:51:47
 - 原始提示词：selectedCategory这个值 需要在生成报告中的模板中使用，这个值怎么传参呢？需要根据这个值，当选择预算库时，模板中保留的是代表审议意见模板（预工委、代工委），有权限控制；模板中选中十五五规划时，左侧的两个区域是禁用的；输出分析报告中，在代表团模板上方新增建议局摘报选项，这个值传参是zhaiyao_type
 - 接收时间：2026-11-17 15:51:47
-- 处理状态：处理中
+- 处理状态：已完成（重复提交，结果见 16:43:17 条目）
+### 16:42:29
+- 原始提示词：selectedCategory这个值 需要在生成报告中的模板中使用，这个值怎么传参呢？需要根据这个值，当选择预算库时，模板中保留的是代表审议意见模板（预工委、代工委），有权限控制；模板中选中十五五规划时，左侧的两个区域是禁用的；输出分析报告中，在代表团模板上方新增建议局摘报选项，这个值传参是zhaiyao_type
+- 接收时间：2026-11-17 16:42:29
+- 处理状态：已完成（重复提交，结果见 16:43:17 条目）
+### 16:43:17
+- 原始提示词：<ide_opened_file>The user opened the file d:\CSC\RD\search_web\src\views\adviceSearch\components\FilterConditions.vue in the IDE. This may or may not be related to the current task.</ide_opened_file> selectedCategory这个值 需要在生成报告中的模板中使用，这个值怎么传参呢？需要根据这个值，当选择预算库时，模板中保留的是代表审议意见模板（预工委、代工委），有权限控制；模板中选中十五五规划时，左侧的两个区域是禁用的；输出分析报告中，在代表团模板上方新增建议局摘报选项，这个值传参是zhaiyao_type
+- 接收时间：2026-11-17 16:43:17
+- 处理状态：已完成
+- 执行说明：已完成。① selectedCategory 经 taskAiParams.data_base 传入弹窗（FilterConditions 切换来源库时已写入 store），GenerateReportModal 直接 mapState 读取；② 来源库为预算库时，「按分类汇总原文内容」只保留「代表审议意见模板（预工委、代工委）」，并按部门名称（预工委/代工委）做权限判断，取不到部门信息时放行、由后端兜底；③ 选中「按照十五五规划纲要归类」时禁用左侧两栏（文件上传/目录编辑、目录结构）；④ 输出分析报告区在代表团模板上方新增「建议局摘报」，提交时 aiObj.zhaiyao_type=jyjzb（常量 BUREAU_DIGEST_ZHAIYAO_TYPE，可一处调整）。eslint 通过。
+- 代码变更：src/views/adviceSearch/report/GenerateReportModal.vue、src/views/adviceSearch/components/AdviceClusterRight.vue
+### 16:56:00
+- 原始提示词：AskUserQuestion：①「代表审议意见模板（预工委、代工委）」按什么依据做权限控制？②「建议局摘报」选中后 aiObj.zhaiyao_type 具体传什么值？
+- 接收时间：2026-11-17 16:56:00
+- 处理状态：已取消（用户拒绝弹窗提问）
+- 执行说明：改用默认约定实现：权限按部门名称匹配预工委/代工委，zhaiyao_type 取值 jyjzb，均集中在常量/单个计算属性中，便于后续调整。
+### 17:17:43
+- 原始提示词：代码同步到上次的问答
+- 接收时间：2026-11-17 17:17:43
+- 处理状态：已完成
+- 执行说明：已将上一问答的代码变更同步到当前工作区。检查发现 AdviceClusterRight.vue 中的改动被外部覆盖（git 中恢复为 HEAD 版本），已重新补齐：导入 BUREAU_DIGEST_ZHAIYAO_TYPE，并在 buildUnitParam 中为「建议局摘报」写入 aiObj.zhaiyao_type；GenerateReportModal.vue 上一问答的改动完整保留。两文件 eslint 通过。上一问答记录已补充代码变更文件清单。
+### 17:23:40
+- 原始提示词：<ide_selection>The user selected the lines 139 to 139 from d:\CSC\RD\search_web\src\views\adviceSearch\report\GenerateReportModal.vue: 按分类汇总原文内容   This may or may not be related to the current task.</ide_selection> 按分类汇总原文内容 三者的区分内容是 正常选中第一个，加参数zhaiyao_type三个参数值分别对用的是jianyi、sww、yusuan；
+- 接收时间：2026-11-17 17:23:40
+- 处理状态：已完成
+- 执行说明：已完成。① GenerateReportModal.vue 新增并导出 summaryZhaiyaoTypeMap：三个汇总选项依次对应 zhaiyao_type = jianyi（按当前分类体系输出）、sww（十五五规划纲要归类）、yusuan（代表审议意见模板）；② AdviceClusterRight.vue 的 submitSummaryGenerate 从映射取 zhaiyao_type，写入 aiObj 与 qdNeedObj；③ 弹窗每次打开时 resetDefaultOption()，默认选中第一个可用汇总项（正常场景即「按当前分类体系输出」）。eslint 通过。
+- 代码变更：src/views/adviceSearch/report/GenerateReportModal.vue、src/views/adviceSearch/components/AdviceClusterRight.vue

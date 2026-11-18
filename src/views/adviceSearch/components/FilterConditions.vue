@@ -637,7 +637,7 @@ export default {
       const outlineId = this.selectedJu || this.selectedJie || this.selectedZhang || this.selectedPian || ''
       const params = {
         ...baseParams,
-        fileku: {
+        fileKu: {
           ku: outlineId ? 'kb__gov_15th_fyp__matches' : '',
           id: outlineId
         }

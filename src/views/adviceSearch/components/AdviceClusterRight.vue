@@ -193,8 +193,9 @@ import {
   ReportOption,
   validReportOptions,
   summaryOptions,
-  summaryModuleMap,
-  reportLabels
+  summaryZhaiyaoTypeMap,
+  reportLabels,
+  BUREAU_DIGEST_ZHAIYAO_TYPE
 } from '../report/GenerateReportModal.vue'
 
 /** 结果类型：'1' 汇总要点，'2' 分析报告 */
@@ -275,7 +276,7 @@ export default {
     }),
     ...mapState('taskAiParams', {
       taskAiParams: state => ({
-        data_base: state.data_base,
+        database: state.data_base,
         theme: state.theme,
         term_theme: state.term_theme
       })
@@ -595,14 +596,15 @@ export default {
       else this.submitReportGenerate(option, payload, tree, selected)
     },
     /**
-     * 按分类汇总原文内容（type '1'）：三个选项以 aiObj.module 区分
+     * 按分类汇总原文内容（type '1'）：三个选项以 aiObj.zhaiyao_type 区分，
+     * 依次为建议库 jianyi / 十五五 sww / 预算库 yusuan。
      */
     submitSummaryGenerate(option, tree, selected) {
-      const module = summaryModuleMap[option] || ''
+      const zhaiyaoType = summaryZhaiyaoTypeMap[option] || ''
       const word = Array.from(new Set(TreeHelper.collectLeafNames(tree)))
       const qdNeedObj = tree.length
-        ? { words: word, tree, module }
-        : { words: word, module }
+        ? { words: word, tree, zhaiyao_type: zhaiyaoType }
+        : { words: word, zhaiyao_type: zhaiyaoType }
 
       this.addHistory('分类要点汇总', '使用模板目录结构提交分类要点汇总生成')
       taskQuery(this.userId)
@@ -613,7 +615,7 @@ export default {
           }
           return searchZFZhaiyao({
             userId: this.userId,
-            aiObj: { word, obj: selected, module, ...this.taskAiParams },
+            aiObj: { word, obj: selected, zhaiyao_type: zhaiyaoType, ...this.taskAiParams },
             type: '1',
             qdNeedObj
           })
@@ -628,7 +630,8 @@ export default {
     },
     /**
      * 输出分析报告（type '3'）：默认模板输出＝正常生成分析报告（minzheng、不带单位参数），
-     * 摘报＝原摘报参数（zhaibao），代表团/承办单位＝分析报告下增加对应单位参数（显示名）
+     * 摘报＝原摘报参数（zhaibao），建议局摘报＝minzheng + aiObj.zhaiyao_type，
+     * 代表团/承办单位＝分析报告下增加对应单位参数（显示名）
      */
     submitReportGenerate(option, payload, tree, selected) {
       const words = TreeHelper.collectNodeNames(tree)
@@ -700,7 +703,9 @@ export default {
         .catch(() => {})
     },
     /**
-     * 代表团/承办单位参数：接口只接受显示名。
+     * 报告附加参数：
+     *   - 代表团/承办单位：接口只接受显示名，另一侧传空串；
+     *   - 建议局摘报：aiObj.zhaiyao_type 传约定枚举（见 BUREAU_DIGEST_ZHAIYAO_TYPE）。
      */
     buildUnitParam(option, payload) {
       const extraParam = { delegation: '', cbdw: '' }
@@ -708,6 +713,8 @@ export default {
         extraParam.delegation = String(payload.delegation)
       } else if (option === ReportOption.reportUndertaker && payload && payload.cbdw) {
         extraParam.cbdw = String(payload.cbdw)
+      } else if (option === ReportOption.reportBureauDigest) {
+        extraParam.zhaiyao_type = BUREAU_DIGEST_ZHAIYAO_TYPE
       }
       return extraParam
     },
