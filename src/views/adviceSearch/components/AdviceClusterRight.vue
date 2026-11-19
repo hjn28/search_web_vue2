@@ -195,11 +195,22 @@ import {
   summaryOptions,
   summaryZhaiyaoTypeMap,
   reportLabels,
-  BUREAU_DIGEST_ZHAIYAO_TYPE
+  BUREAU_DIGEST_REPORT_TYPE
 } from '../report/GenerateReportModal.vue'
 
 /** 结果类型：'1' 汇总要点，'2' 分析报告 */
 const summaryType = { digest: '1', report: '2' }
+
+/**
+ * 分析报告（type '2'/'3'）aiObj.type 取值：
+ *   摘报 → zhaibao；建议局摘报 → jyjzb；默认/代表团/承办单位 → minzheng。
+ * 分析报告不带 zhaiyao_type，模板区分全部走这里的 aiObj.type。
+ */
+const reportAiTypeMap = {
+  [ReportOption.reportDigest]: 'zhaibao',
+  [ReportOption.reportBureauDigest]: BUREAU_DIGEST_REPORT_TYPE
+}
+const defaultReportAiType = 'minzheng'
 
 /** 任务状态：'0' 执行中 */
 const taskStatus = { running: '0' }
@@ -629,8 +640,8 @@ export default {
         .catch(() => {})
     },
     /**
-     * 输出分析报告（type '3'）：默认模板输出＝正常生成分析报告（minzheng、不带单位参数），
-     * 摘报＝原摘报参数（zhaibao），建议局摘报＝minzheng + aiObj.zhaiyao_type，
+     * 输出分析报告（type '3'）：默认模板输出＝正常生成分析报告（aiObj.type=minzheng，不带单位参数），
+     * 摘报＝aiObj.type=zhaibao，建议局摘报＝aiObj.type=jyjzb，
      * 代表团/承办单位＝分析报告下增加对应单位参数（显示名）
      */
     submitReportGenerate(option, payload, tree, selected) {
@@ -638,7 +649,7 @@ export default {
       const qdNeedObj = tree.length ? { words, tree } : { words }
       const extraParam = this.buildUnitParam(option, payload)
       const presetSubtopics = ReportBuilder.buildPresetSubtopics(TreeHelper.treeToInputs(tree))
-      const reportType = option === ReportOption.reportDigest ? 'zhaibao' : 'minzheng'
+      const reportType = reportAiTypeMap[option] || defaultReportAiType
 
       this.addHistory('生成分析报告', `按${reportLabels[option] || ''}模板生成分析报告`)
       taskQuery(this.userId)
@@ -674,7 +685,7 @@ export default {
         : { words: this.lastReportWords }
       const extraParam = this.buildUnitParam(option, payload)
       const presetSubtopics = ReportBuilder.buildPresetSubtopics(TreeHelper.treeToInputs(tree))
-      const reportType = option === ReportOption.reportDigest ? 'zhaibao' : 'minzheng'
+      const reportType = reportAiTypeMap[option] || defaultReportAiType
 
       taskQuery(this.userId)
         .then(res => {
@@ -705,7 +716,8 @@ export default {
     /**
      * 报告附加参数：
      *   - 代表团/承办单位：接口只接受显示名，另一侧传空串；
-     *   - 建议局摘报：aiObj.zhaiyao_type 传约定枚举（见 BUREAU_DIGEST_ZHAIYAO_TYPE）。
+     *   - 建议局摘报不在这里处理，它改的是 aiObj.type（见 reportAiTypeMap），
+     *     分析报告（type '2'/'3'）不传 zhaiyao_type。
      */
     buildUnitParam(option, payload) {
       const extraParam = { delegation: '', cbdw: '' }
@@ -713,8 +725,6 @@ export default {
         extraParam.delegation = String(payload.delegation)
       } else if (option === ReportOption.reportUndertaker && payload && payload.cbdw) {
         extraParam.cbdw = String(payload.cbdw)
-      } else if (option === ReportOption.reportBureauDigest) {
-        extraParam.zhaiyao_type = BUREAU_DIGEST_ZHAIYAO_TYPE
       }
       return extraParam
     },

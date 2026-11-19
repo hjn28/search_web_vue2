@@ -46,16 +46,25 @@ export const uploadFlieToHtml = (data) =>
   httpPost({ url: API.file.toHtml, data })
 
 /**
- * 上传分类学习资料
+ * 上传资料库文件（form-data）
+ * @param {FormData} data { userId, indexName, file, fileName }
  */
 export const uploadTaskFile = (data) =>
   httpPost({ url: API.file.uploadTask, data })
 
 /**
- * 获取来源库列表
+ * 保存资料库（创建文件库记录）
+ * @param {Object} data { fileName, indexName, userId }
  */
-export const getSourceList = (data) =>
-  httpGet({ url: API.task.getSource, data })
+export const saveDatabase = (data) =>
+  httpPost({ url: API.task.saveDatabase, data })
+
+/**
+ * 查询资料库（获取来源库数据）
+ * @param {Object} [params] 附加查询参数
+ */
+export const getSourceList = (params) =>
+  httpGet({ url: API.task.getSource, params })
 
 /**
  * 获取检索树

@@ -149,10 +149,12 @@ export const ReportOption = {
 }
 
 /**
- * 「建议局摘报」提交接口时 aiObj.zhaiyao_type 的取值。
+ * 「建议局摘报」提交接口时 aiObj.type 的取值。
+ * 注意：zhaiyao_type 只在汇总要点（type='1'）中使用；
+ * 分析报告（type='2'/'3'）通过 aiObj.type 区分模板，不带 zhaiyao_type。
  * 后端如调整枚举，只需改这一处。
  */
-export const BUREAU_DIGEST_ZHAIYAO_TYPE = 'jyjzb'
+export const BUREAU_DIGEST_REPORT_TYPE = 'jyjzb'
 
 /** 全部合法生成方式 */
 export const validReportOptions = new Set(Object.values(ReportOption))

@@ -107,7 +107,7 @@
                 <label class="optional-label scxxzl">文件库：</label>
                 <select v-model="activeLibraryId" class="optional-select warehouse-library-select">
                   <option value="">请选择文件库</option>
-                  <option v-for="lib in fileLibraries" :key="lib.id" :value="lib.id">{{ lib.name }}</option>
+                  <option v-for="lib in fileLibraries" :key="lib.id" :value="lib.value">{{ lib.label }}</option>
                 </select>
               </div>
               <div class="optional-item">
@@ -119,14 +119,6 @@
                 >
                   上传文件
                 </button>
-              </div>
-            </div>
-
-            <!-- 当前文件库已上传的文件列表 -->
-            <div v-if="activeLibraryFiles.length" class="warehouse-file-list">
-              <div v-for="file in activeLibraryFiles" :key="file" class="warehouse-file-item">
-                <span class="warehouse-file-name" :title="file">{{ file }}</span>
-                <span class="warehouse-file-remove" title="移除" @click="removeWarehouseFile(file)">×</span>
               </div>
             </div>
 
@@ -194,8 +186,8 @@
 /**
  * AdviceClusterLeft - 左侧面板（检索条件的输入与组织）
  */
-// import { getSourceList } from '../../../api/login'
-import { searchZF, uploadTaskFile } from '../../../api/login'
+import { searchZF, uploadTaskFile, saveDatabase, getSourceList } from '../../../api/login'
+import { getUserId } from '../../../utils/session'
 import SearchHelper from '../../../utils/classes/SearchHelper'
 import TreeHelper from '../../../utils/classes/TreeHelper'
 import CitationView from './CitationView.vue'
@@ -226,6 +218,13 @@ function splitKeywords(text, existed) {
   return result
 }
 
+/** 来源库固定三项；getSource 返回的文件库按其 chineseName/englishName 追加在这三项下方 */
+const BASE_CATEGORIES = [
+  { label: '建议库', value: 'jianyi' },
+  { label: '议案库', value: 'yian' },
+  { label: '预算库', value: 'yusuan' }
+]
+
 /**
  * 将树结构拍平为带缩进层级的一维数组（只读展示用）
  */
@@ -250,14 +249,12 @@ export default {
       filterSemiFuzzyWord: '',
       filterFuzzyWord: '',
 
-      categories: [
-        { label: '建议库', value: 'jianyi' },
-        { label: '议案库', value: 'yian' },
-        { label: '预算库', value: 'yusuan' }
-      ],
+      categories: BASE_CATEGORIES.map(item => ({ ...item })),
       budgetExactWords: SearchHelper.DEFAULT_BUDGET_WORDS,
       /* ---- 辅助构建 ---- */
       assistExpanded: false,
+      /* ---- 当前登录用户：资料库上传/保存接口需要 userId ---- */
+      userId: '',
       /* ---- 分析材料入库区：文件库 ---- */
       // [{ id, name, indexName, files: string[] }]
       fileLibraries: [],
@@ -310,15 +307,11 @@ export default {
       return flattenTree(this.templateTree)
     },
 
-    /** 当前选中的文件库 */
+    /** 当前选中的文件库（activeLibraryId 存的是下拉选项的 value，即 englishName） */
     activeLibrary() {
-      return this.fileLibraries.find(lib => lib.id === this.activeLibraryId) || null
+      return this.fileLibraries.find(lib => lib.value === this.activeLibraryId) || null
     },
-    /** 当前文件库下的文件列表 */
-    activeLibraryFiles() {
-      return this.activeLibrary ? this.activeLibrary.files : []
-    },
-    /** 所有文件库中的文件名（跨库去重），作为模糊词的一部分参与检索 */
+    /** 所有文件库中的文件名（跨库去重），仅用于操作历史展示，不参与检索词 */
     warehouseFiles() {
       const result = []
       this.fileLibraries.forEach(lib => {
@@ -330,16 +323,14 @@ export default {
     },
 
     /**
-     * 交给 FilterConditions 的模糊词：
-     * 模板有值时取模板叶节点，否则取输入框；两者之后再追加入库区文件
+     * 交给 FilterConditions 的模糊词（检索 theme）：
+     * 模板有值时取模板叶节点，否则取输入框。
+     * 入库区上传的文件名与检索主题无关，不并入这里。
      */
     mergedFuzzyWords() {
-      const fuzzy =
-        this.templateHasData && this.templateLeafWords.length
-          ? this.templateLeafWords.join('\n')
-          : this.filterSemiFuzzyWord || ''
-      const warehouse = this.warehouseFiles.join('\n')
-      return fuzzy && warehouse ? `${fuzzy}\n${warehouse}` : fuzzy || warehouse
+      return this.templateHasData && this.templateLeafWords.length
+        ? this.templateLeafWords.join('\n')
+        : this.filterSemiFuzzyWord || ''
     },
 
     /**
@@ -391,7 +382,8 @@ export default {
     }
   },
   mounted() {
-    this.fetchCategories()
+    this.userId = getUserId()
+    this.fetchSources()
   },
   methods: {
     showAlert(message) {
@@ -401,22 +393,37 @@ export default {
       this.$store.dispatch('adviceCluster/addHistory', { action, content })
     },
 
-    /* ==================== 来源库选项 ==================== */
-    fetchCategories() {
-      // getSourceList()
-      //   .then(res => {
-      //     const first = res && Array.isArray(res.data) ? res.data[0] : null
-      //     if (!first || !first.qdNeedObj) return
-      //     this.categories = [
-      //       ...this.categories.slice(0, 3),
-      //       {
-      //         label: first.qdNeedObj.chineseName,
-      //         value: first.qdNeedObj.englishName
-      //       }
-      //     ]
-      //   })
-      //   // 来源库为附加选项，接口失败时保持前三项默认值即可
-      //   .catch(() => {})
+    /* ==================== 来源库 / 文件库选项 ==================== */
+    /**
+     * 查询来源库数据（getSource）：
+     *   ① 文件库按 chineseName→label、englishName→value 拼接在「来源库」默认三项下方；
+     *   ② 同一批数据回填「分析材料入库区」的文件库下拉（同样取 label/value）。
+     */
+    fetchSources() {
+      getSourceList()
+        .then(res => {
+          const seen = {}
+          const libraries = []
+          this.extractLibraryRows(res).forEach(row => {
+            const library = this.normalizeLibraryRow(row)
+            if (!library || seen[library.value]) return
+            seen[library.value] = true
+            libraries.push(library)
+          })
+          this.fileLibraries = libraries
+          if (this.activeLibraryId && !libraries.some(lib => lib.value === this.activeLibraryId)) {
+            this.activeLibraryId = ''
+          }
+          // 拼接在来源库下方，默认三项同名的库不重复追加
+          const baseValues = BASE_CATEGORIES.map(item => item.value)
+          this.categories = BASE_CATEGORIES.map(item => ({ ...item })).concat(
+            libraries
+              .filter(lib => !baseValues.includes(lib.value))
+              .map(lib => ({ label: lib.label, value: lib.value }))
+          )
+        })
+        // 来源库/文件库列表为辅助数据，接口失败时保持当前状态即可
+        .catch(() => {})
     },
 
     /* ==================== 分类模板与模糊词 ==================== */
@@ -470,7 +477,7 @@ export default {
     resetLeftFilters() {
       this.$store.commit('adviceCluster/CLEAR_EXPAND_SELECTION')
       this.filterSemiFuzzyWord = ''
-      this.fileLibraries = []
+      // 文件库列表来自服务端查询（getSource），重置筛选条件时只取消选中，不清空列表
       this.activeLibraryId = ''
       // 只清除模糊词独立模板，不影响汇总要点/分析报告共用的 template 模块
       if (this.templateHasData) {
@@ -539,10 +546,61 @@ export default {
     },
 
     /* ==================== 分析材料入库区（文件库） ==================== */
+    /** 兼容资料库接口可能的数据包装：数组 / { list } / { records } */
+    extractLibraryRows(res) {
+      if (!res) return []
+      const data = res.data !== undefined ? res.data : res
+      if (Array.isArray(data)) return data
+      if (data && typeof data === 'object') {
+        if (Array.isArray(data.list)) return data.list
+        if (Array.isArray(data.records)) return data.records
+      }
+      return []
+    },
     /**
-     * 添加文件库：弹窗输入名称，成功后自动选中该文件库
-     * 说明：文件库名称会转为拼音（无声调）作为上传接口的 indexName，
-     *      同一文件库内的文件共享该索引名。
+     * 把 getSource 返回项归一化为 { id, label, value, name, indexName, files }。
+     * 命名字段：chineseName → label（显示名），englishName → value（下拉取值）。
+     * name/indexName 保留给上传、查重等既有逻辑使用。
+     */
+    normalizeLibraryRow(row) {
+      if (!row || typeof row !== 'object') return null
+      const nested = row.qdNeedObj && typeof row.qdNeedObj === 'object' ? row.qdNeedObj : {}
+      const label = String(
+        row.chineseName || nested.chineseName || row.fileName || row.file_name || row.name || ''
+      ).trim()
+      const value = String(
+        row.englishName || nested.englishName || row.indexName || row.index_name || ''
+      ).trim() || this.toPinyin(label)
+      if (!label && !value) return null
+      const rawFiles = row.files || row.fileNames || row.file_names || []
+      const files = Array.isArray(rawFiles)
+        ? rawFiles.map(file => String(file || '').trim()).filter(Boolean)
+        : []
+      return {
+        id: String(row.id || `lib_${value || label}`),
+        label: label || value,
+        value: value || label,
+        name: label || value,
+        indexName: value || label,
+        files
+      }
+    },
+    /** 获取 userId：登录信息可能晚于组件挂载写入，调用时再兜底读取一次 */
+    resolveUserId() {
+      return this.userId || getUserId() || '1234'
+    },
+    /** task 系列接口统一按 code === 0 判断成功（兼容 success/result 标记） */
+    isApiSuccess(res) {
+      return !!res && (res.code === 0 || res.success === true || res.result === 0)
+    },
+    /** 提取接口错误提示，取不到时使用兜底文案 */
+    getApiMessage(res, fallback) {
+      const message = res && (res.message || res.msg || (typeof res.data === 'string' ? res.data : ''))
+      return message || fallback
+    },
+    /**
+     * 添加文件库：调用 saveDatabase 保存资料库（fileName = 名称，indexName = 名称拼音），
+     * 成功后才加入下拉框并自动选中。
      */
     addFileLibrary() {
       this.$prompt('请输入文件库名称', '添加文件库', {
@@ -557,16 +615,33 @@ export default {
       })
         .then(({ value }) => {
           const name = String(value).trim()
-          const library = {
-            id: `lib_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
-            name,
-            indexName: this.toPinyin(name),
-            files: []
-          }
-          this.fileLibraries.push(library)
-          this.activeLibraryId = library.id
-          this.addHistory('添加文件库', `文件库：${name}`)
-          this.$message && this.$message.success('文件库添加成功')
+          const indexName = this.toPinyin(name)
+          return saveDatabase({ fileName: name, indexName, userId: this.resolveUserId() })
+            .then(res => {
+              if (!this.isApiSuccess(res)) {
+                this.showAlert(this.getApiMessage(res, '文件库添加失败，请重试'))
+                return
+              }
+              const library = {
+                id: `lib_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+                label: name,
+                value: indexName,
+                name,
+                indexName,
+                files: []
+              }
+              this.fileLibraries.push(library)
+              this.activeLibraryId = library.value
+              // 新库同步追加到「来源库」下拉，与刷新后 getSource 返回的结果保持一致
+              if (!this.categories.some(item => item.value === library.value)) {
+                this.categories.push({ label: library.label, value: library.value })
+              }
+              this.addHistory('添加文件库', `文件库：${name}`)
+              this.$message && this.$message.success('文件库添加成功')
+            })
+            .catch(() => {
+              this.showAlert('文件库添加失败，请重试')
+            })
         })
         .catch(() => {})
     },
@@ -635,7 +710,7 @@ export default {
     },
     /**
      * 逐个上传到「当前选中文件库」，接口成功后再加入该文件库的文件列表
-     * indexName 取自文件库，fileName 取自文件本身
+     * form-data 参数：userId、indexName（文件库索引）、file（文件流）、fileName（文件名称）
      */
     uploadWarehouseFiles(files) {
       const library = this.activeLibrary
@@ -653,15 +728,15 @@ export default {
         }
 
         const formData = new FormData()
+        formData.append('userId', this.resolveUserId())
+        formData.append('indexName', library.indexName)
         formData.append('file', file)
         formData.append('fileName', fileName)
-        formData.append('indexName', library.indexName)
-        formData.append('force', false)
 
         uploadTaskFile(formData)
           .then(res => {
-            if (!res || (res.code !== 0 && res.success !== true)) {
-              this.showAlert((res && (res.message || res.msg)) || '文件上传失败，请重试')
+            if (!this.isApiSuccess(res)) {
+              this.showAlert(this.getApiMessage(res, '文件上传失败，请重试'))
               return
             }
             if (library.files.indexOf(fileName) === -1) library.files.push(fileName)
@@ -676,13 +751,6 @@ export default {
     /** 中文文件名转无声调全拼，作为接口需要的索引名 */
     toPinyin(value) {
       return pinyin(String(value || ''), { toneType: 'none', pattern: 'pinyin' }).replace(/\s+/g, '')
-    },
-    /** 从当前文件库移除某个文件 */
-    removeWarehouseFile(fileName) {
-      const library = this.activeLibrary
-      if (!library) return
-      const index = library.files.indexOf(fileName)
-      if (index > -1) library.files.splice(index, 1)
     }
   }
 }
@@ -880,41 +948,6 @@ export default {
   line-height: 26px;
 }
 
-.warehouse-file-list {
-  margin-top: 10px;
-  display: flex;
-  flex-direction: column;
-}
-.warehouse-file-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 4px 8px;
-  background: #fafafa;
-  border: 1px solid var(--border-color, #d5d5d5);
-  border-radius: 4px;
-  font-size: 11px;
-  margin-bottom: 6px;
-}
-.warehouse-file-item:last-child {
-  margin-bottom: 0;
-}
-.warehouse-file-name {
-  color: #333;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  flex: 1;
-}
-.warehouse-file-remove {
-  cursor: pointer;
-  color: #999;
-  padding: 0 4px;
-  flex-shrink: 0;
-}
-.warehouse-file-remove:hover {
-  color: var(--primary-red);
-}
 .optional-row .optional-item {
   margin-right: 14px;
 }

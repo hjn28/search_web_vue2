@@ -1014,3 +1014,37 @@
 - 处理状态：已完成
 - 执行说明：已完成。① GenerateReportModal.vue 新增并导出 summaryZhaiyaoTypeMap：三个汇总选项依次对应 zhaiyao_type = jianyi（按当前分类体系输出）、sww（十五五规划纲要归类）、yusuan（代表审议意见模板）；② AdviceClusterRight.vue 的 submitSummaryGenerate 从映射取 zhaiyao_type，写入 aiObj 与 qdNeedObj；③ 弹窗每次打开时 resetDefaultOption()，默认选中第一个可用汇总项（正常场景即「按当前分类体系输出」）。eslint 通过。
 - 代码变更：src/views/adviceSearch/report/GenerateReportModal.vue、src/views/adviceSearch/components/AdviceClusterRight.vue
+
+## 2026-11-18
+### 18:07:35
+- 原始提示词：<ide_selection>The user selected the lines 181 to 181 from d:\CSC\RD\search_web\src\views\adviceSearch\report\GenerateReportModal.vue: reportBureauDigest  This may or may not be related to the current task.</ide_selection> 针对生成报告的时候，有type1、2、3的区分，当是1的时候是有zhaiyao_type这个参数的；为2、3的时候，没有这个参数，另外选中建议局摘报的时候，是更改type的值，改为jyjzb
+- 接收时间：2026-11-18 18:07:35
+- 处理状态：已完成
+- 执行说明：已完成。① type='1'（汇总要点）的 submitSummaryGenerate 保持不变，仍通过 aiObj.zhaiyao_type 区分三个汇总选项；② type='2'/'3'（分析报告）不再传 zhaiyao_type，buildUnitParam 移除了建议局摘报写入 zhaiyao_type 的分支；③ 新增 reportAiTypeMap（摘报→zhaibao、建议局摘报→jyjzb、其余→minzheng），submitReportGenerate 与 submitTaskReportGenerate 统一用它计算 aiObj.type；④ 常量 BUREAU_DIGEST_ZHAIYAO_TYPE 改名为 BUREAU_DIGEST_REPORT_TYPE（值 jyjzb 不变），注释同步更新。eslint 通过。
+- 代码变更：src/views/adviceSearch/report/GenerateReportModal.vue、src/views/adviceSearch/components/AdviceClusterRight.vue
+### 18:17:47
+- 原始提示词：<ide_opened_file>The user opened the file d:\CSC\RD\search_web\src\views\adviceSearch\components\AdviceClusterLeft.vue in the IDE. This may or may not be related to the current task.</ide_opened_file> 上传资料库文件 task/uploadFile  form-data 形式的  传递参数有 userId、indexName（文件名称转为的拼音）、file（文件流）、fileName（文件名称）  上传资料库 task/saveDatabase post请求 参数：fileName（名称）、indexName（文件转的拼音）、userId  查询资料库 还是原来的 getSource获取来源库数据
+- 接收时间：2026-11-18 18:17:47
+- 处理状态：已完成
+- 执行说明：已完成。① `task/uploadFile` 改为 form-data 传 userId、indexName（当前文件库索引名）、file、fileName，移除原 force 参数；② 新增 `task/saveDatabase`（POST：fileName、indexName、userId），在「添加文件库」时调用，成功后才加入下拉框；③ 页面加载调用 `getSource` 回填文件库列表，字段兼容 fileName/indexName、files/fileNames 及 list/records 包装；④ userId 通过 session.getUserId 获取（iframe 参数优先，localStorage 兜底），重置筛选条件不再清空服务端文件库列表；⑤ 同步更新《目录模板与分类体系逻辑说明.md》。eslint 通过。
+- 代码变更：src/api/config.js、src/api/login.js、src/views/adviceSearch/components/AdviceClusterLeft.vue、目录模板与分类体系逻辑说明.md
+
+## 2026-11-19
+### 10:26:41
+- 原始提示词：<ide_opened_file>The user opened the file d:\CSC\RD\search_web\src\views\adviceSearch\components\AdviceClusterLeft.vue in the IDE. This may or may not be related to the current task.</ide_opened_file> getSource获取的文件库需要拼接在来源库的下方，字段取的是chineseName作为lable，englishName作为的value；在分析材料入库区的文件库中 也是这样取值，设置为lable和value；
+- 接收时间：2026-11-19 10:26:41
+- 处理状态：已完成
+- 执行说明：已完成。① AdviceClusterLeft 的 fetchCategories 桩代码与 fetchWarehouseLibraries 合并为 fetchSources（getSource 只调一次），返回项归一化新增 label=chineseName、value=englishName（兼容 qdNeedObj 嵌套及 fileName/indexName 旧字段）；② 文件库按 label/value 追加在「来源库」默认三项（建议库/议案库/预算库）下方，默认项不重复追加；③ 分析材料入库区的文件库下拉改为 :value="lib.value"、显示 lib.label，activeLibrary 等按 value 匹配，新增文件库同步追加到来源库；④ SearchHelper.buildSearchParams 的 data_base 在映射表未命中时透传选中值（文件库 englishName），不再回退 jianyi；⑤ 同步更新《目录模板与分类体系逻辑说明.md》。eslint 通过。
+- 代码变更：src/views/adviceSearch/components/AdviceClusterLeft.vue、src/utils/classes/SearchHelper.js、目录模板与分类体系逻辑说明.md
+### 10:45:04
+- 原始提示词：<ide_opened_file>The user opened the file d:\CSC\RD\search_web\src\views\adviceSearch\components\AdviceClusterLeft.vue in the IDE. This may or may not be related to the current task.</ide_opened_file> 上传文件之后，下方不用展示文件名
+- 接收时间：2026-11-19 10:45:04
+- 处理状态：已完成
+- 执行说明：已完成。移除分析材料入库区文件库下拉下方的已上传文件列表（warehouse-file-list），同步删除仅供该列表使用的 activeLibraryFiles 计算属性、removeWarehouseFile 方法与对应 CSS；文件库内的 files 数据仍保留，继续用于同名文件查重及模糊词检索。eslint 通过。
+- 代码变更：src/views/adviceSearch/components/AdviceClusterLeft.vue
+### 11:17:00
+- 原始提示词：<ide_opened_file>The user opened the file d:\CSC\RD\search_web\src\views\adviceSearch\components\AdviceClusterLeft.vue in the IDE. This may or may not be related to the current task.</ide_opened_file> 为什么上传完文件，比如我上传的是商务部.txt文件，再进行检索的时候theme 就变成了商务部；这二者是没有关联的呀；哪里的逻辑 给关联了
+- 接收时间：2026-11-19 11:17:00
+- 处理状态：已完成
+- 执行说明：已定位并修复。原因：上传文件时把去掉扩展名的文件名存入文件库 files，warehouseFiles 汇总后由 mergedFuzzyWords 追加进模糊词，FilterConditions 将其作为 semiFuzzyWordInput 传入 SearchHelper.buildSearchParams → theme，同时 fuzzyWords 的 watch 也把 theme 写入 taskAiParams。修复：mergedFuzzyWords 不再合并 warehouseFiles（只保留模板叶子节点/分类体系输入框）；warehouseFiles 仅用于操作历史「入库=…」展示；顺带把 FilterConditions.emitTaskAiObjParams 的 data_base 改为映射未命中时透传选中值，与 buildSearchParams 保持一致；同步更新《目录模板与分类体系逻辑说明.md》中入库文件名参与检索的描述。eslint 通过。
+- 代码变更：src/views/adviceSearch/components/AdviceClusterLeft.vue、src/views/adviceSearch/components/FilterConditions.vue、目录模板与分类体系逻辑说明.md

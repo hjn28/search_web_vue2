@@ -732,7 +732,7 @@ export default {
 
     emitTaskAiObjParams() {
       this.$store.commit('taskAiParams/SET_PARAMS', {
-        data_base: SearchHelper.CATEGORY_MAP[this.selectedCategory] || 'jianyi',
+        data_base: SearchHelper.CATEGORY_MAP[this.selectedCategory] || this.selectedCategory || 'jianyi',
         theme: SearchHelper.parseMultiLine(this.fuzzyWords),
         term_theme: SearchHelper.parseMultiLine(this.exactWordInput)
       })

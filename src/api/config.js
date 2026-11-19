@@ -99,7 +99,8 @@ const API = {
     delete: '/task/deleteTask',
     updateResult: '/task/updateResult',
     getNewResult: '/task/getNewResult',
-    getSource: '/task/getSource'
+    getSource: '/task/getSource',
+    saveDatabase: '/task/saveDatabase'
   }
 }
 

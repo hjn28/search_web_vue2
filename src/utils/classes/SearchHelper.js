@@ -70,7 +70,8 @@ class SearchHelper {
       exactWordInput, semiFuzzyWordInput, fuzzyWordInput
     } = opts
 
-    const dataBase = this.CATEGORY_MAP[selectedCategory] || 'jianyi'
+    // 固定来源库走映射；getSource 追加的文件库直接以 englishName 作为 data_base 透传
+    const dataBase = this.CATEGORY_MAP[selectedCategory] || selectedCategory || 'jianyi'
     const sessionList = this.toArray(selectedSession)
     const delegationList = this.toArray(selectedDelegation)
     const cblxList = this.toArray(selectedCblx)
